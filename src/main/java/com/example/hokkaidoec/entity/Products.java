@@ -2,11 +2,11 @@ package com.example.hokkaidoec.entity;
 
 public class Products {
 	private int id;
-	private String product_name;
+	private String name;
 	private String description;
 	private int price;
 	private int stock;
-	private String image_url;
+	private String imageUrl;
 
 	public int getId() {
 		return id;
@@ -16,12 +16,12 @@ public class Products {
 		this.id = id;
 	}
 
-	public String getproduct_name() {
-		return product_name;
+	public String name() {
+		return name;
 	}
 
-	public void setproduct_name(String product_name) {
-		this.product_name = product_name;
+	public void name(String name) {
+		this.name = name;
 	}
 
 	public String getDescription() {
@@ -48,11 +48,11 @@ public class Products {
 		this.stock = stock;
 	}
 
-	public String getImage_url() {
-		return image_url;
+	public String getImageUrl() {
+		return imageUrl;
 	}
 
-	public void setImage_url(String image_url) {
-		this.image_url = image_url;
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
 	}
 }
