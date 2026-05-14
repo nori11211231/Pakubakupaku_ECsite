@@ -2,7 +2,7 @@ package com.example.hokkaidoec.entity;
 
 public class Regions {
 	private int id;
-	private String region_name;
+	private String name;
 
 	public int getId() {
 		return id;
@@ -12,11 +12,11 @@ public class Regions {
 		this.id = id;
 	}
 
-	public String getRegion_name() {
-		return region_name;
+	public String name() {
+		return name;
 	}
 
-	public void setRegion_name(String region_name) {
-		this.region_name = region_name;
+	public void setname(String name) {
+		this.name = name;
 	}
 }
