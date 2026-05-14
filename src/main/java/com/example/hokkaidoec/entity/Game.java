@@ -3,12 +3,12 @@ package com.example.hokkaidoec.entity;
 import java.time.LocalDateTime;
 
 public class Game {
-	LocalDateTime today = LocalDateTime.now();
+	LocalDateTime today;
 	private int id;
-	private int bet_Point;
+	private int betPoint;
 	private boolean result;
-	private int earned_Point;
-	private LocalDateTime played_At;
+	private int earnedPoint;
+	private LocalDateTime playedAt;
 
 	public int getId() {
 		return id;
@@ -18,12 +18,12 @@ public class Game {
 		this.id = id;
 	}
 
-	public int getBet_Point() {
-		return bet_Point;
+	public int getBetPoint() {
+		return betPoint;
 	}
 
-	public void setBet_Point(Integer betPoint) {
-		this.bet_Point = betPoint;
+	public void setBetPoint(Integer betPoint) {
+		this.betPoint = betPoint;
 	}
 
 	public boolean getResult() {
@@ -34,20 +34,24 @@ public class Game {
 		this.result = result;
 	}
 
-	public int getEarned_Point() {
-		return earned_Point;
+	public int getEarnedPoint() {
+		return earnedPoint;
 	}
 
-	public void setEarned_Point(Integer earnedPoint) {
-		this.earned_Point = earnedPoint;
+	public void setEarnedPoint(Integer earnedPoint) {
+		this.earnedPoint = earnedPoint;
 	}
 
 	public LocalDateTime getPlayed_At() {
 
-		return played_At;
+		return playedAt;
 	}
 
 	public void setPlayed_At(LocalDateTime playedAt) {
-		this.played_At = playedAt;
+		this.playedAt = playedAt;
+	}
+
+	public void setTodayTime(LocalDateTime day) {
+		this.today = day;
 	}
 }
