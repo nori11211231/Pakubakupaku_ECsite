@@ -39,4 +39,5 @@ public class PointHistory {
 	public void setCreatedAt(LocalDateTime createdAt) {
 		this.createdAt = createdAt;
 	}
+	//LocalDateTimeのなかみがまだ完全にかけていないのでのちのちＤＢを確認して値が入っていなかったら修正、毛利も同様
 }
