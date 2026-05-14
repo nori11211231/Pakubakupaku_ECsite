@@ -12,7 +12,7 @@ public class Regions {
 		this.id = id;
 	}
 
-	public String name() {
+	public String getname() {
 		return name;
 	}
 
