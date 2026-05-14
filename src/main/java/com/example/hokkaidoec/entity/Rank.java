@@ -3,8 +3,8 @@ package com.example.hokkaidoec.entity;
 public class Rank {
 	private int id;
 	private String name;
-	private int min_amount;
-	private double point_rate;
+	private int minAmount;
+	private double pointRate;
 
 	public int getId() {
 		return id;
@@ -22,20 +22,20 @@ public class Rank {
 		this.name = name;
 	}
 
-	public int getMin_amount() {
-		return min_amount;
+	public int getMinAmount() {
+		return minAmount;
 	}
 
-	public void setMin_amount(int min_amount) {
-		this.min_amount = min_amount;
+	public void setMinAmount(int minAmount) {
+		this.minAmount = minAmount;
 	}
 
-	public double getPoint_rate() {
-		return point_rate;
+	public double getPointRate() {
+		return pointRate;
 	}
 
-	public void setPoint_rate(double point_rate) {
-		this.point_rate = point_rate;
+	public void setPointRate(double pointRate) {
+		this.pointRate = pointRate;
 	}
 
 }
