@@ -2,7 +2,7 @@ package com.example.hokkaidoec.entity;
 
 public class Categories {
 	private int id;
-	private String category_name;
+	private String name;
 
 	public int getId() {
 		return id;
@@ -12,11 +12,11 @@ public class Categories {
 		this.id = id;
 	}
 
-	public String getCategory_name() {
-		return category_name;
+	public String name() {
+		return name;
 	}
 
-	public void setCategory_name(String category_name) {
-		this.category_name = category_name;
+	public void name(String name) {
+		this.name = name;
 	}
 }
