@@ -8,7 +8,7 @@ public class User {
 	private String address;
 	private String phone;
 	private int point;
-	private int total_purchase_amount;//UserからひっぱってAIにおくから必要
+	private int totalPurchaseAmount;//UserからひっぱってAIにおくから必要
 
 	public int getId() {
 		return id;
@@ -66,11 +66,11 @@ public class User {
 		this.point = point;
 	}
 
-	public int getTotal_purchase_amount() {
-		return total_purchase_amount;
+	public int getTotalPurchaseAmount() {
+		return totalPurchaseAmount;
 	}
 
-	public void setTotal_purchase_amount(int total_purchase_amount) {
-		this.total_purchase_amount = total_purchase_amount;
+	public void setTotalPurchaseAmount(int totalPurchaseAmount) {
+		this.totalPurchaseAmount = totalPurchaseAmount;
 	}
 }
