@@ -1,59 +1,59 @@
-<!--<!DOCTYPE html>-->
-<!--<html xmlns:th="http://www.thymeleaf.org">-->
-<!--<head>-->
-<!--    <meta charset="UTF-8">-->
-<!--    <title>ガチャ</title>-->
-<!--</head>-->
-<!--<body>-->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>ガチャ</title>
+</head>
+<body>
 
-<!--    <h1>ガチャ</h1>-->
+    <h1>ガチャ</h1>
 
-<!--    <p>-->
-<!--        現在ポイント：-->
-<!--        <span th:text="${currentPoint}">0</span>-->
-<!--        pt-->
-<!--    </p>-->
+    <p>
+        現在ポイント：
+        <span th:text="${currentPoint}">0</span>
+        pt
+    </p>
 
-<!--     エラーメッセージ -->
-<!--    <p th:if="${errorMessage}" th:text="${errorMessage}" style="color: red;">-->
-<!--        エラーメッセージ-->
-<!--    </p>-->
+     エラーメッセージ 
+    <p th:if="${errorMessage}" th:text="${errorMessage}" style="color: red;">
+        エラーメッセージ
+    </p>
 
-<!--    <form th:action="@{/game}" th:object="${gameForm}" method="post">-->
+    <form th:action="@{/game}" th:object="${gameForm}" method="post">
 
-<!--        <div>-->
-<!--            <label for="betPoint">ベットポイント</label>-->
-<!--            <input type="number"-->
-<!--                   id="betPoint"-->
-<!--                   th:field="*{betPoint}"-->
-<!--                   min="1"-->
-<!--                   required>-->
-<!--        </div>-->
+        <div>
+            <label for="betPoint">ベットポイント</label>
+            <input type="number"
+                   id="betPoint"
+                   th:field="*{betPoint}"
+                   min="1"
+                   required>
+        </div>
 
-<!--        <div>-->
-<!--            <button type="submit">ガチャを引く</button>-->
-<!--        </div>-->
+        <div>
+            <button type="submit">ガチャを引く</button>
+        </div>
 
-<!--    </form>-->
+    </form>
 
-<!--    <hr>-->
+    <hr>
 
-<!--    <h2>ガチャ内容</h2>-->
+    <h2>ガチャ内容</h2>
 
-<!--    <ul>-->
-<!--        <li>超大当たり：15000分の1 / ベットポイントの100倍</li>-->
-<!--        <li>大当たり：ベットポイントの10倍</li>-->
-<!--        <li>当たり：ベットポイントの2倍</li>-->
-<!--        <li>はずれ：獲得ポイント0</li>-->
-<!--    </ul>-->
+    <ul>
+        <li>超大当たり：15000分の1 / ベットポイントの100倍</li>
+        <li>大当たり：ベットポイントの10倍</li>
+        <li>当たり：ベットポイントの2倍</li>
+        <li>はずれ：獲得ポイント0</li>
+    </ul>
 
-<!--    <p>-->
-<!--        <a th:href="@{/game/history}">ガチャ履歴を見る</a>-->
-<!--    </p>-->
+    <p>
+        <a th:href="@{/game/history}">ガチャ履歴を見る</a>
+    </p>
 
-<!--    <p>-->
-<!--        <a th:href="@{/}">トップページへ戻る</a>-->
-<!--    </p>-->
+    <p>
+        <a th:href="@{/}">トップページへ戻る</a>
+    </p>
 
-<!--</body>-->
-<!--</html>-->
+</body>
+</html>
