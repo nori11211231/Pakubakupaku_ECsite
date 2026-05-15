@@ -4,44 +4,44 @@ import java.time.LocalDateTime;
 
 public class GamePlayHistory {
 
-	private Integer id;
-	private Integer userId;
-	private Integer betPoint;
+	private int id;
+	private int userId;
+	private int betPoint;
 	private Boolean result;
 	private String resultType;
-	private Integer earnedPoint;
+	private int earnedPoint;
 	private LocalDateTime playedAt;
 
 	// 画面表示用
 	private String resultText;
 	private String videoPath;
 	private String message;
-	private Integer currentPoint;
+	private int currentPoint;
 
 	public GamePlayHistory() {
 	}
 
-	public Integer getId() {
+	public int getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 
-	public Integer getUserId() {
+	public int getUserId() {
 		return userId;
 	}
 
-	public void setUserId(Integer userId) {
+	public void setUserId(int userId) {
 		this.userId = userId;
 	}
 
-	public Integer getBetPoint() {
+	public int getBetPoint() {
 		return betPoint;
 	}
 
-	public void setBetPoint(Integer betPoint) {
+	public void setBetPoint(int betPoint) {
 		this.betPoint = betPoint;
 	}
 
@@ -61,11 +61,11 @@ public class GamePlayHistory {
 		this.resultType = resultType;
 	}
 
-	public Integer getEarnedPoint() {
+	public int getEarnedPoint() {
 		return earnedPoint;
 	}
 
-	public void setEarnedPoint(Integer earnedPoint) {
+	public void setEarnedPoint(int earnedPoint) {
 		this.earnedPoint = earnedPoint;
 	}
 
@@ -101,11 +101,12 @@ public class GamePlayHistory {
 		this.message = message;
 	}
 
-	public Integer getCurrentPoint() {
+	public int getCurrentPoint() {
 		return currentPoint;
 	}
 
-	public void setCurrentPoint(Integer currentPoint) {
+	public void setCurrentPoint(int currentPoint) {
 		this.currentPoint = currentPoint;
 	}
+
 }
