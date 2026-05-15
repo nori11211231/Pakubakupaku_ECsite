@@ -9,7 +9,8 @@ public class User {
 	private String phone;
 	private int point;
 	private int totalPurchaseAmount;//UserからひっぱってAIにおくから必要
-
+	User(){
+	}
 	public int getId() {
 		return id;
 	}
