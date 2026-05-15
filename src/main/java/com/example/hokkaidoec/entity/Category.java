@@ -4,9 +4,9 @@ public class Category {
 	private int id;
 	private String categoryName;
 
-	Category() {
+	public Category() {
 
-	};
+	}
 
 	public int getId() {
 		return id;
