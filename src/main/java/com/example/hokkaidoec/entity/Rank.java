@@ -1,10 +1,12 @@
 package com.example.hokkaidoec.entity;
 
+import java.math.BigDecimal;
+
 public class Rank {
 	public int rankId;
 	public String rankName;
 	public int minAmount;
-	public double pointRate;
+	public BigDecimal pointRate;
 
 	public Rank() {
 		// TODO 自動生成されたコンストラクター・スタブ
@@ -34,11 +36,12 @@ public class Rank {
 		this.minAmount = minAmount;
 	}
 
-	public double getPointRate() {
+	public BigDecimal getPointRate() {
 		return pointRate;
 	}
 
-	public void setPointRate(double pointRate) {
+	public void setPointRate(BigDecimal pointRate) {
 		this.pointRate = pointRate;
 	}
+
 }
