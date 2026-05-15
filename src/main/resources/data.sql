@@ -105,20 +105,21 @@ VALUES
 -- =========================
 -- orders
 -- total_amount = 商品小計 - used_point
+-- order_status: ORDERED = 注文受付, SHIPPED = 発送済み, CANCELED = キャンセル
 -- =========================
 INSERT INTO orders
-(id, user_id, order_date, total_amount, used_point, earned_point, order_status)
+(id, user_id, shipping_address, order_date, total_amount, used_point, earned_point, order_status)
 VALUES
-(1, 1, '2026-05-01 10:15:00', 5500, 100, 55, '完了'),
-(2, 2, '2026-05-02 11:30:00', 6460, 0, 129, '完了'),
-(3, 3, '2026-05-03 14:20:00', 6700, 500, 201, '完了'),
-(4, 4, '2026-05-04 16:45:00', 14200, 1000, 710, '発送中'),
-(5, 5, '2026-05-05 09:10:00', 3300, 0, 33, '完了'),
-(6, 6, '2026-05-06 13:00:00', 4550, 200, 91, '完了'),
-(7, 7, '2026-05-07 18:25:00', 12000, 0, 360, '発送中'),
-(8, 8, '2026-05-08 20:05:00', 10800, 1000, 540, '完了'),
-(9, 3, '2026-05-09 12:40:00', 7740, 0, 232, '完了'),
-(10, 4, '2026-05-10 15:55:00', 7040, 500, 352, '注文受付');
+(1, 1, '北海道札幌市中央区1-1-1', '2026-05-01 10:15:00', 5500, 100, 55, 'SHIPPED'),
+(2, 2, '北海道函館市五稜郭町2-2-2', '2026-05-02 11:30:00', 6460, 0, 129, 'SHIPPED'),
+(3, 3, '北海道旭川市3条通3-3-3', '2026-05-03 14:20:00', 6700, 500, 201, 'SHIPPED'),
+(4, 4, '北海道帯広市西1条4-4-4', '2026-05-04 16:45:00', 14200, 1000, 710, 'ORDERED'),
+(5, 5, '北海道小樽市色内5-5-5', '2026-05-05 09:10:00', 3300, 0, 33, 'SHIPPED'),
+(6, 6, '北海道釧路市末広町6-6-6', '2026-05-06 13:00:00', 4550, 200, 91, 'SHIPPED'),
+(7, 7, '北海道北見市中央町7-7-7', '2026-05-07 18:25:00', 12000, 0, 360, 'ORDERED'),
+(8, 8, '北海道根室市花咲町8-8-8', '2026-05-08 20:05:00', 10800, 1000, 540, 'SHIPPED'),
+(9, 3, '北海道旭川市3条通3-3-3', '2026-05-09 12:40:00', 7740, 0, 232, 'SHIPPED'),
+(10, 4, '北海道帯広市西1条4-4-4', '2026-05-10 15:55:00', 7040, 500, 352, 'ORDERED');
 
 -- =========================
 -- order_items
@@ -185,25 +186,27 @@ VALUES
 
 -- =========================
 -- ai_growth
+-- ai_name ではなく name に修正
 -- =========================
 INSERT INTO ai_growth
-(id, user_id, ai_name,growth_stage, personality, updated_at, chara_image_url)
+(id, user_id, name, growth_stage, personality, updated_at, chara_image_url)
 VALUES
-(1, 1, 'ポチ',1, '元気', '2026-05-01 10:20:00', '/images/ai/chara_stage1.webp'),
-(2, 2, 'タマ',2,'やさしい', '2026-05-02 11:35:00', '/images/ai/chara_stage2.webp'),
-(3, 3, 'Temu',3, '知的', '2026-05-09 12:45:00', '/images/ai/chara_stage3.webp'),
-(4, 4, '佐々木',4, '上品', '2026-05-10 16:00:00', '/images/ai/chara_stage4.webp'),
-(5, 5, '田中どんぐり',1, 'のんびり', '2026-05-05 09:15:00', '/images/ai/chara_stage1.webp'),
-(6, 6, '佐藤ちゃん',2, '明るい', '2026-05-06 13:05:00', '/images/ai/chara_stage2.webp'),
-(7, 7, 'ちいかわ',3, 'クール', '2026-05-07 18:30:00', '/images/ai/chara_stage3.webp'),
-(8, 8, 'はちわれ',4, '頼れる', '2026-05-12 21:05:00', '/images/ai/chara_stage4.webp');
+(1, 1, 'ポチ', 1, '元気', '2026-05-01 10:20:00', '/images/ai/chara_stage1.webp'),
+(2, 2, 'タマ', 2, 'やさしい', '2026-05-02 11:35:00', '/images/ai/chara_stage2.webp'),
+(3, 3, 'Temu', 3, '知的', '2026-05-09 12:45:00', '/images/ai/chara_stage3.webp'),
+(4, 4, '佐々木', 4, '上品', '2026-05-10 16:00:00', '/images/ai/chara_stage4.webp'),
+(5, 5, '田中どんぐり', 1, 'のんびり', '2026-05-05 09:15:00', '/images/ai/chara_stage1.webp'),
+(6, 6, '佐藤ちゃん', 2, '明るい', '2026-05-06 13:05:00', '/images/ai/chara_stage2.webp'),
+(7, 7, 'ちいかわ', 3, 'クール', '2026-05-07 18:30:00', '/images/ai/chara_stage3.webp'),
+(8, 8, 'はちわれ', 4, '頼れる', '2026-05-12 21:05:00', '/images/ai/chara_stage4.webp');
 
 -- =========================
 -- game_play_history
 -- result: true = 当たり, false = はずれ
+-- play_id ではなく id に修正
 -- =========================
 INSERT INTO game_play_history
-(play_id, user_id, bet_point, result, earned_point, played_at)
+(id, user_id, bet_point, result, earned_point, played_at)
 VALUES
 (1, 1, 50, true, 100, '2026-05-11 19:00:00'),
 (2, 1, 30, false, 0, '2026-05-11 19:10:00'),
@@ -228,4 +231,4 @@ SELECT setval(pg_get_serial_sequence('users', 'id'), (SELECT MAX(id) FROM users)
 SELECT setval(pg_get_serial_sequence('orders', 'id'), (SELECT MAX(id) FROM orders));
 SELECT setval(pg_get_serial_sequence('point_history', 'id'), (SELECT MAX(id) FROM point_history));
 SELECT setval(pg_get_serial_sequence('ai_growth', 'id'), (SELECT MAX(id) FROM ai_growth));
-SELECT setval(pg_get_serial_sequence('game_play_history', 'play_id'), (SELECT MAX(play_id) FROM game_play_history));
+SELECT setval(pg_get_serial_sequence('game_play_history', 'id'), (SELECT MAX(id) FROM game_play_history));
