@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper
+	namespace="com.example.hokkaidoec.mapper.GamePlayHistoryMapper">
+
+	<!-- ガチャ結果を保存する -->
+	<insert id="insert">
+		INSERT INTO game_play_history (
+		user_id,
+		bet_point,
+		result,
+		result_type,
+		earned_point,
+		played_at
+		) VALUES (
+		#{userId},
+		#{betPoint},
+		#{result},
+		#{resultType},
+		#{earnedPoint},
+		#{playedAt}
+		)
+	</insert>
+
+	<!-- ユーザーごとのガチャ履歴を取得する -->
+	<select id="findByUserId"
+		resultType="com.example.hokkaidoec.entity.GamePlayHistory">
+		SELECT
+		id,
+		user_id,
+		bet_point,
+		result,
+		result_type,
+		earned_point,
+		played_at
+		FROM game_play_history
+		WHERE user_id = #{userId}
+		ORDER BY played_at DESC
+	</select>
+
+</mapper>
