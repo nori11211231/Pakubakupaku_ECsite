@@ -11,6 +11,10 @@ public class Order {
 	private int earnedPoint;
 	private String orderStatus;
 
+	public Order(){
+	}
+
+
 	public int getOrderId() {
 		return orderId;
 	}
