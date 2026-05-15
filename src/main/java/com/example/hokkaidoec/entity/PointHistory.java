@@ -4,10 +4,12 @@ import java.time.LocalDateTime;
 
 public class PointHistory {
 	private int id;
-	private int userId;
 	private int pointChange;
 	private String reason;
 	private LocalDateTime createdAt;
+
+	public PointHistory(){
+	}
 
 	public int getId() {
 		return id;
@@ -15,14 +17,6 @@ public class PointHistory {
 
 	public void setId(int id) {
 		this.id = id;
-	}
-
-	public int getUserId() {
-		return userId;
-	}
-
-	public void setUserId(int userId) {
-		this.userId = userId;
 	}
 
 	public int getPointChange() {
