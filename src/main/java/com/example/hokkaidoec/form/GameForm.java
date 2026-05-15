@@ -4,6 +4,7 @@ public class GameForm {
 
 	private Integer betPoint;
 
+
 	public GameForm() {
 	}
 
