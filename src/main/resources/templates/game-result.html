@@ -1,64 +1,64 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<!--<!DOCTYPE html>-->
+<!--<html xmlns:th="http://www.thymeleaf.org">-->
 
-<head>
-	<meta charset="UTF-8">
-	<title>ガチャ結果</title>
-</head>
+<!--<head>-->
+<!--	<meta charset="UTF-8">-->
+<!--	<title>ガチャ結果</title>-->
+<!--</head>-->
 
-<body>
+<!--<body>-->
 
-	<h1>ガチャ結果</h1>
+<!--	<h1>ガチャ結果</h1>-->
 
-	<!-- 結果動画 -->
-	<div>
-		<video width="500" autoplay muted playsinline controls>
-			<source th:src="@{${videoPath}}" type="video/mp4">
-			お使いのブラウザは動画再生に対応していません。
-		</video>
-	</div>
+<!--	 結果動画 -->
+<!--	<div>-->
+<!--		<video width="500" autoplay muted playsinline controls>-->
+<!--			<source th:src="@{${videoPath}}" type="video/mp4">-->
+<!--			お使いのブラウザは動画再生に対応していません。-->
+<!--		</video>-->
+<!--	</div>-->
 
-	<hr>
+<!--	<hr>-->
 
-	<!-- 結果表示 -->
-	<h2 th:text="${resultText}">結果</h2>
+<!--	 結果表示 -->
+<!--	<h2 th:text="${resultText}">結果</h2>-->
 
-	<p th:text="${message}">
-		結果メッセージ
-	</p>
+<!--	<p th:text="${message}">-->
+<!--		結果メッセージ-->
+<!--	</p>-->
 
-	<p>
-		ベットポイント：
-		<span th:text="${betPoint}">0</span>
-		pt
-	</p>
+<!--	<p>-->
+<!--		ベットポイント：-->
+<!--		<span th:text="${betPoint}">0</span>-->
+<!--		pt-->
+<!--	</p>-->
 
-	<p>
-		獲得ポイント：
-		<span th:text="${earnedPoint}">0</span>
-		pt
-	</p>
+<!--	<p>-->
+<!--		獲得ポイント：-->
+<!--		<span th:text="${earnedPoint}">0</span>-->
+<!--		pt-->
+<!--	</p>-->
 
-	<p>
-		現在ポイント：
-		<span th:text="${currentPoint}">0</span>
-		pt
-	</p>
+<!--	<p>-->
+<!--		現在ポイント：-->
+<!--		<span th:text="${currentPoint}">0</span>-->
+<!--		pt-->
+<!--	</p>-->
 
-	<hr>
+<!--	<hr>-->
 
-	<p>
-		<a th:href="@{/game}">もう一度ガチャを引く</a>
-	</p>
+<!--	<p>-->
+<!--		<a th:href="@{/game}">もう一度ガチャを引く</a>-->
+<!--	</p>-->
 
-	<p>
-		<a th:href="@{/game/history}">ガチャ履歴を見る</a>
-	</p>
+<!--	<p>-->
+<!--		<a th:href="@{/game/history}">ガチャ履歴を見る</a>-->
+<!--	</p>-->
 
-	<p>
-		<a th:href="@{/}">トップページへ戻る</a>
-	</p>
+<!--	<p>-->
+<!--		<a th:href="@{/}">トップページへ戻る</a>-->
+<!--	</p>-->
 
-</body>
+<!--</body>-->
 
-</html>
+<!--</html>-->

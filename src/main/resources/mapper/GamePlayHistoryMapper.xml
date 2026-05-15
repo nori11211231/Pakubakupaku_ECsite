@@ -1,44 +1,60 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE mapper
-        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--<!DOCTYPE html>-->
+<!--<html xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <title>ガチャ履歴</title>-->
+<!--</head>-->
+<!--<body>-->
 
-<mapper
-	namespace="com.example.hokkaidoec.mapper.GamePlayHistoryMapper">
+<!--    <h1>ガチャ履歴</h1>-->
 
-	<!-- ガチャ結果を保存する -->
-	<insert id="insert">
-		INSERT INTO game_play_history (
-		user_id,
-		bet_point,
-		result,
-		result_type,
-		earned_point,
-		played_at
-		) VALUES (
-		#{userId},
-		#{betPoint},
-		#{result},
-		#{resultType},
-		#{earnedPoint},
-		#{playedAt}
-		)
-	</insert>
+<!--    <table border="1">-->
+<!--        <thead>-->
+<!--            <tr>-->
+<!--                <th>日時</th>-->
+<!--                <th>ベットポイント</th>-->
+<!--                <th>結果</th>-->
+<!--                <th>獲得ポイント</th>-->
+<!--            </tr>-->
+<!--        </thead>-->
 
-	<!-- ユーザーごとのガチャ履歴を取得する -->
-	<select id="findByUserId"
-		resultType="com.example.hokkaidoec.entity.GamePlayHistory">
-		SELECT
-		id,
-		user_id,
-		bet_point,
-		result,
-		result_type,
-		earned_point,
-		played_at
-		FROM game_play_history
-		WHERE user_id = #{userId}
-		ORDER BY played_at DESC
-	</select>
+<!--        <tbody>-->
+<!--            <tr th:each="history : ${gameHistories}">-->
+<!--                <td th:text="${#temporals.format(history.playedAt, 'yyyy/MM/dd HH:mm')}">-->
+<!--                    2026/05/15 12:00-->
+<!--                </td>-->
 
-</mapper>
+<!--                <td>-->
+<!--                    <span th:text="${history.betPoint}">0</span> pt-->
+<!--                </td>-->
+
+<!--                <td>-->
+<!--                    <span th:if="${history.resultType == 'SUPER_JACKPOT'}">超大当たり</span>-->
+<!--                    <span th:if="${history.resultType == 'BIG_WIN'}">大当たり</span>-->
+<!--                    <span th:if="${history.resultType == 'WIN'}">当たり</span>-->
+<!--                    <span th:if="${history.resultType == 'LOSE'}">はずれ</span>-->
+<!--                </td>-->
+
+<!--                <td>-->
+<!--                    <span th:text="${history.earnedPoint}">0</span> pt-->
+<!--                </td>-->
+<!--            </tr>-->
+<!--        </tbody>-->
+<!--    </table>-->
+
+<!--    <p th:if="${#lists.isEmpty(gameHistories)}">-->
+<!--        まだガチャ履歴はありません。-->
+<!--    </p>-->
+
+<!--    <hr>-->
+
+<!--    <p>-->
+<!--        <a th:href="@{/game}">ガチャ画面へ戻る</a>-->
+<!--    </p>-->
+
+<!--    <p>-->
+<!--        <a th:href="@{/}">トップページへ戻る</a>-->
+<!--    </p>-->
+
+<!--</body>-->
+<!--</html>-->
