@@ -4,9 +4,9 @@ public class Region {
 	private int id;
 	private String regionName;
 
-	Region() {
+	public Region() {
 
-	};
+	}
 
 	public int getId() {
 		return id;
