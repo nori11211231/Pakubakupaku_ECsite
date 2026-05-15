@@ -4,6 +4,8 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
+import com.example.hokkaidoec.entity.User;
+
 @Mapper
 public interface UserMapper {
 
@@ -12,6 +14,6 @@ public interface UserMapper {
 	User findByEmail(String email);
 
 	/** ユーザを登録する */
-	@Insert("INSERT INTO users (name, email,address,phone, password) VALUES (#{name}, #{email},#{address},#{phone} #{password})")
+	@Insert("INSERT INTO users (name, email,address,phone, password,point,totalPurchaseAmount) VALUES (#{name}, #{email},#{address},#{phone}, #{password},0,0)")
 	void insert(User user);
 }
