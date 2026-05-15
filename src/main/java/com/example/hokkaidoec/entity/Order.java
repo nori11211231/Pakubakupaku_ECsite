@@ -3,8 +3,7 @@ package com.example.hokkaidoec.entity;
 import java.time.LocalDateTime;
 
 public class Order {
-	private int id;
-	private int userId;
+	private int orderId;
 	private String shippingAddress;
 	private LocalDateTime orderDate;
 	private int totalAmount;
@@ -12,20 +11,12 @@ public class Order {
 	private int earnedPoint;
 	private String orderStatus;
 
-	public int getId() {
-		return id;
+	public int getOrderId() {
+		return orderId;
 	}
 
-	public void setId(int id) {
-		this.id = id;
-	}
-
-	public int getUserId() {
-		return userId;
-	}
-
-	public void setUserId(int userId) {
-		this.userId = userId;
+	public void setOrderId(int orderId) {
+		this.orderId = orderId;
 	}
 
 	public String getShippingAddress() {
