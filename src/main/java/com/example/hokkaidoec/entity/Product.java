@@ -8,9 +8,9 @@ public class Product {
 	private int stock;
 	private String imageUrl;
 
-	Product() {
+	public Product() {
 
-	};
+	}
 
 	public int getId() {
 		return id;
