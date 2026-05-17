@@ -3,24 +3,32 @@ package com.example.hokkaidoec.entity;
 import java.time.LocalDateTime;
 
 public class Order {
-	private int orderId;
+	private Integer id;
+	private Integer userId;
 	private String shippingAddress;
 	private LocalDateTime orderDate;
-	private int totalAmount;
-	private int usedPoint;
-	private int earnedPoint;
+	private Integer totalAmount;
+	private Integer usedPoint;
+	private Integer earnedPoint;
 	private String orderStatus;
 
-	public Order(){
+	public Order() {
 	}
 
-
-	public int getOrderId() {
-		return orderId;
+	public Integer getId() {
+		return id;
 	}
 
-	public void setOrderId(int orderId) {
-		this.orderId = orderId;
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public Integer getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Integer userId) {
+		this.userId = userId;
 	}
 
 	public String getShippingAddress() {
@@ -39,27 +47,27 @@ public class Order {
 		this.orderDate = orderDate;
 	}
 
-	public int getTotalAmount() {
+	public Integer getTotalAmount() {
 		return totalAmount;
 	}
 
-	public void setTotalAmount(int totalAmount) {
+	public void setTotalAmount(Integer totalAmount) {
 		this.totalAmount = totalAmount;
 	}
 
-	public int getUsedPoint() {
+	public Integer getUsedPoint() {
 		return usedPoint;
 	}
 
-	public void setUsedPoint(int usedPoint) {
+	public void setUsedPoint(Integer usedPoint) {
 		this.usedPoint = usedPoint;
 	}
 
-	public int getEarnedPoint() {
+	public Integer getEarnedPoint() {
 		return earnedPoint;
 	}
 
-	public void setEarnedPoint(int earnedPoint) {
+	public void setEarnedPoint(Integer earnedPoint) {
 		this.earnedPoint = earnedPoint;
 	}
 
@@ -70,5 +78,4 @@ public class Order {
 	public void setOrderStatus(String orderStatus) {
 		this.orderStatus = orderStatus;
 	}
-
 }

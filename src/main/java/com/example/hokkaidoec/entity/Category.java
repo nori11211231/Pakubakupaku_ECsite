@@ -1,18 +1,18 @@
 package com.example.hokkaidoec.entity;
 
 public class Category {
-	private int id;
+	private Integer id;
 	private String categoryName;
 
 	public Category() {
 
 	}
 
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 

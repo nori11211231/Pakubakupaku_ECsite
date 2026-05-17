@@ -3,21 +3,21 @@ package com.example.hokkaidoec.entity;
 import java.math.BigDecimal;
 
 public class Rank {
-	public int rankId;
-	public String rankName;
-	public int minAmount;
-	public BigDecimal pointRate;
+	private Integer id;
+	private String rankName;
+	private Integer minAmount;
+	private BigDecimal pointRate;
 
 	public Rank() {
 		// TODO 自動生成されたコンストラクター・スタブ
 	}
 
-	public int getRankId() {
-		return rankId;
+	public Integer getId() {
+		return id;
 	}
 
-	public void setRankId(int rankId) {
-		this.rankId = rankId;
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
 	public String getRankName() {
@@ -28,11 +28,11 @@ public class Rank {
 		this.rankName = rankName;
 	}
 
-	public int getMinAmount() {
+	public Integer getMinAmount() {
 		return minAmount;
 	}
 
-	public void setMinAmount(int minAmount) {
+	public void setMinAmount(Integer minAmount) {
 		this.minAmount = minAmount;
 	}
 
@@ -43,5 +43,4 @@ public class Rank {
 	public void setPointRate(BigDecimal pointRate) {
 		this.pointRate = pointRate;
 	}
-
 }
