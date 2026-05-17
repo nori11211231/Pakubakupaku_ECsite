@@ -93,6 +93,11 @@
         <artifactId>spring-boot-starter-validation-test</artifactId>
         <scope>test</scope>
     </dependency>
+<!--    スプリングブートで起動エラーが発生したので起動するためのコード-->
+<!--    <dependency>-->
+<!--  <groupId>org.springframework.boot</groupId>-->
+<!--  <artifactId>spring-boot-starter-jdbc</artifactId>-->
+<!--</dependency>-->
 </dependencies>
 
 	<build>

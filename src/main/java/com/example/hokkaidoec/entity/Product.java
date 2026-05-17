@@ -7,6 +7,11 @@ public class Product {
 	private int price;
 	private int stock;
 	private String imageUrl;
+	//Ai曰くFKに設定していてもDB上ではFKの関係がつながっているけど
+	//java上ではつながってなくてget-setが必要みたいだから追記してるよ
+
+	private int categoryId;
+	private int regionId;
 
 	public Product() {
 
@@ -58,6 +63,22 @@ public class Product {
 
 	public void setImageUrl(String imageUrl) {
 		this.imageUrl = imageUrl;
+	}
+
+	public int getCategoryId() {
+		return categoryId;
+	}
+
+	public void setCategoryId(int categoryId) {
+		this.categoryId = categoryId;
+	}
+
+	public int getRegionId() {
+		return regionId;
+	}
+
+	public void setRegionId(int regionId) {
+		this.regionId = regionId;
 	}
 
 }
