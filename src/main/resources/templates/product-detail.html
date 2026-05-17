@@ -3,344 +3,420 @@
 <!--<head>-->
 <!--  <meta charset="utf-8" />-->
 <!--  <meta name="viewport" content="width=device-width,initial-scale=1" />-->
-<!--  <title>商品詳細</title>-->
+<!--  <title>商品詳細 - 北海道EC</title>-->
 <!--  <style>-->
-<!--    :root {-->
-<!--      --max-width: 1100px;-->
-<!--      --gap: 20px;-->
-<!--      --accent: #0b6efd;-->
-<!--      --muted: #6b7280;-->
+<!--    :root{-->
+<!--      --accent:#ff7a00;-->
+<!--      --muted:#666;-->
+<!--      --bg:#f8f8f8;-->
+<!--      --card:#fff;-->
+<!--      --max-width:1100px;-->
 <!--    }-->
-<!--    body {-->
-<!--      font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;-->
-<!--      margin: 0;-->
-<!--      padding: 20px;-->
-<!--      background: #f8fafc;-->
-<!--      color: #111827;-->
-<!--      display: flex;-->
-<!--      justify-content: center;-->
+<!--    body{-->
+<!--      font-family: "Noto Sans JP", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;-->
+<!--      background:var(--bg);-->
+<!--      color:#222;-->
+<!--      margin:0;-->
+<!--      padding:24px;-->
+<!--      display:flex;-->
+<!--      justify-content:center;-->
 <!--    }-->
-<!--    .container {-->
-<!--      width: 100%;-->
-<!--      max-width: var(--max-width);-->
-<!--      background: #fff;-->
-<!--      border-radius: 8px;-->
-<!--      box-shadow: 0 6px 18px rgba(15,23,42,0.06);-->
-<!--      padding: 24px;-->
-<!--      box-sizing: border-box;-->
+<!--    .container{-->
+<!--      width:100%;-->
+<!--      max-width:var(--max-width);-->
+<!--      background:var(--card);-->
+<!--      box-shadow:0 2px 8px rgba(0,0,0,0.06);-->
+<!--      border-radius:8px;-->
+<!--      padding:24px;-->
+<!--      box-sizing:border-box;-->
 <!--    }-->
-<!--    .grid {-->
-<!--      display: grid;-->
+
+<!--    /* レイアウト */-->
+<!--    .layout{-->
+<!--      display:grid;-->
 <!--      grid-template-columns: 1fr 420px;-->
-<!--      gap: var(--gap);-->
+<!--      gap:28px;-->
+<!--      align-items:start;-->
 <!--    }-->
-<!--    @media (max-width: 900px) {-->
-<!--      .grid { grid-template-columns: 1fr; }-->
+
+<!--    /* 画像エリア */-->
+<!--    .image-wrap{-->
+<!--      background:#fff;-->
+<!--      border-radius:6px;-->
+<!--      overflow:hidden;-->
+<!--      display:flex;-->
+<!--      align-items:center;-->
+<!--      justify-content:center;-->
+<!--      min-height:420px;-->
+<!--      border:1px solid #eee;-->
 <!--    }-->
-<!--    .image-wrap {-->
-<!--      background: #f3f4f6;-->
-<!--      border-radius: 8px;-->
-<!--      padding: 16px;-->
-<!--      display: flex;-->
-<!--      align-items: center;-->
-<!--      justify-content: center;-->
-<!--      min-height: 320px;-->
+<!--    .image-wrap img{-->
+<!--      max-width:100%;-->
+<!--      max-height:100%;-->
+<!--      object-fit:contain;-->
+<!--      display:block;-->
 <!--    }-->
-<!--    .image-wrap img {-->
-<!--      max-width: 100%;-->
-<!--      max-height: 480px;-->
-<!--      object-fit: contain;-->
-<!--      border-radius: 6px;-->
+
+<!--    /* 詳細エリア */-->
+<!--    .detail{-->
+<!--      background:linear-gradient(180deg,#fff,#fff);-->
+<!--      padding:18px;-->
+<!--      border-radius:6px;-->
+<!--      border:1px solid #eee;-->
 <!--    }-->
-<!--    .meta {-->
-<!--      display: flex;-->
-<!--      flex-direction: column;-->
-<!--      gap: 12px;-->
+<!--    .title{-->
+<!--      font-size:20px;-->
+<!--      font-weight:700;-->
+<!--      margin:0 0 8px 0;-->
 <!--    }-->
-<!--    h1 { margin: 0; font-size: 1.5rem; }-->
-<!--    .price { font-size: 1.4rem; color: var(--accent); font-weight: 700; }-->
-<!--    .muted { color: var(--muted); font-size: 0.95rem; }-->
-<!--    .stock { font-weight: 600; }-->
-<!--    .controls {-->
-<!--      display: flex;-->
-<!--      gap: 8px;-->
-<!--      align-items: center;-->
-<!--      margin-top: 8px;-->
+<!--    .meta{-->
+<!--      color:var(--muted);-->
+<!--      font-size:14px;-->
+<!--      margin-bottom:12px;-->
 <!--    }-->
-<!--    .qty {-->
-<!--      display: inline-flex;-->
-<!--      align-items: center;-->
-<!--      border: 1px solid #e5e7eb;-->
-<!--      border-radius: 6px;-->
-<!--      overflow: hidden;-->
+<!--    .desc{-->
+<!--      font-size:15px;-->
+<!--      line-height:1.6;-->
+<!--      color:#333;-->
+<!--      margin-bottom:16px;-->
+<!--      white-space:pre-wrap;-->
 <!--    }-->
-<!--    .qty button {-->
-<!--      background: #fff;-->
-<!--      border: none;-->
-<!--      padding: 8px 12px;-->
-<!--      cursor: pointer;-->
-<!--      font-size: 1rem;-->
+
+<!--    .price-stock{-->
+<!--      display:flex;-->
+<!--      align-items:center;-->
+<!--      gap:16px;-->
+<!--      margin-bottom:18px;-->
 <!--    }-->
-<!--    .qty input {-->
-<!--      width: 56px;-->
-<!--      text-align: center;-->
-<!--      border: none;-->
-<!--      padding: 8px;-->
-<!--      font-size: 1rem;-->
+<!--    .price{-->
+<!--      font-size:22px;-->
+<!--      font-weight:800;-->
+<!--      color:var(--accent);-->
 <!--    }-->
-<!--    .btn {-->
-<!--      background: var(--accent);-->
-<!--      color: #fff;-->
-<!--      border: none;-->
-<!--      padding: 10px 14px;-->
-<!--      border-radius: 6px;-->
-<!--      cursor: pointer;-->
-<!--      font-weight: 600;-->
+<!--    .stock{-->
+<!--      color:var(--muted);-->
+<!--      font-size:14px;-->
 <!--    }-->
-<!--    .btn:disabled { opacity: 0.6; cursor: not-allowed; }-->
-<!--    .secondary {-->
-<!--      background: #fff;-->
-<!--      border: 1px solid #e5e7eb;-->
-<!--      color: #111827;-->
+
+<!--    /* 購入操作 */-->
+<!--    .purchase{-->
+<!--      display:flex;-->
+<!--      gap:12px;-->
+<!--      align-items:center;-->
+<!--      margin-bottom:18px;-->
 <!--    }-->
-<!--    .desc {-->
-<!--      margin-top: 12px;-->
-<!--      line-height: 1.6;-->
-<!--      white-space: pre-wrap;-->
+<!--    .qty{-->
+<!--      display:flex;-->
+<!--      align-items:center;-->
+<!--      border:1px solid #ddd;-->
+<!--      border-radius:6px;-->
+<!--      overflow:hidden;-->
+<!--      background:#fff;-->
 <!--    }-->
-<!--    .meta-row { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }-->
-<!--    .tag { background:#eef2ff; color:#3730a3; padding:6px 8px; border-radius:999px; font-size:0.85rem; }-->
-<!--    .ai-box {-->
-<!--      margin-top: 18px;-->
-<!--      padding: 12px;-->
-<!--      border-radius: 8px;-->
-<!--      background: #f8fafc;-->
-<!--      border: 1px dashed #e6eefc;-->
+<!--    .qty button{-->
+<!--      width:36px;-->
+<!--      height:36px;-->
+<!--      border:0;-->
+<!--      background:#fafafa;-->
+<!--      cursor:pointer;-->
+<!--      font-size:18px;-->
 <!--    }-->
-<!--    .back-link { display:inline-block; margin-bottom:12px; color:var(--accent); text-decoration:none; }-->
+<!--    .qty input{-->
+<!--      width:64px;-->
+<!--      height:36px;-->
+<!--      border:0;-->
+<!--      text-align:center;-->
+<!--      font-size:15px;-->
+<!--      outline:none;-->
+<!--    }-->
+<!--    .add-cart{-->
+<!--      background:var(--accent);-->
+<!--      color:#fff;-->
+<!--      border:0;-->
+<!--      padding:10px 16px;-->
+<!--      border-radius:6px;-->
+<!--      font-weight:700;-->
+<!--      cursor:pointer;-->
+<!--      box-shadow:0 2px 6px rgba(255,122,0,0.18);-->
+<!--    }-->
+<!--    .add-cart:disabled{-->
+<!--      opacity:0.5;-->
+<!--      cursor:not-allowed;-->
+<!--    }-->
+
+<!--    /* 補助情報 */-->
+<!--    .extras{-->
+<!--      margin-top:18px;-->
+<!--      display:grid;-->
+<!--      grid-template-columns:1fr 1fr;-->
+<!--      gap:12px;-->
+<!--    }-->
+<!--    .card{-->
+<!--      background:#fff;-->
+<!--      border:1px solid #eee;-->
+<!--      padding:12px;-->
+<!--      border-radius:6px;-->
+<!--      min-height:120px;-->
+<!--    }-->
+<!--    .card h4{-->
+<!--      margin:0 0 8px 0;-->
+<!--      font-size:15px;-->
+<!--    }-->
+<!--    .review-list{-->
+<!--      font-size:14px;-->
+<!--      color:#333;-->
+<!--    }-->
+
+<!--    /* レスポンシブ */-->
+<!--    @media (max-width:980px){-->
+<!--      .layout{-->
+<!--        grid-template-columns:1fr;-->
+<!--      }-->
+<!--      .detail{-->
+<!--        margin-top:12px;-->
+<!--      }-->
+<!--      .extras{-->
+<!--        grid-template-columns:1fr;-->
+<!--      }-->
+<!--    }-->
 <!--  </style>-->
 <!--</head>-->
 <!--<body>-->
-<!--  <div class="container" id="app">-->
-<!--    <a class="back-link" href="/products">← 商品一覧に戻る</a>-->
+<!--  <div class="container" id="product-page">-->
+<!--     ヘッダ（簡易） -->
+<!--    <header style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;">-->
+<!--      <div style="font-weight:800;font-size:18px;">北海道EC</div>-->
+<!--      <div style="display:flex;gap:12px;align-items:center;">-->
+<!--        <input type="search" placeholder="検索" style="padding:8px 10px;border-radius:6px;border:1px solid #ddd;" />-->
+<!--        <div style="color:var(--muted);font-weight:700;">1,250 pt</div>-->
+<!--        <a href="/mypage" style="text-decoration:none;color:var(--muted);">マイページ</a>-->
+<!--      </div>-->
+<!--    </header>-->
 
-<!--    <div id="loading" class="muted">読み込み中…</div>-->
+<!--    <main class="layout" role="main">-->
+<!--       画像 -->
+<!--      <div class="image-wrap" id="imageWrap">-->
+<!--         商品画像を挿入。APIから imageUrl を取得して src にセット -->
+<!--        <img id="productImage" src="" alt="商品画像" />-->
+<!--      </div>-->
 
-<!--    <main class="grid" id="content" style="display:none;">-->
-<!--      <section>-->
-<!--        <div class="image-wrap" id="imageWrap" aria-live="polite">-->
-<!--          <img id="productImage" alt="商品画像" src="" />-->
+<!--       詳細 -->
+<!--      <aside class="detail" aria-labelledby="productTitle">-->
+<!--        <h1 id="productTitle" class="title">商品名がここに入ります</h1>-->
+<!--        <div class="meta"><strong>産地</strong>：<span id="productRegion">—</span></div>-->
+<!--        <div class="desc" id="productDescription">商品説明がここに入ります。調理向きや特徴などを表示します。</div>-->
+
+<!--        <div class="price-stock">-->
+<!--          <div class="price" id="productPrice">¥0</div>-->
+<!--          <div class="stock" id="productStock">在庫：—</div>-->
 <!--        </div>-->
 
-<!--        <div class="desc" id="description"></div>-->
-<!--      </section>-->
-
-<!--      <aside class="meta" aria-labelledby="productTitle">-->
-<!--        <div>-->
-<!--          <h1 id="productTitle">商品名</h1>-->
-<!--          <div class="meta-row">-->
-<!--            <div class="price" id="price">¥0</div>-->
-<!--            <div class="muted" id="categoryRegion">カテゴリ · 地域</div>-->
-<!--          </div>-->
-<!--        </div>-->
-
-<!--        <div class="muted">在庫: <span id="stock" class="stock">0</span></div>-->
-
-<!--        <div class="controls" role="group" aria-label="購入コントロール">-->
+<!--        <div class="purchase" aria-label="購入操作">-->
 <!--          <div class="qty" aria-hidden="false">-->
-<!--            <button id="decrease" aria-label="数量を減らす">−</button>-->
-<!--            <input id="quantity" type="number" min="1" value="1" aria-label="購入数量" />-->
-<!--            <button id="increase" aria-label="数量を増やす">＋</button>-->
+<!--            <button type="button" id="decreaseBtn" aria-label="数量を減らす">−</button>-->
+<!--            <input type="number" id="qtyInput" value="1" min="1" step="1" aria-label="数量" />-->
+<!--            <button type="button" id="increaseBtn" aria-label="数量を増やす">＋</button>-->
 <!--          </div>-->
 
-<!--          <button id="addToCart" class="btn">カートに追加</button>-->
-<!--          <button id="buyNow" class="btn secondary">今すぐ購入</button>-->
+<!--          <button class="add-cart" id="addCartBtn">カートに追加</button>-->
 <!--        </div>-->
 
-<!--        <div class="ai-box" id="aiBox" aria-live="polite">-->
-<!--          <strong>AIコンシェルジュ</strong>-->
-<!--          <p class="muted" id="aiPlaceholder">商品のおすすめポイントや質問に答えるAIコンシェルジュをここに表示します。</p>-->
-<!--          <div style="margin-top:8px;">-->
-<!--            <input id="aiQuestion" type="text" placeholder="質問を入力（例：この商品の保存方法は？）" style="width:100%; padding:8px; border-radius:6px; border:1px solid #e5e7eb;" />-->
-<!--            <div style="display:flex; gap:8px; margin-top:8px;">-->
-<!--              <button id="askAi" class="btn secondary">質問する</button>-->
-<!--              <button id="clearAi" class="btn secondary">クリア</button>-->
-<!--            </div>-->
-<!--            <div id="aiAnswer" style="margin-top:10px; color:#0f172a;"></div>-->
+<!--        <div style="font-size:13px;color:var(--muted);">※ 購入判断用の画面です。配送や支払いはカートで選択してください。</div>-->
+
+<!--         補助情報 -->
+<!--        <div class="extras" style="margin-top:18px;">-->
+<!--          <div class="card" id="aiConcierge">-->
+<!--            <h4>AIコンシェルジュ</h4>-->
+<!--            <div id="aiContent">おすすめの調理法や相性の良い商品をここに表示します。</div>-->
 <!--          </div>-->
-<!--        </div>-->
 
-<!--        <div style="margin-top:12px;">-->
-<!--          <small class="muted">商品ID: <span id="productId">-</span></small>-->
+<!--          <div class="card" id="reviews">-->
+<!--            <h4>レビュー欄（拡張機能）</h4>-->
+<!--            <div class="review-list" id="reviewList">レビューがまだありません。</div>-->
+<!--          </div>-->
 <!--        </div>-->
 <!--      </aside>-->
 <!--    </main>-->
 <!--  </div>-->
 
 <!--  <script>-->
-<!--    // --- 設定: API のベースパス ----->
-<!--    const API_BASE = '/api'; // 必要に応じて調整-->
+<!--    // ====== 想定する Product JSON 構造 ======-->
+<!--    // {-->
+<!--    //   id: 1,-->
+<!--    //   productName: "北海道じゃがいも",-->
+<!--    //   description: "結構しっかりみが強く料理に使いやすい",-->
+<!--    //   price: 1200,-->
+<!--    //   stock: 50,-->
+<!--    //   imageUrl: "/images/potato.jpg",-->
+<!--    //   categoryId: 2,-->
+<!--    //   regionId: 3,-->
+<!--    //   regionName: "真見駅"-->
+<!--    // }-->
 
-<!--    // --- ユーティリティ ----->
-<!--    function q(selector) { return document.querySelector(selector); }-->
-<!--    function formatYen(n) {-->
-<!--      return '¥' + n.toLocaleString('ja-JP');-->
-<!--    }-->
+<!--    // 初期化：URL から id を取得して API から商品情報を取得する想定-->
+<!--    (function(){-->
+<!--      const productId = (function(){-->
+<!--        // 例: /products/1 のようなパスから id を取得-->
+<!--        const m = location.pathname.match(/\/products\/(\d+)/);-->
+<!--        return m ? m[1] : null;-->
+<!--      })();-->
 
-<!--    // --- URL から productId を取得 ----->
-<!--    function getProductIdFromPath() {-->
-<!--      // 例: /products/123 または /detail.html?id=123-->
-<!--      const pathMatch = location.pathname.match(/\/products\/(\d+)/);-->
-<!--      if (pathMatch) return pathMatch[1];-->
-<!--      const params = new URLSearchParams(location.search);-->
-<!--      return params.get('id');-->
-<!--    }-->
+<!--      // DOM 要素-->
+<!--      const imgEl = document.getElementById('productImage');-->
+<!--      const titleEl = document.getElementById('productTitle');-->
+<!--      const regionEl = document.getElementById('productRegion');-->
+<!--      const descEl = document.getElementById('productDescription');-->
+<!--      const priceEl = document.getElementById('productPrice');-->
+<!--      const stockEl = document.getElementById('productStock');-->
+<!--      const qtyInput = document.getElementById('qtyInput');-->
+<!--      const decBtn = document.getElementById('decreaseBtn');-->
+<!--      const incBtn = document.getElementById('increaseBtn');-->
+<!--      const addCartBtn = document.getElementById('addCartBtn');-->
+<!--      const aiContent = document.getElementById('aiContent');-->
+<!--      const reviewList = document.getElementById('reviewList');-->
 
-<!--    // --- DOM 要素 ----->
-<!--    const loadingEl = q('#loading');-->
-<!--    const contentEl = q('#content');-->
-<!--    const productImage = q('#productImage');-->
-<!--    const productTitle = q('#productTitle');-->
-<!--    const priceEl = q('#price');-->
-<!--    const descriptionEl = q('#description');-->
-<!--    const stockEl = q('#stock');-->
-<!--    const categoryRegionEl = q('#categoryRegion');-->
-<!--    const productIdEl = q('#productId');-->
-<!--    const quantityInput = q('#quantity');-->
-<!--    const decreaseBtn = q('#decrease');-->
-<!--    const increaseBtn = q('#increase');-->
-<!--    const addToCartBtn = q('#addToCart');-->
-<!--    const buyNowBtn = q('#buyNow');-->
+<!--      let product = null;-->
 
-<!--    // AI elements-->
-<!--    const aiQuestion = q('#aiQuestion');-->
-<!--    const askAiBtn = q('#askAi');-->
-<!--    const clearAiBtn = q('#clearAi');-->
-<!--    const aiAnswer = q('#aiAnswer');-->
+<!--      // 数量操作-->
+<!--      decBtn.addEventListener('click', ()=> {-->
+<!--        const v = Math.max(1, parseInt(qtyInput.value || 1, 10) - 1);-->
+<!--        qtyInput.value = v;-->
+<!--      });-->
+<!--      incBtn.addEventListener('click', ()=> {-->
+<!--        const v = Math.max(1, parseInt(qtyInput.value || 1, 10) + 1);-->
+<!--        qtyInput.value = v;-->
+<!--      });-->
+<!--      qtyInput.addEventListener('input', ()=> {-->
+<!--        let v = parseInt(qtyInput.value || 1, 10);-->
+<!--        if (isNaN(v) || v < 1) v = 1;-->
+<!--        qtyInput.value = v;-->
+<!--      });-->
 
-<!--    let currentProduct = null;-->
+<!--      // カート追加-->
+<!--      addCartBtn.addEventListener('click', async ()=> {-->
+<!--        if (!product) return;-->
+<!--        const qty = parseInt(qtyInput.value, 10);-->
+<!--        if (qty > product.stock) {-->
+<!--          alert('在庫が足りません。数量を調整してください。');-->
+<!--          return;-->
+<!--        }-->
 
-<!--    // --- データ取得 ----->
-<!--    async function fetchProduct(id) {-->
-<!--      const url = `${API_BASE}/products/${id}`;-->
-<!--      const res = await fetch(url, { headers: { 'Accept': 'application/json' } });-->
-<!--      if (!res.ok) throw new Error('商品情報の取得に失敗しました');-->
-<!--      return await res.json();-->
-<!--    }-->
+<!--        addCartBtn.disabled = true;-->
+<!--        addCartBtn.textContent = '追加中...';-->
 
-<!--    // --- 初期化 ----->
-<!--    async function init() {-->
-<!--      const id = getProductIdFromPath();-->
-<!--      if (!id) {-->
-<!--        loadingEl.textContent = '商品IDが指定されていません';-->
-<!--        return;-->
+<!--        try {-->
+<!--          // ここでカートAPIにPOSTする想定-->
+<!--          // 例: POST /api/cart { productId, quantity }-->
+<!--          // const res = await fetch('/api/cart', {-->
+<!--          //   method:'POST',-->
+<!--          //   headers:{'Content-Type':'application/json'},-->
+<!--          //   body: JSON.stringify({ productId: product.id, quantity: qty })-->
+<!--          // });-->
+<!--          // if (!res.ok) throw new Error('カート追加に失敗しました');-->
+
+<!--          // 仮の成功処理-->
+<!--          setTimeout(()=> {-->
+<!--            addCartBtn.disabled = false;-->
+<!--            addCartBtn.textContent = 'カートに追加';-->
+<!--            alert('カートに追加しました');-->
+<!--          }, 700);-->
+<!--        } catch (err) {-->
+<!--          addCartBtn.disabled = false;-->
+<!--          addCartBtn.textContent = 'カートに追加';-->
+<!--          alert('エラーが発生しました');-->
+<!--        }-->
+<!--      });-->
+
+<!--      // 商品情報を描画する関数-->
+<!--      function renderProduct(p){-->
+<!--        product = p;-->
+<!--        titleEl.textContent = p.productName || '商品名';-->
+<!--        regionEl.textContent = p.regionName || '—';-->
+<!--        descEl.textContent = p.description || '説明なし';-->
+<!--        priceEl.textContent = '¥' + (p.price != null ? p.price.toLocaleString() : '0');-->
+<!--        stockEl.textContent = '在庫：' + (p.stock != null ? p.stock + '個' : '—');-->
+<!--        imgEl.src = p.imageUrl || '/assets/placeholder.png';-->
+<!--        imgEl.alt = p.productName || '商品画像';-->
+
+<!--        // 在庫が0ならボタンを無効化-->
+<!--        if (p.stock === 0) {-->
+<!--          addCartBtn.disabled = true;-->
+<!--          addCartBtn.textContent = '在庫なし';-->
+<!--        } else {-->
+<!--          addCartBtn.disabled = false;-->
+<!--          addCartBtn.textContent = 'カートに追加';-->
+<!--        }-->
+
+<!--        // AIコンシェルジュの簡易表示（将来的にAPI連携）-->
+<!--        aiContent.textContent = `おすすめ：${p.productName}は煮物やポテトサラダに向いています。相性の良い商品：バター、塩辛、ベーコンなど。`;-->
+
+<!--        // レビュー（仮）-->
+<!--        reviewList.innerHTML = '';-->
+<!--        if (p.reviews && p.reviews.length){-->
+<!--          p.reviews.forEach(r=>{-->
+<!--            const div = document.createElement('div');-->
+<!--            div.style.marginBottom = '8px';-->
+<!--            div.textContent = `${r.user}：${r.comment}`;-->
+<!--            reviewList.appendChild(div);-->
+<!--          });-->
+<!--        } else {-->
+<!--          reviewList.textContent = 'レビューがまだありません。';-->
+<!--        }-->
 <!--      }-->
 
-<!--      try {-->
-<!--        const product = await fetchProduct(id);-->
-<!--        currentProduct = product;-->
-<!--        renderProduct(product);-->
-<!--        loadingEl.style.display = 'none';-->
-<!--        contentEl.style.display = 'grid';-->
-<!--      } catch (err) {-->
-<!--        loadingEl.textContent = '商品を読み込めませんでした';-->
-<!--        console.error(err);-->
+<!--      // データ取得（実装例）-->
+<!--      async function fetchProduct(){-->
+<!--        if (!productId) {-->
+<!--          // productId が無い場合はページ内で初期データを使うか、クエリから取得する実装にする-->
+<!--          // ここではダミーデータを使う-->
+<!--          const dummy = {-->
+<!--            id: 1,-->
+<!--            productName: "北海道じゃがいも",-->
+<!--            description: "結構しっかりみが強く料理に使いやすい",-->
+<!--            price: 1200,-->
+<!--            stock: 50,-->
+<!--            imageUrl: "/attachments/v78wuWW9i3HxjDi8JpZvN.png", // 実運用では公開画像URLを使う-->
+<!--            categoryId: 2,-->
+<!--            regionId: 3,-->
+<!--            regionName: "真見駅",-->
+<!--            reviews: [-->
+<!--              { user: "山田", comment: "ホクホクで美味しい" },-->
+<!--              { user: "佐藤", comment: "ポテトサラダに最適でした" }-->
+<!--            ]-->
+<!--          };-->
+<!--          renderProduct(dummy);-->
+<!--          return;-->
+<!--        }-->
+
+<!--        try {-->
+<!--          // 実運用: API から商品を取得する-->
+<!--          // const res = await fetch(`/api/products/${productId}`);-->
+<!--          // if (!res.ok) throw new Error('商品取得失敗');-->
+<!--          // const data = await res.json();-->
+<!--          // renderProduct(data);-->
+
+<!--          // 開発時はダミーを表示-->
+<!--          renderProduct({-->
+<!--            id: productId,-->
+<!--            productName: "北海道じゃがいも",-->
+<!--            description: "結構しっかりみが強く料理に使いやすい",-->
+<!--            price: 1200,-->
+<!--            stock: 50,-->
+<!--            imageUrl: "/assets/placeholder.png",-->
+<!--            categoryId: 2,-->
+<!--            regionId: 3,-->
+<!--            regionName: "真見駅",-->
+<!--            reviews: []-->
+<!--          });-->
+<!--        } catch (err) {-->
+<!--          console.error(err);-->
+<!--          alert('商品情報の取得に失敗しました');-->
+<!--        }-->
 <!--      }-->
-<!--    }-->
 
-<!--    // --- レンダリング ----->
-<!--    function renderProduct(p) {-->
-<!--      productImage.src = p.imageUrl || '/static/images/no-image.png';-->
-<!--      productImage.alt = p.productName || '商品画像';-->
-<!--      productTitle.textContent = p.productName || '—';-->
-<!--      priceEl.textContent = formatYen(p.price || 0);-->
-<!--      descriptionEl.textContent = p.description || '説明がありません';-->
-<!--      stockEl.textContent = p.stock != null ? p.stock : '—';-->
-<!--      categoryRegionEl.textContent = `${p.categoryId ? 'カテゴリ:' + p.categoryId : 'カテゴリ不明'} · ${p.regionId ? '地域:' + p.regionId : '地域不明'}`;-->
-<!--      productIdEl.textContent = p.id || '-';-->
-
-<!--      // 在庫が 0 の場合は購入不可にする-->
-<!--      const outOfStock = (p.stock == null) ? false : (p.stock <= 0);-->
-<!--      addToCartBtn.disabled = outOfStock;-->
-<!--      buyNowBtn.disabled = outOfStock;-->
-<!--      if (outOfStock) {-->
-<!--        stockEl.textContent = '在庫なし';-->
-<!--      }-->
-<!--    }-->
-
-<!--    // --- カート操作（簡易実装） ----->
-<!--    function addToCart(productId, qty) {-->
-<!--      // ここはアプリのカート実装に合わせて置き換える-->
-<!--      const cart = JSON.parse(localStorage.getItem('cart') || '[]');-->
-<!--      const existing = cart.find(i => i.productId == productId);-->
-<!--      if (existing) {-->
-<!--        existing.qty += qty;-->
-<!--      } else {-->
-<!--        cart.push({ productId, qty });-->
-<!--      }-->
-<!--      localStorage.setItem('cart', JSON.stringify(cart));-->
-<!--      return cart;-->
-<!--    }-->
-
-<!--    // --- イベント ----->
-<!--    decreaseBtn.addEventListener('click', () => {-->
-<!--      const v = Math.max(1, parseInt(quantityInput.value || '1', 10) - 1);-->
-<!--      quantityInput.value = v;-->
-<!--    });-->
-<!--    increaseBtn.addEventListener('click', () => {-->
-<!--      const v = Math.max(1, parseInt(quantityInput.value || '1', 10) + 1);-->
-<!--      quantityInput.value = v;-->
-<!--    });-->
-
-<!--    addToCartBtn.addEventListener('click', () => {-->
-<!--      if (!currentProduct) return;-->
-<!--      const qty = Math.max(1, parseInt(quantityInput.value || '1', 10));-->
-<!--      if (currentProduct.stock != null && qty > currentProduct.stock) {-->
-<!--        alert('在庫数を超えています');-->
-<!--        return;-->
-<!--      }-->
-<!--      addToCart(currentProduct.id, qty);-->
-<!--      addToCartBtn.textContent = 'カートに追加済み';-->
-<!--      setTimeout(() => addToCartBtn.textContent = 'カートに追加', 1500);-->
-<!--    });-->
-
-<!--    buyNowBtn.addEventListener('click', () => {-->
-<!--      if (!currentProduct) return;-->
-<!--      const qty = Math.max(1, parseInt(quantityInput.value || '1', 10));-->
-<!--      if (currentProduct.stock != null && qty > currentProduct.stock) {-->
-<!--        alert('在庫数を超えています');-->
-<!--        return;-->
-<!--      }-->
-<!--      // 簡易フロー: カートに入れてカートページへ遷移-->
-<!--      addToCart(currentProduct.id, qty);-->
-<!--      location.href = '/cart';-->
-<!--    });-->
-
-<!--    // --- AIコンシェルジュ（プレースホルダ） ----->
-<!--    askAiBtn.addEventListener('click', async () => {-->
-<!--      const qText = aiQuestion.value.trim();-->
-<!--      if (!qText) {-->
-<!--        aiAnswer.textContent = '質問を入力してください';-->
-<!--        return;-->
-<!--      }-->
-<!--      aiAnswer.textContent = '回答を取得中…';-->
-<!--      // 実装案: /api/ai/ask に POST して回答を取得する-->
-<!--      try {-->
-<!--        // 以下はダミー。実際はサーバー側の AI エンドポイントを呼ぶ-->
-<!--        await new Promise(r => setTimeout(r, 700));-->
-<!--        aiAnswer.innerHTML = `<strong>AIの回答（例）</strong><div style="margin-top:6px;">「${currentProduct.productName}」は冷暗所で保存すると風味が長持ちします。調理例: 簡単レシピやギフト包装の提案など。</div>`;-->
-<!--      } catch (e) {-->
-<!--        aiAnswer.textContent = 'AIの回答取得に失敗しました';-->
-<!--      }-->
-<!--    });-->
-
-<!--    clearAiBtn.addEventListener('click', () => {-->
-<!--      aiQuestion.value = '';-->
-<!--      aiAnswer.textContent = '';-->
-<!--    });-->
-
-<!--    // --- 初期化呼び出し ----->
-<!--    init();-->
+<!--      // 初期フェッチ-->
+<!--      fetchProduct();-->
+<!--    })();-->
 <!--  </script>-->
 <!--</body>-->
 <!--</html>-->

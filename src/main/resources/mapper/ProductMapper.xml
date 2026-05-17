@@ -34,37 +34,39 @@
   </select> 
 <!--  理解できていないので保留-->
 
-<!--<select id="search" resultType="com.example.hokkaidoec.entity.Product">-->
-<!--    SELECT-->
-<!--      id,-->
-<!--      product_name AS productName,-->
-<!--      description,-->
-<!--      price,-->
-<!--      stock,-->
-<!--      image_url AS imageUrl,-->
-<!--      category_id AS categoryId,-->
-<!--      region_id AS regionId-->
-<!--    FROM products-->
-<!--    <where>-->
-<!--      <if test="keyword != null and keyword != ''">-->
-<!--        AND product_name ILIKE '%' || #{keyword} || '%'-->
-<!--      </if>-->
-<!--      <if test="categoryId != null">-->
-<!--        AND category_id = #{categoryId}-->
-<!--      </if>-->
-<!--      <if test="regionId != null">-->
-<!--        AND region_id = #{regionId}-->
-<!--      </if>-->
-<!--      <if test="minPrice != null">-->
-<!--        AND price >= #{minPrice}-->
-<!--      </if>-->
+<select id="search" resultType="com.example.hokkaidoec.entity.Product">
+    SELECT
+      id,
+      product_name AS productName,
+      description,
+      price,
+      stock,
+      image_url AS imageUrl,
+      category_id AS categoryId,
+      region_id AS regionId
+    FROM products
+    <where>
+      <if test="keyword != null and keyword != ''">
+        AND product_name ILIKE '%' || #{keyword} || '%'
+      </if>
+      <if test="categoryId != null">
+        AND category_id = #{categoryId}
+      </if>
+      <if test="regionId != null">
+        AND region_id = #{regionId}
+      </if>
+      <if test="minPrice != null">
+        AND price >= #{minPrice}
+      </if>
 <!--      <if test="maxPrice != null">-->
 <!--        AND price <= #{maxPrice}-->
 <!--      </if>-->
-<!--    </where>-->
-<!--    <choose>-->
-<!--      <when test="sort == 'price_asc'">ORDER BY price ASC</when>-->
-<!--      <when test="sort == 'price_desc'">ORDER BY price DESC</when>-->
-<!--      <otherwise>ORDER BY id ASC</otherwise>-->
-<!--    </choose>-->
+<!--<←これが打てない-->
+    </where>
+    <choose>
+      <when test="sort == 'price_asc'">ORDER BY price ASC</when>
+      <when test="sort == 'price_desc'">ORDER BY price DESC</when>
+      <otherwise>ORDER BY id ASC</otherwise>
+    </choose>
+     </select>
 </mapper>

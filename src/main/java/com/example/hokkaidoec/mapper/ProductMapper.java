@@ -3,6 +3,7 @@ package com.example.hokkaidoec.mapper;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import com.example.hokkaidoec.entity.Product;
 
@@ -16,12 +17,11 @@ public interface ProductMapper {
 
 	//	検索条件（カテゴリ、地域、価格帯、キーワード、並べ替え）を受け取るメソッド
 	//	まだ理解はできていないので保留
-	//	 List<Product> search(
-	//		        @Param("keyword") String keyword,
-	//		        @Param("categoryId") Integer categoryId,
-	//		        @Param("regionId") Integer regionId,
-	//		        @Param("minPrice") Integer minPrice,
-	//		        @Param("maxPrice") Integer maxPrice,
-	//		        @Param("sort") String sort
-	//		    );
+	List<Product> search(
+			@Param("keyword") String keyword,
+			@Param("categoryId") Integer categoryId,
+			@Param("regionId") Integer regionId,
+			@Param("minPrice") Integer minPrice,
+			@Param("maxPrice") Integer maxPrice,
+			@Param("sort") String sort);
 }
