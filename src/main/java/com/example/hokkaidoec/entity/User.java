@@ -1,21 +1,24 @@
 package com.example.hokkaidoec.entity;
 
 public class User {
-	private int id;
+	private Integer id;
 	private String name;
 	private String email;
 	private String password;
 	private String address;
 	private String phone;
-	private int point;
-	private int totalPurchaseAmount;//UserからひっぱってAIにおくから必要
-	User(){
+	private Integer point;
+	private Integer totalPurchaseAmount;//UserからひっぱってAIにおくから必要
+	private Integer rankId;
+
+	public User() {
 	}
-	public int getId() {
+
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
@@ -59,19 +62,27 @@ public class User {
 		this.phone = phone;
 	}
 
-	public int getPoint() {
+	public Integer getPoint() {
 		return point;
 	}
 
-	public void setPoint(int point) {
+	public void setPoint(Integer point) {
 		this.point = point;
 	}
 
-	public int getTotalPurchaseAmount() {
+	public Integer getTotalPurchaseAmount() {
 		return totalPurchaseAmount;
 	}
 
-	public void setTotalPurchaseAmount(int totalPurchaseAmount) {
+	public void setTotalPurchaseAmount(Integer totalPurchaseAmount) {
 		this.totalPurchaseAmount = totalPurchaseAmount;
+	}
+
+	public Integer getRankId() {
+		return rankId;
+	}
+
+	public void setRankId(Integer rankId) {
+		this.rankId = rankId;
 	}
 }

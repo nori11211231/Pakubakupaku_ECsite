@@ -1,22 +1,25 @@
 package com.example.hokkaidoec.entity;
 
 public class Product {
-	private int id;
+
+	private Integer id;
 	private String productName;
 	private String description;
-	private int price;
-	private int stock;
+	private Integer price;
+	private Integer stock;
 	private String imageUrl;
+	private Integer categoryId;
+	private Integer regionId;
 
 	public Product() {
 
 	}
 
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
@@ -36,19 +39,19 @@ public class Product {
 		this.description = description;
 	}
 
-	public int getPrice() {
+	public Integer getPrice() {
 		return price;
 	}
 
-	public void setPrice(int price) {
+	public void setPrice(Integer price) {
 		this.price = price;
 	}
 
-	public int getStock() {
+	public Integer getStock() {
 		return stock;
 	}
 
-	public void setStock(int stock) {
+	public void setStock(Integer stock) {
 		this.stock = stock;
 	}
 
@@ -60,4 +63,19 @@ public class Product {
 		this.imageUrl = imageUrl;
 	}
 
+	public Integer getCategoryId() {
+		return categoryId;
+	}
+
+	public void setCategoryId(Integer categoryId) {
+		this.categoryId = categoryId;
+	}
+
+	public Integer getRegionId() {
+		return regionId;
+	}
+
+	public void setRegionId(Integer regionId) {
+		this.regionId = regionId;
+	}
 }

@@ -1,10 +1,60 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-</head>
-<body>
+<!--<!DOCTYPE html>-->
+<!--<html xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <title>ガチャ履歴</title>-->
+<!--</head>-->
+<!--<body>-->
 
-</body>
-</html>
+<!--    <h1>ガチャ履歴</h1>-->
+
+<!--    <table border="1">-->
+<!--        <thead>-->
+<!--            <tr>-->
+<!--                <th>日時</th>-->
+<!--                <th>ベットポイント</th>-->
+<!--                <th>結果</th>-->
+<!--                <th>獲得ポイント</th>-->
+<!--            </tr>-->
+<!--        </thead>-->
+
+<!--        <tbody>-->
+<!--            <tr th:each="history : ${gameHistories}">-->
+<!--                <td th:text="${#temporals.format(history.playedAt, 'yyyy/MM/dd HH:mm')}">-->
+<!--                    2026/05/15 12:00-->
+<!--                </td>-->
+
+<!--                <td>-->
+<!--                    <span th:text="${history.betPoint}">0</span> pt-->
+<!--                </td>-->
+
+<!--                <td>-->
+<!--                    <span th:if="${history.resultType == 'SUPER_JACKPOT'}">超大当たり</span>-->
+<!--                    <span th:if="${history.resultType == 'BIG_WIN'}">大当たり</span>-->
+<!--                    <span th:if="${history.resultType == 'WIN'}">当たり</span>-->
+<!--                    <span th:if="${history.resultType == 'LOSE'}">はずれ</span>-->
+<!--                </td>-->
+
+<!--                <td>-->
+<!--                    <span th:text="${history.earnedPoint}">0</span> pt-->
+<!--                </td>-->
+<!--            </tr>-->
+<!--        </tbody>-->
+<!--    </table>-->
+
+<!--    <p th:if="${#lists.isEmpty(gameHistories)}">-->
+<!--        まだガチャ履歴はありません。-->
+<!--    </p>-->
+
+<!--    <hr>-->
+
+<!--    <p>-->
+<!--        <a th:href="@{/game}">ガチャ画面へ戻る</a>-->
+<!--    </p>-->
+
+<!--    <p>-->
+<!--        <a th:href="@{/}">トップページへ戻る</a>-->
+<!--    </p>-->
+
+<!--</body>-->
+<!--</html>-->

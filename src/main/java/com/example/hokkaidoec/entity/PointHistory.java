@@ -3,27 +3,36 @@ package com.example.hokkaidoec.entity;
 import java.time.LocalDateTime;
 
 public class PointHistory {
-	private int id;
-	private int pointChange;
+	private Integer id;
+	private Integer userId;
+	private Integer pointChange;
 	private String reason;
 	private LocalDateTime createdAt;
 
-	public PointHistory(){
+	public PointHistory() {
 	}
 
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
-	public int getPointChange() {
+	public Integer getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Integer userId) {
+		this.userId = userId;
+	}
+
+	public Integer getPointChange() {
 		return pointChange;
 	}
 
-	public void setPointChange(int pointChange) {
+	public void setPointChange(Integer pointChange) {
 		this.pointChange = pointChange;
 	}
 
@@ -42,5 +51,4 @@ public class PointHistory {
 	public void setCreatedAt(LocalDateTime createdAt) {
 		this.createdAt = createdAt;
 	}
-
 }
