@@ -1,8 +1,44 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE mapper
-        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
- 
-<mapper namespace="com.example.hokkaidoec.mapper.PointHistoryMapper">
- 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.PointHistoryMapper">
+
+    <insert id="insert" parameterType="com.example.demo.entity.PointHistory" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO point_history (
+            user_id,
+            point_change,
+            reason,
+            created_at
+        ) VALUES (
+            #{userId},
+            #{pointChange},
+            #{reason},
+            CURRENT_TIMESTAMP
+        )
+    </insert>
+
+    <select id="findByUserId" resultType="com.example.demo.entity.PointHistory">
+        SELECT 
+            id,
+            user_id AS userId,
+            point_change AS pointChange,
+            reason,
+            created_at AS createdAt
+        FROM point_history
+        WHERE user_id = #{userId}
+        ORDER BY created_at DESC
+    </select>
+
+    <select id="findRecentByUserId" resultType="com.example.demo.entity.PointHistory">
+        SELECT 
+            id,
+            user_id AS userId,
+            point_change AS pointChange,
+            reason,
+            created_at AS createdAt
+        FROM point_history
+        WHERE user_id = #{userId}
+        ORDER BY created_at DESC
+        LIMIT #{limit}
+    </select>
+
 </mapper>
