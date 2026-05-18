@@ -1,34 +1,68 @@
 <!--<!DOCTYPE html>-->
-<!--<html xmlns:th="http://www.thymeleaf.org">-->
+<!--<html xmlns:th="http://www.thymeleaf.org" lang="ja">-->
 <!--<head>-->
 <!--    <meta charset="UTF-8">-->
-<!--    <title>ガチャ</title>-->
+<!--    <title>ガチャ結果</title>-->
+<!--    <link rel="stylesheet" th:href="@{/css/game-result.css}">-->
 <!--</head>-->
+
 <!--<body>-->
+<!--<div class="result-page">-->
 
-<!--<h1>ポイントガチャ</h1>-->
+<!--    <div class="result-card">-->
 
-<!--<p>-->
-<!--    現在のポイント：-->
-<!--    <span th:text="${currentPoint}">0</span> pt-->
-<!--</p>-->
+<!--        <h1 class="result-title">ガチャ結果</h1>-->
 
-<!--<p th:if="${errorMessage}" th:text="${errorMessage}" style="color:red;"></p>-->
+<!--         当たり動画 -->
+<!--        <div th:if="${effectType == 'win'}" class="video-area win-area">-->
+<!--            <video autoplay muted playsinline class="result-video">-->
+<!--                <source th:src="@{/video/game/win.mp4}" type="video/mp4">-->
+<!--            </video>-->
 
-<!--<form th:action="@{/game/result}" method="post" th:object="${gameForm}">-->
-<!--    <label>使うポイント</label>-->
-<!--    <input type="number" th:field="*{betPoint}" min="1">-->
+<!--            <h2 class="win-title">大当たり！</h2>-->
+<!--            <p>ポイントを獲得しました！</p>-->
+<!--        </div>-->
 
-<!--    <button type="submit">ガチャを引く</button>-->
-<!--</form>-->
+<!--         はずれ動画 -->
+<!--        <div th:if="${effectType == 'lose'}" class="video-area lose-area">-->
+<!--            <video autoplay muted playsinline class="result-video">-->
+<!--                <source th:src="@{/video/game/lose.mp4}" type="video/mp4">-->
+<!--            </video>-->
 
-<!--<p>-->
-<!--    <a th:href="@{/game/history}">ガチャ履歴を見る</a>-->
-<!--</p>-->
+<!--            <h2 class="lose-title">はずれ……</h2>-->
+<!--            <p>今回は残念。もう一度チャレンジしてみよう！</p>-->
+<!--        </div>-->
 
-<!--<p>-->
-<!--    <a th:href="@{/}">トップへ戻る</a>-->
-<!--</p>-->
+<!--        <div class="point-result">-->
+<!--            <p>-->
+<!--                使用ポイント：-->
+<!--                <span th:text="${betPoint}">100</span> pt-->
+<!--            </p>-->
 
+<!--            <p th:if="${result}">-->
+<!--                獲得ポイント：-->
+<!--                <span th:text="${earnedPoint}">300</span> pt-->
+<!--            </p>-->
+
+<!--            <p th:if="${!result}">-->
+<!--                消費ポイント：-->
+<!--                <span th:text="${lostPoint}">100</span> pt-->
+<!--            </p>-->
+
+<!--            <p>-->
+<!--                現在のポイント：-->
+<!--                <span th:text="${currentPoint}">1250</span> pt-->
+<!--            </p>-->
+<!--        </div>-->
+
+<!--        <div class="result-buttons">-->
+<!--            <a th:href="@{/game}" class="main-link">もう一度ガチャを引く</a>-->
+<!--            <a th:href="@{/game/history}" class="sub-link">ガチャ履歴を見る</a>-->
+<!--            <a th:href="@{/}" class="sub-link">トップへ戻る</a>-->
+<!--        </div>-->
+
+<!--    </div>-->
+
+<!--</div>-->
 <!--</body>-->
 <!--</html>-->

@@ -15,8 +15,8 @@
 //import com.example.hokkaidoec.entity.User;
 //import com.example.hokkaidoec.form.GameForm;
 //import com.example.hokkaidoec.mapper.GamePlayHistoryMapper;
-//import com.example.pakubakupaku_ecsite.mapper.PointHistoryMapper;
-//import com.example.pakubakupaku_ecsite.mapper.UserMapper;
+//import com.example.hokkaidoec.mapper.PointHistoryMapper;
+//import com.example.hokkaidoec.mapper.UserMapper;
 //
 //@Controller
 //public class GameController {
@@ -34,6 +34,7 @@
 //		this.pointHistoryMapper = pointHistoryMapper;
 //	}
 //
+//	// ガチャ画面表示
 //	@GetMapping("/game")
 //	public String game(Model model, HttpSession session) {
 //
@@ -50,6 +51,7 @@
 //		return "game";
 //	}
 //
+//	// ガチャ実行・結果表示
 //	@PostMapping("/game/result")
 //	public String result(GameForm gameForm, Model model, HttpSession session) {
 //
@@ -61,6 +63,7 @@
 //
 //		Integer betPoint = gameForm.getBetPoint();
 //
+//		// 入力チェック
 //		if (betPoint == null || betPoint <= 0) {
 //			model.addAttribute("gameForm", gameForm);
 //			model.addAttribute("loginUser", loginUser);
@@ -69,41 +72,69 @@
 //			return "game";
 //		}
 //
-//		if (loginUser.getPoint() < betPoint) {
+//		// はずれ時はベットポイントの10倍を失うため、その分のポイントが必要
+//		Integer losePoint = betPoint * 10;
+//
+//		if (loginUser.getPoint() < losePoint) {
 //			model.addAttribute("gameForm", gameForm);
 //			model.addAttribute("loginUser", loginUser);
 //			model.addAttribute("currentPoint", loginUser.getPoint());
-//			model.addAttribute("errorMessage", "ポイントが不足しています。");
+//			model.addAttribute("errorMessage", "はずれ時に消費するポイントが不足しています。");
 //			return "game";
 //		}
 //
 //		Random random = new Random();
 //
-//		// とりあえず 30% で当たり
-//		boolean result = random.nextInt(100) < 30;
+//		// 1〜1600の乱数
+//		int lottery = random.nextInt(1600) + 1;
+//
+//		// 超大当たり：1600分の1
+//		boolean superResult = lottery == 1;
+//
+//		// 通常当たり：約30%
+//		// 1は超大当たりなので、2〜480を通常当たりにする
+//		boolean normalResult = lottery >= 2 && lottery <= 480;
+//
+//		// DB保存用：当たり系ならtrue、はずれならfalse
+//		boolean result = superResult || normalResult;
 //
 //		Integer earnedPoint;
+//		Integer lostPoint;
 //		Integer pointChange;
 //		String resultText;
 //		String effectType;
 //
-//		if (result) {
-//			earnedPoint = betPoint * 3;
+//		if (superResult) {
+//			// 超大当たり：100倍
+//			earnedPoint = betPoint * 100;
+//			lostPoint = 0;
+//			pointChange = earnedPoint;
+//			resultText = "超大当たり";
+//			effectType = "super";
+//
+//		} else if (normalResult) {
+//			// 当たり：10倍
+//			earnedPoint = betPoint * 10;
+//			lostPoint = 0;
 //			pointChange = earnedPoint;
 //			resultText = "当たり";
 //			effectType = "win";
+//
 //		} else {
+//			// はずれ：10倍失う
 //			earnedPoint = 0;
-//			pointChange = -betPoint;
+//			lostPoint = betPoint * 10;
+//			pointChange = -lostPoint;
 //			resultText = "はずれ";
 //			effectType = "lose";
 //		}
 //
+//		// ユーザーのポイントを更新
 //		Integer newPoint = loginUser.getPoint() + pointChange;
-//
 //		loginUser.setPoint(newPoint);
 //		userMapper.updatePoint(loginUser);
 //
+//		// ガチャ履歴を登録
 //		GamePlayHistory gameResult = new GamePlayHistory();
 //		gameResult.setUserId(loginUser.getId());
 //		gameResult.setBetPoint(betPoint);
@@ -112,11 +143,14 @@
 //
 //		gamePlayHistoryMapper.insert(gameResult);
 //
+//		// ポイント履歴を登録
 //		PointHistory pointHistory = new PointHistory();
 //		pointHistory.setUserId(loginUser.getId());
 //		pointHistory.setPointChange(pointChange);
 //
-//		if (result) {
+//		if (superResult) {
+//			pointHistory.setReason("ガチャ超大当たり");
+//		} else if (normalResult) {
 //			pointHistory.setReason("ガチャ当たり");
 //		} else {
 //			pointHistory.setReason("ガチャはずれ");
@@ -124,21 +158,29 @@
 //
 //		pointHistoryMapper.insert(pointHistory);
 //
+//		// セッションのユーザー情報も更新
 //		session.setAttribute("loginUser", loginUser);
 //
+//		// 結果画面へ渡す値
 //		model.addAttribute("gameResult", gameResult);
 //		model.addAttribute("loginUser", loginUser);
 //		model.addAttribute("betPoint", betPoint);
 //		model.addAttribute("result", result);
 //		model.addAttribute("resultText", resultText);
 //		model.addAttribute("earnedPoint", earnedPoint);
-//		model.addAttribute("lostPoint", betPoint);
+//		model.addAttribute("lostPoint", lostPoint);
 //		model.addAttribute("currentPoint", newPoint);
+//
+//		// 動画切り替え用
+//		// super → tyouatari.mp4
+//		// win   → atari.mp4
+//		// lose  → hazure.mp4
 //		model.addAttribute("effectType", effectType);
 //
 //		return "game-result";
 //	}
 //
+//	// ガチャ履歴画面表示
 //	@GetMapping("/game/history")
 //	public String history(Model model, HttpSession session) {
 //
@@ -152,6 +194,7 @@
 //
 //		model.addAttribute("gameHistories", gameHistories);
 //		model.addAttribute("loginUser", loginUser);
+//		model.addAttribute("currentPoint", loginUser.getPoint());
 //
 //		return "game-history";
 //	}
