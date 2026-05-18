@@ -48,18 +48,18 @@
       </div>
 
       <aside class="detail" aria-labelledby="productTitle">
-        <h1 id="productTitle" class="title">商品名がここに入ります</h1>
+        <h1 id="productTitle" class="title">[[${product.productName}]]</h1>
         <div class="meta">
-          <strong>産地</strong>：<span id="productRegion">—</span>
+          <strong>産地</strong>：<span id="productRegion">[[${region.regionName}]]</span>
           &nbsp;｜&nbsp;
-          <strong>カテゴリ</strong>：<span id="productCategory">—</span>
+          <strong>カテゴリ</strong>：<span id="productCategory">[[${category.categoryName}]]</span>
         </div>
 
-        <div class="desc" id="productDescription">商品説明がここに入ります。</div>
+        <div class="desc" id="productDescription">[[${product.description}]]</div>
 
         <div class="price-stock">
-          <div class="price" id="productPrice">¥0</div>
-          <div class="stock" id="productStock">在庫：—</div>
+          <div class="price" id="productPrice">¥[[${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')}]]円</div>
+          <div class="stock" id="productStock">在庫：[[${product.stock}]]</div>
         </div>
 
         <div class="purchase" aria-label="購入操作">

@@ -1,5 +1,14 @@
 package com.example.hokkaidoec.mapper;
 
+import org.apache.ibatis.annotations.Mapper;
+
+import com.example.hokkaidoec.entity.Category;
+
+@Mapper
+public interface CategoryMapper {
+	Category findById(Integer id);
+}
+
 //@Mapper
 //public class CategoryMapper {
 //	/** 全商品を取得する */

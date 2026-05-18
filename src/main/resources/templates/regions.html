@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>北海道 地図から選択</title>
+<style>
+  body { font-family: system-ui, -apple-system, "Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif; margin:0; padding:0; color:#222; }
+  .map-wrap { max-width: 1100px; margin: 24px auto; padding: 0 16px; }
+  .svg-container { position: relative; width: 100%; height: auto; }
+  svg { width: 100%; height: auto; display:block; }
+  .pins-layer { position:absolute; left:0; top:0; width:100%; height:100%; pointer-events:none; }
+  .region-pin {
+    position: absolute;
+    transform: translate(-50%, -100%);
+    background: #00796b;
+    color: #fff;
+    padding: 6px 10px;
+    border-radius: 20px;
+    font-size: 13px;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    white-space: nowrap;
+    display: inline-flex;
+    gap: 8px;
+    align-items: center;
+    pointer-events: auto;
+  }
+  .region-pin:focus { outline: 3px solid #80cbc4; }
+  .pin-dot { width:10px; height:10px; background:#fff; border-radius:50%; flex:0 0 10px; }
+  #tooltip {
+    position: absolute;
+    pointer-events: none;
+    background: rgba(0,0,0,0.85);
+    color: #fff;
+    padding: 6px 8px;
+    border-radius: 6px;
+    font-size: 13px;
+    transform: translate(-50%, -120%);
+    white-space: nowrap;
+    display: none;
+    z-index: 50;
+  }
+  .loading {
+    text-align:center; padding:12px; color:#666;
+  }
+  @media (max-width:480px) {
+    .region-pin { font-size:12px; padding:5px 6px; }
+  }
+</style>
+</head>
+<body>
+  <div class="map-wrap">
+    <h2>地図から地域を選択</h2>
+    <p>地域をクリックすると該当地域の商品一覧に移動します。並べ替えは地域ごとの既定値が適用されます。</p>
+
+    <div class="svg-container" id="svgContainer" aria-live="polite">
+       実運用では正確な北海道 SVG に差し替えてください。viewBox は必ず設定 
+      <svg id="hokkaidoSvg" viewBox="0 0 1000 1000" role="img" aria-hidden="false">
+         ここに詳細な北海道パスを入れてください 
+        <g id="regionsGroup">
+           ダミーパス（差し替え必須） 
+          <path id="p-1" d="M100,100 L300,100 L300,300 L100,300 Z" fill="#cfe8e0" stroke="#fff" stroke-width="2"></path>
+          <path id="p-2" d="M320,120 L520,120 L520,320 L320,320 Z" fill="#bfe0d8" stroke="#fff" stroke-width="2"></path>
+          <path id="p-3" d="M120,320 L320,320 L320,520 L120,520 Z" fill="#a8d8cf" stroke="#fff" stroke-width="2"></path>
+           実際は 14 地域のパスを入れる 
+        </g>
+      </svg>
+
+      <div class="pins-layer" id="pinsLayer" aria-hidden="false"></div>
+      <div id="tooltip" role="status" aria-live="polite"></div>
+      <div id="loading" class="loading">地域データを読み込み中…</div>
+    </div>
+  </div>
+
+<script>
+/*
+  フロント実装方針
+  1) /regions/summary を fetch して regionsData を取得
+  2) SVG の実サイズ（getBoundingClientRect）に対して xPercent/yPercent を px に変換してピンを配置
+  3) クリックで /products?regionId=<id>&sort=<defaultSort> に遷移
+  4) フォールバックとして静的配列を用意（API が無い場合）
+*/
+
+const svgEl = document.getElementById('hokkaidoSvg');
+const pinsLayer = document.getElementById('pinsLayer');
+const tooltip = document.getElementById('tooltip');
+const loadingEl = document.getElementById('loading');
+
+let regionsData = null;
+
+/* API から地域データを取得する関数 */
+async function fetchRegions() {
+  try {
+    const res = await fetch('/regions/summary', { cache: 'no-store' });
+    if (!res.ok) throw new Error('network');
+    const data = await res.json();
+    return data;
+  } catch (err) {
+    console.warn('regions/summary fetch failed, using fallback data', err);
+    return null;
+  }
+}
+
+/* フォールバックデータ（DB の regions 名を反映） */
+const fallbackRegions = [
+  { regionId:1, name:"空知", xPercent:30, yPercent:45, defaultSort:"id", count:2 },
+  { regionId:2, name:"石狩", xPercent:28, yPercent:38, defaultSort:"price_desc", count:2 },
+  { regionId:3, name:"後志", xPercent:22, yPercent:50, defaultSort:"newest", count:2 },
+  { regionId:4, name:"胆振", xPercent:40, yPercent:60, defaultSort:"id", count:2 },
+  { regionId:5, name:"日高", xPercent:48, yPercent:68, defaultSort:"id", count:2 },
+  { regionId:6, name:"渡島", xPercent:18, yPercent:78, defaultSort:"id", count:2 },
+  { regionId:7, name:"檜山", xPercent:12, yPercent:82, defaultSort:"id", count:2 },
+  { regionId:8, name:"上川", xPercent:44, yPercent:28, defaultSort:"id", count:2 },
+  { regionId:9, name:"留萌", xPercent:12, yPercent:22, defaultSort:"id", count:2 },
+  { regionId:10, name:"宗谷", xPercent:36, yPercent:6, defaultSort:"id", count:2 },
+  { regionId:11, name:"オホーツク", xPercent:70, yPercent:18, defaultSort:"id", count:2 },
+  { regionId:12, name:"十勝", xPercent:66, yPercent:62, defaultSort:"id", count:2 },
+  { regionId:13, name:"釧路", xPercent:78, yPercent:56, defaultSort:"id", count:2 },
+  { regionId:14, name:"根室", xPercent:92, yPercent:70, defaultSort:"id", count:2 }
+];
+
+/* ピン作成 */
+function createPin(region) {
+  const btn = document.createElement('button');
+  btn.className = 'region-pin';
+  btn.setAttribute('data-region-id', region.regionId);
+  btn.setAttribute('aria-label', `${region.name} の商品一覧へ移動`);
+  btn.setAttribute('role', 'button');
+  btn.setAttribute('tabindex', '0');
+  btn.innerHTML = `<span class="pin-dot" aria-hidden="true"></span><span class="pin-label">${region.name}</span>`;
+
+  // クリックで遷移
+  btn.addEventListener('click', (e) => {
+    e.preventDefault();
+    const regionId = region.regionId;
+    const sort = region.defaultSort || 'id';
+    window.location.href = `/products?regionId=${encodeURIComponent(regionId)}&sort=${encodeURIComponent(sort)}`;
+  });
+
+  // ホバーでツールチップ
+  btn.addEventListener('mouseenter', (e) => showTooltip(region, e));
+  btn.addEventListener('mouseleave', hideTooltip);
+
+  // キーボードで Enter/Space
+  btn.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      btn.click();
+    }
+  });
+
+  pinsLayer.appendChild(btn);
+  return btn;
+}
+
+/* ツールチップ表示/非表示 */
+function showTooltip(region, event) {
+  tooltip.style.display = 'block';
+  tooltip.textContent = `${region.name} — ${region.count ?? '商品なし'}`;
+  positionTooltip(event.clientX, event.clientY);
+}
+function hideTooltip() {
+  tooltip.style.display = 'none';
+}
+function positionTooltip(clientX, clientY) {
+  const containerRect = svgEl.getBoundingClientRect();
+  tooltip.style.left = (clientX - containerRect.left) + 'px';
+  tooltip.style.top = (clientY - containerRect.top) + 'px';
+}
+
+/* ピンを配置（% -> px） */
+function placePins(regions) {
+  pinsLayer.innerHTML = '';
+  const rect = svgEl.getBoundingClientRect();
+  regions.forEach(region => {
+    const pin = createPin(region);
+    const px = (region.xPercent / 100) * rect.width;
+    const py = (region.yPercent / 100) * rect.height;
+    pin.style.left = px + 'px';
+    pin.style.top = py + 'px';
+  });
+}
+
+/* 初期化 */
+async function init() {
+  loadingEl.style.display = 'block';
+  let data = await fetchRegions();
+  if (!data) data = fallbackRegions;
+  regionsData = data;
+  placePins(regionsData);
+  loadingEl.style.display = 'none';
+}
+
+/* リサイズ対応 */
+window.addEventListener('resize', () => {
+  if (regionsData) placePins(regionsData);
+});
+
+/* モバイルのタップでツールチップを短時間表示 */
+pinsLayer.addEventListener('touchstart', (e) => {
+  const target = e.target.closest('.region-pin');
+  if (!target) return;
+  const regionId = target.getAttribute('data-region-id');
+  const region = regionsData.find(r => String(r.regionId) === String(regionId));
+  if (region) {
+    const touch = e.touches[0];
+    showTooltip(region, { clientX: touch.clientX, clientY: touch.clientY });
+    setTimeout(hideTooltip, 1500);
+  }
+}, { passive: true });
+
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>
+
