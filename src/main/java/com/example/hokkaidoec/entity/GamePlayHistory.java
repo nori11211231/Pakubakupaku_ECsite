@@ -8,18 +8,8 @@ public class GamePlayHistory {
 	private Integer userId;
 	private Integer betPoint;
 	private Boolean result;
-	private String resultType;
 	private Integer earnedPoint;
 	private LocalDateTime playedAt;
-
-	// 画面表示用
-	private String resultText;
-	private String videoPath;
-	private String message;
-	private int currentPoint;
-
-	public GamePlayHistory() {
-	}
 
 	public Integer getId() {
 		return id;
@@ -53,14 +43,6 @@ public class GamePlayHistory {
 		this.result = result;
 	}
 
-	public String getResultType() {
-		return resultType;
-	}
-
-	public void setResultType(String resultType) {
-		this.resultType = resultType;
-	}
-
 	public Integer getEarnedPoint() {
 		return earnedPoint;
 	}
@@ -75,37 +57,5 @@ public class GamePlayHistory {
 
 	public void setPlayedAt(LocalDateTime playedAt) {
 		this.playedAt = playedAt;
-	}
-
-	public String getResultText() {
-		return resultText;
-	}
-
-	public void setResultText(String resultText) {
-		this.resultText = resultText;
-	}
-
-	public String getVideoPath() {
-		return videoPath;
-	}
-
-	public void setVideoPath(String videoPath) {
-		this.videoPath = videoPath;
-	}
-
-	public String getMessage() {
-		return message;
-	}
-
-	public void setMessage(String message) {
-		this.message = message;
-	}
-
-	public int getCurrentPoint() {
-		return currentPoint;
-	}
-
-	public void setCurrentPoint(int currentPoint) {
-		this.currentPoint = currentPoint;
 	}
 }

@@ -6,54 +6,29 @@
 <!--</head>-->
 <!--<body>-->
 
-<!--    <h1>ガチャ</h1>-->
+<!--<h1>ポイントガチャ</h1>-->
 
-<!--    <p>-->
-<!--        現在ポイント：-->
-<!--        <span th:text="${currentPoint}">0</span>-->
-<!--        pt-->
-<!--    </p>-->
+<!--<p>-->
+<!--    現在のポイント：-->
+<!--    <span th:text="${currentPoint}">0</span> pt-->
+<!--</p>-->
 
-<!--     エラーメッセージ -->
-<!--    <p th:if="${errorMessage}" th:text="${errorMessage}" style="color: red;">-->
-<!--        エラーメッセージ-->
-<!--    </p>-->
+<!--<p th:if="${errorMessage}" th:text="${errorMessage}" style="color:red;"></p>-->
 
-<!--    <form th:action="@{/game}" th:object="${gameForm}" method="post">-->
+<!--<form th:action="@{/game/result}" method="post" th:object="${gameForm}">-->
+<!--    <label>使うポイント</label>-->
+<!--    <input type="number" th:field="*{betPoint}" min="1">-->
 
-<!--        <div>-->
-<!--            <label for="betPoint">ベットポイント</label>-->
-<!--            <input type="number"-->
-<!--                   id="betPoint"-->
-<!--                   th:field="*{betPoint}"-->
-<!--                   min="1"-->
-<!--                   required>-->
-<!--        </div>-->
+<!--    <button type="submit">ガチャを引く</button>-->
+<!--</form>-->
 
-<!--        <div>-->
-<!--            <button type="submit">ガチャを引く</button>-->
-<!--        </div>-->
+<!--<p>-->
+<!--    <a th:href="@{/game/history}">ガチャ履歴を見る</a>-->
+<!--</p>-->
 
-<!--    </form>-->
-
-<!--    <hr>-->
-
-<!--    <h2>ガチャ内容</h2>-->
-
-<!--    <ul>-->
-<!--        <li>超大当たり：15000分の1 / ベットポイントの100倍</li>-->
-<!--        <li>大当たり：ベットポイントの10倍</li>-->
-<!--        <li>当たり：ベットポイントの2倍</li>-->
-<!--        <li>はずれ：獲得ポイント0</li>-->
-<!--    </ul>-->
-
-<!--    <p>-->
-<!--        <a th:href="@{/game/history}">ガチャ履歴を見る</a>-->
-<!--    </p>-->
-
-<!--    <p>-->
-<!--        <a th:href="@{/}">トップページへ戻る</a>-->
-<!--    </p>-->
+<!--<p>-->
+<!--    <a th:href="@{/}">トップへ戻る</a>-->
+<!--</p>-->
 
 <!--</body>-->
 <!--</html>-->

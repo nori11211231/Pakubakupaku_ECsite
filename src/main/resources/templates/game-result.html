@@ -10,42 +10,40 @@
 
 <!--	<h1>ガチャ結果</h1>-->
 
-<!--	 結果動画 -->
-<!--	<div>-->
-<!--		<video width="500" autoplay muted playsinline controls>-->
-<!--			<source th:src="@{${videoPath}}" type="video/mp4">-->
-<!--			お使いのブラウザは動画再生に対応していません。-->
-<!--		</video>-->
+<!--	<div th:if="${effectType == 'win'}">-->
+<!--		<h2>🎉 当たり！</h2>-->
+<!--		<p>お金が大量に出てきた！</p>-->
 <!--	</div>-->
 
-<!--	<hr>-->
+<!--	<div th:if="${effectType == 'lose'}">-->
+<!--		<h2>はずれ……</h2>-->
+<!--		<p>紙くずが出てきた……</p>-->
+<!--	</div>-->
 
-<!--	 結果表示 -->
-<!--	<h2 th:text="${resultText}">結果</h2>-->
-
-<!--	<p th:text="${message}">-->
-<!--		結果メッセージ-->
+<!--	<p>-->
+<!--		結果：-->
+<!--		<span th:text="${resultText}">当たり</span>-->
 <!--	</p>-->
 
 <!--	<p>-->
-<!--		ベットポイント：-->
-<!--		<span th:text="${betPoint}">0</span>-->
-<!--		pt-->
+<!--		使用ポイント：-->
+<!--		<span th:text="${betPoint}">0</span> pt-->
 <!--	</p>-->
 
-<!--	<p>-->
+<!--	<p th:if="${result}">-->
 <!--		獲得ポイント：-->
-<!--		<span th:text="${earnedPoint}">0</span>-->
-<!--		pt-->
+<!--		<span th:text="${earnedPoint}">0</span> pt-->
+<!--	</p>-->
+
+<!--	<p th:if="${!result}">-->
+<!--		消費ポイント：-->
+<!--		<span th:text="${lostPoint}">0</span> pt-->
 <!--	</p>-->
 
 <!--	<p>-->
-<!--		現在ポイント：-->
-<!--		<span th:text="${currentPoint}">0</span>-->
-<!--		pt-->
+<!--		現在のポイント：-->
+<!--		<span th:text="${currentPoint}">0</span> pt-->
 <!--	</p>-->
-
-<!--	<hr>-->
 
 <!--	<p>-->
 <!--		<a th:href="@{/game}">もう一度ガチャを引く</a>-->
@@ -56,7 +54,7 @@
 <!--	</p>-->
 
 <!--	<p>-->
-<!--		<a th:href="@{/}">トップページへ戻る</a>-->
+<!--		<a th:href="@{/}">トップへ戻る</a>-->
 <!--	</p>-->
 
 <!--</body>-->
