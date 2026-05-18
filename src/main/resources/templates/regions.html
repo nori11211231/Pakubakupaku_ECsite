@@ -1,217 +1,270 @@
-<!--<!doctype html>-->
-<!--<html lang="ja">-->
-<!--<head>-->
-<!--<meta charset="utf-8" />-->
-<!--<meta name="viewport" content="width=device-width,initial-scale=1" />-->
-<!--<title>北海道 地図から選択</title>-->
-<!--<style>-->
-<!--  body { font-family: system-ui, -apple-system, "Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif; margin:0; padding:0; color:#222; }-->
-<!--  .map-wrap { max-width: 1100px; margin: 24px auto; padding: 0 16px; }-->
-<!--  .svg-container { position: relative; width: 100%; height: auto; }-->
-<!--  svg { width: 100%; height: auto; display:block; }-->
-<!--  .pins-layer { position:absolute; left:0; top:0; width:100%; height:100%; pointer-events:none; }-->
-<!--  .region-pin {-->
-<!--    position: absolute;-->
-<!--    transform: translate(-50%, -100%);-->
-<!--    background: #00796b;-->
-<!--    color: #fff;-->
-<!--    padding: 6px 10px;-->
-<!--    border-radius: 20px;-->
-<!--    font-size: 13px;-->
-<!--    cursor: pointer;-->
-<!--    box-shadow: 0 2px 6px rgba(0,0,0,0.2);-->
-<!--    white-space: nowrap;-->
-<!--    display: inline-flex;-->
-<!--    gap: 8px;-->
-<!--    align-items: center;-->
-<!--    pointer-events: auto;-->
-<!--  }-->
-<!--  .region-pin:focus { outline: 3px solid #80cbc4; }-->
-<!--  .pin-dot { width:10px; height:10px; background:#fff; border-radius:50%; flex:0 0 10px; }-->
-<!--  #tooltip {-->
-<!--    position: absolute;-->
-<!--    pointer-events: none;-->
-<!--    background: rgba(0,0,0,0.85);-->
-<!--    color: #fff;-->
-<!--    padding: 6px 8px;-->
-<!--    border-radius: 6px;-->
-<!--    font-size: 13px;-->
-<!--    transform: translate(-50%, -120%);-->
-<!--    white-space: nowrap;-->
-<!--    display: none;-->
-<!--    z-index: 50;-->
-<!--  }-->
-<!--  .loading {-->
-<!--    text-align:center; padding:12px; color:#666;-->
-<!--  }-->
-<!--  @media (max-width:480px) {-->
-<!--    .region-pin { font-size:12px; padding:5px 6px; }-->
-<!--  }-->
-<!--</style>-->
-<!--</head>-->
-<!--<body>-->
-<!--  <div class="map-wrap">-->
-<!--    <h2>地図から地域を選択</h2>-->
-<!--    <p>地域をクリックすると該当地域の商品一覧に移動します。並べ替えは地域ごとの既定値が適用されます。</p>-->
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>北海道 地図から地域を選択</title>
+<style>
+  body {
+    font-family: system-ui, -apple-system, "Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif;
+    margin: 0;
+    padding: 0;
+    color: #222;
+    background: #f5f5f5;
+  }
+  .map-wrap {
+    max-width: 1100px;
+    margin: 24px auto;
+    padding: 0 16px 32px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+  }
+  h2 {
+    margin: 16px 0 4px;
+  }
+  p.desc {
+    margin: 0 0 16px;
+    color: #555;
+  }
+  .svg-container {
+    position: relative;
+    width: 100%;
+    height: auto;
+  }
+  svg {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+  .region-shape {
+    cursor: pointer;
+    stroke: #ffffff;
+    stroke-width: 2;
+    transition: fill 0.15s ease, transform 0.15s ease;
+  }
+  .region-shape:hover,
+  .region-shape:focus {
+    fill: #ffb74d !important;
+    transform: translateY(-2px);
+  }
+  .region-label {
+    font-size: 20px;
+    fill: #ffffff;
+    text-shadow: 0 0 4px rgba(0,0,0,0.6);
+    pointer-events: none;
+  }
+  #tooltip {
+    position: absolute;
+    pointer-events: none;
+    background: rgba(0,0,0,0.85);
+    color: #fff;
+    padding: 6px 8px;
+    border-radius: 6px;
+    font-size: 13px;
+    transform: translate(-50%, -120%);
+    white-space: nowrap;
+    display: none;
+    z-index: 50;
+  }
+</style>
+</head>
+<body>
+  <div class="map-wrap">
+    <h2>地図から地域を選択</h2>
+    <p class="desc">地域をクリックすると、その地域の商品一覧ページ（並べ替え適用済み）に移動します。</p>
 
-<!--    <div class="svg-container" id="svgContainer" aria-live="polite">-->
-<!--       実運用では正確な北海道 SVG に差し替えてください。viewBox は必ず設定 -->
-<!--      <svg id="hokkaidoSvg" viewBox="0 0 1000 1000" role="img" aria-hidden="false">-->
-<!--         ここに詳細な北海道パスを入れてください -->
-<!--        <g id="regionsGroup">-->
-<!--           ダミーパス（差し替え必須） -->
-<!--          <path id="p-1" d="M100,100 L300,100 L300,300 L100,300 Z" fill="#cfe8e0" stroke="#fff" stroke-width="2"></path>-->
-<!--          <path id="p-2" d="M320,120 L520,120 L520,320 L320,320 Z" fill="#bfe0d8" stroke="#fff" stroke-width="2"></path>-->
-<!--          <path id="p-3" d="M120,320 L320,320 L320,520 L120,520 Z" fill="#a8d8cf" stroke="#fff" stroke-width="2"></path>-->
-<!--           実際は 14 地域のパスを入れる -->
-<!--        </g>-->
-<!--      </svg>-->
+    <div class="svg-container" id="svgContainer">
+      <!-- 簡略化した北海道 SVG（viewBox は 1000x1000 固定） -->
+      <!-- 各 path が regions テーブルの 1〜14 に対応 -->
+      <svg id="hokkaidoSvg" viewBox="0 0 1000 1000" role="img" aria-label="北海道の地域別マップ">
+        <defs>
+          <linearGradient id="bgGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#006064"/>
+            <stop offset="100%" stop-color="#00897b"/>
+          </linearGradient>
+        </defs>
 
-<!--      <div class="pins-layer" id="pinsLayer" aria-hidden="false"></div>-->
-<!--      <div id="tooltip" role="status" aria-live="polite"></div>-->
-<!--      <div id="loading" class="loading">地域データを読み込み中…</div>-->
-<!--    </div>-->
-<!--  </div>-->
+        <!-- 北海道全体のシルエット（ざっくり） -->
+        <path d="M150,250 L350,150 L550,120 L750,200 L850,350 L820,550 L700,750 L500,850 L300,800 L180,650 L140,450 Z"
+              fill="url(#bgGrad)" stroke="#004d40" stroke-width="4" />
 
-<!--<script>-->
-<!--/*-->
-<!--  フロント実装方針-->
-<!--  1) /regions/summary を fetch して regionsData を取得-->
-<!--  2) SVG の実サイズ（getBoundingClientRect）に対して xPercent/yPercent を px に変換してピンを配置-->
-<!--  3) クリックで /products?regionId=<id>&sort=<defaultSort> に遷移-->
-<!--  4) フォールバックとして静的配列を用意（API が無い場合）-->
-<!--*/-->
+        <!-- ここから 14 地域をざっくり分割（位置は開発用のイメージ） -->
+        <!-- id=10 宗谷 -->
+        <path class="region-shape"
+              data-region-id="10" data-region-name="宗谷"
+              d="M350,150 L550,120 L650,160 L620,230 L480,230 Z"
+              fill="#26a69a" tabindex="0" />
 
-<!--const svgEl = document.getElementById('hokkaidoSvg');-->
-<!--const pinsLayer = document.getElementById('pinsLayer');-->
-<!--const tooltip = document.getElementById('tooltip');-->
-<!--const loadingEl = document.getElementById('loading');-->
+        <!-- id=9 留萌 -->
+        <path class="region-shape"
+              data-region-id="9" data-region-name="留萌"
+              d="M250,190 L350,150 L480,230 L420,300 L300,280 Z"
+              fill="#4db6ac" tabindex="0" />
 
-<!--let regionsData = null;-->
+        <!-- id=11 オホーツク -->
+        <path class="region-shape"
+              data-region-id="11" data-region-name="オホーツク"
+              d="M480,230 L620,230 L700,260 L720,340 L640,380 L520,360 L460,310 Z"
+              fill="#26c6da" tabindex="0" />
 
-<!--/* API から地域データを取得する関数 */-->
-<!--async function fetchRegions() {-->
-<!--  try {-->
-<!--    const res = await fetch('/regions/summary', { cache: 'no-store' });-->
-<!--    if (!res.ok) throw new Error('network');-->
-<!--    const data = await res.json();-->
-<!--    return data;-->
-<!--  } catch (err) {-->
-<!--    console.warn('regions/summary fetch failed, using fallback data', err);-->
-<!--    return null;-->
-<!--  }-->
-<!--}-->
+        <!-- id=8 上川 -->
+        <path class="region-shape"
+              data-region-id="8" data-region-name="上川"
+              d="M420,300 L460,310 L520,360 L480,430 L380,420 L340,360 Z"
+              fill="#29b6f6" tabindex="0" />
 
-<!--/* フォールバックデータ（DB の regions 名を反映） */-->
-<!--const fallbackRegions = [-->
-<!--  { regionId:1, name:"空知", xPercent:30, yPercent:45, defaultSort:"id", count:2 },-->
-<!--  { regionId:2, name:"石狩", xPercent:28, yPercent:38, defaultSort:"price_desc", count:2 },-->
-<!--  { regionId:3, name:"後志", xPercent:22, yPercent:50, defaultSort:"newest", count:2 },-->
-<!--  { regionId:4, name:"胆振", xPercent:40, yPercent:60, defaultSort:"id", count:2 },-->
-<!--  { regionId:5, name:"日高", xPercent:48, yPercent:68, defaultSort:"id", count:2 },-->
-<!--  { regionId:6, name:"渡島", xPercent:18, yPercent:78, defaultSort:"id", count:2 },-->
-<!--  { regionId:7, name:"檜山", xPercent:12, yPercent:82, defaultSort:"id", count:2 },-->
-<!--  { regionId:8, name:"上川", xPercent:44, yPercent:28, defaultSort:"id", count:2 },-->
-<!--  { regionId:9, name:"留萌", xPercent:12, yPercent:22, defaultSort:"id", count:2 },-->
-<!--  { regionId:10, name:"宗谷", xPercent:36, yPercent:6, defaultSort:"id", count:2 },-->
-<!--  { regionId:11, name:"オホーツク", xPercent:70, yPercent:18, defaultSort:"id", count:2 },-->
-<!--  { regionId:12, name:"十勝", xPercent:66, yPercent:62, defaultSort:"id", count:2 },-->
-<!--  { regionId:13, name:"釧路", xPercent:78, yPercent:56, defaultSort:"id", count:2 },-->
-<!--  { regionId:14, name:"根室", xPercent:92, yPercent:70, defaultSort:"id", count:2 }-->
-<!--];-->
+        <!-- id=1 空知 -->
+        <path class="region-shape"
+              data-region-id="1" data-region-name="空知"
+              d="M300,280 L340,360 L380,420 L320,470 L260,430 L230,360 Z"
+              fill="#42a5f5" tabindex="0" />
 
-<!--/* ピン作成 */-->
-<!--function createPin(region) {-->
-<!--  const btn = document.createElement('button');-->
-<!--  btn.className = 'region-pin';-->
-<!--  btn.setAttribute('data-region-id', region.regionId);-->
-<!--  btn.setAttribute('aria-label', `${region.name} の商品一覧へ移動`);-->
-<!--  btn.setAttribute('role', 'button');-->
-<!--  btn.setAttribute('tabindex', '0');-->
-<!--  btn.innerHTML = `<span class="pin-dot" aria-hidden="true"></span><span class="pin-label">${region.name}</span>`;-->
+        <!-- id=2 石狩 -->
+        <path class="region-shape"
+              data-region-id="2" data-region-name="石狩"
+              d="M230,360 L260,430 L240,480 L190,470 L170,420 Z"
+              fill="#5c6bc0" tabindex="0" />
 
-<!--  // クリックで遷移-->
-<!--  btn.addEventListener('click', (e) => {-->
-<!--    e.preventDefault();-->
-<!--    const regionId = region.regionId;-->
-<!--    const sort = region.defaultSort || 'id';-->
-<!--    window.location.href = `/products?regionId=${encodeURIComponent(regionId)}&sort=${encodeURIComponent(sort)}`;-->
-<!--  });-->
+        <!-- id=3 後志 -->
+        <path class="region-shape"
+              data-region-id="3" data-region-name="後志"
+              d="M190,470 L240,480 L260,550 L220,600 L170,580 L150,520 Z"
+              fill="#7e57c2" tabindex="0" />
 
-<!--  // ホバーでツールチップ-->
-<!--  btn.addEventListener('mouseenter', (e) => showTooltip(region, e));-->
-<!--  btn.addEventListener('mouseleave', hideTooltip);-->
+        <!-- id=4 胆振 -->
+        <path class="region-shape"
+              data-region-id="4" data-region-name="胆振"
+              d="M260,550 L320,570 L360,640 L320,700 L260,690 L220,600 Z"
+              fill="#8e24aa" tabindex="0" />
 
-<!--  // キーボードで Enter/Space-->
-<!--  btn.addEventListener('keydown', (e) => {-->
-<!--    if (e.key === 'Enter' || e.key === ' ') {-->
-<!--      e.preventDefault();-->
-<!--      btn.click();-->
-<!--    }-->
-<!--  });-->
+        <!-- id=5 日高 -->
+        <path class="region-shape"
+              data-region-id="5" data-region-name="日高"
+              d="M320,570 L380,560 L430,600 L420,660 L360,640 Z"
+              fill="#ab47bc" tabindex="0" />
 
-<!--  pinsLayer.appendChild(btn);-->
-<!--  return btn;-->
-<!--}-->
+        <!-- id=6 渡島 -->
+        <path class="region-shape"
+              data-region-id="6" data-region-name="渡島"
+              d="M220,600 L260,690 L260,760 L210,780 L180,720 L170,650 Z"
+              fill="#ec407a" tabindex="0" />
 
-<!--/* ツールチップ表示/非表示 */-->
-<!--function showTooltip(region, event) {-->
-<!--  tooltip.style.display = 'block';-->
-<!--  tooltip.textContent = `${region.name} — ${region.count ?? '商品なし'}`;-->
-<!--  positionTooltip(event.clientX, event.clientY);-->
-<!--}-->
-<!--function hideTooltip() {-->
-<!--  tooltip.style.display = 'none';-->
-<!--}-->
-<!--function positionTooltip(clientX, clientY) {-->
-<!--  const containerRect = svgEl.getBoundingClientRect();-->
-<!--  tooltip.style.left = (clientX - containerRect.left) + 'px';-->
-<!--  tooltip.style.top = (clientY - containerRect.top) + 'px';-->
-<!--}-->
+        <!-- id=7 檜山 -->
+        <path class="region-shape"
+              data-region-id="7" data-region-name="檜山"
+              d="M170,580 L220,600 L170,650 L150,640 L140,600 Z"
+              fill="#ef5350" tabindex="0" />
 
-<!--/* ピンを配置（% -> px） */-->
-<!--function placePins(regions) {-->
-<!--  pinsLayer.innerHTML = '';-->
-<!--  const rect = svgEl.getBoundingClientRect();-->
-<!--  regions.forEach(region => {-->
-<!--    const pin = createPin(region);-->
-<!--    const px = (region.xPercent / 100) * rect.width;-->
-<!--    const py = (region.yPercent / 100) * rect.height;-->
-<!--    pin.style.left = px + 'px';-->
-<!--    pin.style.top = py + 'px';-->
-<!--  });-->
-<!--}-->
+        <!-- id=12 十勝 -->
+        <path class="region-shape"
+              data-region-id="12" data-region-name="十勝"
+              d="M480,430 L580,440 L640,480 L620,560 L540,580 L460,540 Z"
+              fill="#ff7043" tabindex="0" />
 
-<!--/* 初期化 */-->
-<!--async function init() {-->
-<!--  loadingEl.style.display = 'block';-->
-<!--  let data = await fetchRegions();-->
-<!--  if (!data) data = fallbackRegions;-->
-<!--  regionsData = data;-->
-<!--  placePins(regionsData);-->
-<!--  loadingEl.style.display = 'none';-->
-<!--}-->
+        <!-- id=13 釧路 -->
+        <path class="region-shape"
+              data-region-id="13" data-region-name="釧路"
+              d="M540,580 L620,560 L660,620 L640,680 L560,700 L520,650 Z"
+              fill="#ffa726" tabindex="0" />
 
-<!--/* リサイズ対応 */-->
-<!--window.addEventListener('resize', () => {-->
-<!--  if (regionsData) placePins(regionsData);-->
-<!--});-->
+        <!-- id=14 根室 -->
+        <path class="region-shape"
+              data-region-id="14" data-region-name="根室"
+              d="M640,480 L720,500 L760,560 L740,620 L660,620 L620,560 Z"
+              fill="#ffca28" tabindex="0" />
 
-<!--/* モバイルのタップでツールチップを短時間表示 */-->
-<!--pinsLayer.addEventListener('touchstart', (e) => {-->
-<!--  const target = e.target.closest('.region-pin');-->
-<!--  if (!target) return;-->
-<!--  const regionId = target.getAttribute('data-region-id');-->
-<!--  const region = regionsData.find(r => String(r.regionId) === String(regionId));-->
-<!--  if (region) {-->
-<!--    const touch = e.touches[0];-->
-<!--    showTooltip(region, { clientX: touch.clientX, clientY: touch.clientY });-->
-<!--    setTimeout(hideTooltip, 1500);-->
-<!--  }-->
-<!--}, { passive: true });-->
+        <!-- ラベル（ざっくり配置） -->
+        <text class="region-label" x="470" y="190">宗谷</text>
+        <text class="region-label" x="310" y="230">留萌</text>
+        <text class="region-label" x="610" y="280">オホーツク</text>
+        <text class="region-label" x="430" y="360">上川</text>
+        <text class="region-label" x="320" y="360">空知</text>
+        <text class="region-label" x="230" y="410">石狩</text>
+        <text class="region-label" x="210" y="520">後志</text>
+        <text class="region-label" x="300" y="620">胆振</text>
+        <text class="region-label" x="380" y="600">日高</text>
+        <text class="region-label" x="220" y="720">渡島</text>
+        <text class="region-label" x="180" y="620">檜山</text>
+        <text class="region-label" x="540" y="520">十勝</text>
+        <text class="region-label" x="580" y="650">釧路</text>
+        <text class="region-label" x="690" y="560">根室</text>
+      </svg>
 
-<!--document.addEventListener('DOMContentLoaded', init);-->
-<!--</script>-->
-<!--</body>-->
-<!--</html>-->
+      <div id="tooltip" role="status" aria-live="polite"></div>
+    </div>
+  </div>
 
+<script>
+  const svg = document.getElementById('hokkaidoSvg');
+  const tooltip = document.getElementById('tooltip');
+  const container = document.getElementById('svgContainer');
+
+  // 地域ごとのデフォルトソート（必要に応じて変更 or サーバから埋め込み）
+  const defaultSortByRegion = {
+    1: 'id',          // 空知
+    2: 'price_desc',  // 石狩
+    3: 'id',          // 後志
+    4: 'id',          // 胆振
+    5: 'id',          // 日高
+    6: 'id',          // 渡島
+    7: 'id',          // 檜山
+    8: 'id',          // 上川
+    9: 'id',          // 留萌
+    10: 'id',         // 宗谷
+    11: 'id',         // オホーツク
+    12: 'id',         // 十勝
+    13: 'id',         // 釧路
+    14: 'id'          // 根室
+  };
+
+  function goToRegion(regionId) {
+    const sort = defaultSortByRegion[regionId] || 'id';
+    window.location.href = `/products?regionId=${encodeURIComponent(regionId)}&sort=${encodeURIComponent(sort)}`;
+  }
+
+  function showTooltip(name, evt) {
+    const rect = container.getBoundingClientRect();
+    tooltip.style.display = 'block';
+    tooltip.textContent = name;
+    tooltip.style.left = (evt.clientX - rect.left) + 'px';
+    tooltip.style.top = (evt.clientY - rect.top) + 'px';
+  }
+
+  function hideTooltip() {
+    tooltip.style.display = 'none';
+  }
+
+  svg.addEventListener('click', (e) => {
+    const target = e.target.closest('.region-shape');
+    if (!target) return;
+    const regionId = parseInt(target.getAttribute('data-region-id'), 10);
+    if (!regionId) return;
+    goToRegion(regionId);
+  });
+
+  svg.addEventListener('mousemove', (e) => {
+    const target = e.target.closest('.region-shape');
+    if (!target) {
+      hideTooltip();
+      return;
+    }
+    const name = target.getAttribute('data-region-name');
+    showTooltip(name, e);
+  });
+
+  svg.addEventListener('mouseleave', hideTooltip);
+
+  // キーボード操作対応
+  svg.querySelectorAll('.region-shape').forEach(path => {
+    path.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        const regionId = parseInt(path.getAttribute('data-region-id'), 10);
+        if (regionId) goToRegion(regionId);
+      }
+    });
+  });
+</script>
+</body>
+</html>

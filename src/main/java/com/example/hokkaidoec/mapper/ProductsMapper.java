@@ -13,7 +13,7 @@ public interface ProductsMapper {
 	List<Product> findAll();
 
 	/** IDで商品を1件取得する */
-	Product findById(int id);
+	Product findById(@Param("id") int id);
 
 	//	検索条件（カテゴリ、地域、価格帯、キーワード、並べ替え）を受け取るメソッド
 	//	まだ理解はできていないので保留
