@@ -1,8 +1,68 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
- 
-<mapper namespace="com.example.hokkaidoec.mapper.AiGrowthMapper">
- 
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.pakubakupaku_ecsite.mapper.AiGrowthMapper">
+
+    <resultMap id="AiGrowthResultMap" type="com.example.pakubakupaku_ecsite.entity.AiGrowth">
+        <id property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="name" column="name"/>
+        <result property="growthStage" column="growth_stage"/>
+        <result property="personality" column="personality"/>
+        <result property="updatedAt" column="updated_at"/>
+        <result property="charaImageUrl" column="chara_image_url"/>
+    </resultMap>
+
+    <select id="findByUserId" resultMap="AiGrowthResultMap">
+        SELECT
+            id,
+            user_id,
+            name,
+            growth_stage,
+            personality,
+            updated_at,
+            chara_image_url
+        FROM
+            ai_growth
+        WHERE
+            user_id = #{userId}
+    </select>
+
+    <insert id="insert"
+            parameterType="com.example.pakubakupaku_ecsite.entity.AiGrowth"
+            useGeneratedKeys="true"
+            keyProperty="id">
+        INSERT INTO ai_growth (
+            user_id,
+            name,
+            growth_stage,
+            personality,
+            updated_at,
+            chara_image_url
+        ) VALUES (
+            #{userId},
+            #{name},
+            #{growthStage},
+            #{personality},
+            CURRENT_TIMESTAMP,
+            #{charaImageUrl}
+        )
+    </insert>
+
+    <update id="updateGrowthStage">
+        UPDATE
+            ai_growth
+        <set>
+            growth_stage = #{growthStage},
+            updated_at = CURRENT_TIMESTAMP,
+            <if test="charaImageUrl != null and charaImageUrl != ''">
+                chara_image_url = #{charaImageUrl},
+            </if>
+        </set>
+        WHERE
+            user_id = #{userId}
+    </update>
+
 </mapper>

@@ -1,8 +1,72 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
- 
-<mapper namespace="com.example.hokkaidoec.mapper.OrderMapper">
- 
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.pakubakupaku_ECsite.mapper.OrderMapper">
+
+    <resultMap id="OrderResultMap" type="com.example.pakubakupaku_ECsite.entity.Order">
+        <id property="id" column="id" />
+        <result property="userId" column="user_id" />
+        <result property="shippingAddress" column="shipping_address" />
+        <result property="orderDate" column="order_date" />
+        <result property="totalAmount" column="total_amount" />
+        <result property="usedPoint" column="used_point" />
+        <result property="earnedPoint" column="earned_point" />
+        <result property="orderStatus" column="order_status" />
+    </resultMap>
+
+    <insert id="insert"
+            parameterType="com.example.pakubakupaku_ECsite.entity.Order"
+            useGeneratedKeys="true"
+            keyProperty="id"
+            keyColumn="id">
+        INSERT INTO orders (
+            user_id,
+            shipping_address,
+            order_date,
+            total_amount,
+            used_point,
+            earned_point,
+            order_status
+        ) VALUES (
+            #{userId},
+            #{shippingAddress},
+            #{orderDate},
+            #{totalAmount},
+            #{usedPoint},
+            #{earnedPoint},
+            #{orderStatus}
+        )
+    </insert>
+
+    <select id="findById" resultMap="OrderResultMap">
+        SELECT
+            id,
+            user_id,
+            shipping_address,
+            order_date,
+            total_amount,
+            used_point,
+            earned_point,
+            order_status
+        FROM orders
+        WHERE id = #{id}
+    </select>
+
+    <select id="findByUserId" resultMap="OrderResultMap">
+        SELECT
+            id,
+            user_id,
+            shipping_address,
+            order_date,
+            total_amount,
+            used_point,
+            earned_point,
+            order_status
+        FROM orders
+        WHERE user_id = #{userId}
+        ORDER BY order_date DESC
+    </select>
+
 </mapper>
