@@ -1,3 +1,4 @@
+
 package com.example.hokkaidoec.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
