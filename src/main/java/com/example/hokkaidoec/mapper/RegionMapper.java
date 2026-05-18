@@ -1,11 +1,17 @@
 package com.example.hokkaidoec.mapper;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Mapper;
 
 import com.example.hokkaidoec.entity.Region;
 
 @Mapper
 public interface RegionMapper {
+
+	/** 全商品を取得する */
+	List<Region> findAll();
+
 	Region findById(Integer id);
 }
 

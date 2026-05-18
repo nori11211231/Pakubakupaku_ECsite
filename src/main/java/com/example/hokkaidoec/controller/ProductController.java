@@ -27,34 +27,17 @@ public class ProductController {
 		this.categoryMapper = categoryMapper;
 	}
 
-	//	@GetMapping("/products")
-	//	public String showList(Model model) {
-	//		//商品一覧ページを表示する
-	//
-	//		List<Product> products = productMapper.findAll();
-	//		model.addAttribute("products", products);
-	//		return "products";
-	//	}
-
-	//商品詳細ページへ
-	//	@GetMapping("/products/{id}")
-	//	public String showDetail(@PathVariable("id") int id, Model model) {
-	//		Product product = productMapper.findById(id);
-	//		model.addAttribute("product", product);
-	//		return "product-detail";
-	//	}
-
 	@GetMapping("/products/{productId}")
 	public String detail(@PathVariable Integer productId, Model model) {
 
 		// 商品本体
 		Product product = productMapper.findById(productId);
-		 if (product == null) {
-		        // 本当に存在しない ID のとき
-		        model.addAttribute("errorMessage", "商品が見つかりません");
-		        // 一覧に戻す or 専用エラーページへ
-		        return "redirect:/products";
-		    }
+		if (product == null) {
+			// 本当に存在しない ID のとき
+			model.addAttribute("errorMessage", "商品が見つかりません");
+			// 一覧に戻す or 専用エラーページへ
+			return "redirect:/products";
+		}
 		// カテゴリ名を取得
 		Category category = categoryMapper.findById(product.getCategoryId());
 
@@ -78,11 +61,25 @@ public class ProductController {
 			@RequestParam(value = "maxPrice", required = false) Integer maxPrice,
 			@RequestParam(value = "sort", required = false) String sort,
 			Model model) {
-
+		// 商品検索をするコード
 		List<Product> products = productMapper.search(
 				keyword, categoryId, regionId, minPrice, maxPrice, sort);
 
+		List<Category> categories = categoryMapper.findAll();
+		List<Region> regions = regionMapper.findAll();
+
+		// 商品地域カテゴリ一覧
 		model.addAttribute("products", products);
+		model.addAttribute("categories", categories);
+		model.addAttribute("regions", regions);
+
+		// ★ 選択状態を保持
+		model.addAttribute("keyword", keyword);
+		model.addAttribute("categoryId", categoryId);
+		model.addAttribute("regionId", regionId);
+		model.addAttribute("minPrice", minPrice);
+		model.addAttribute("maxPrice", maxPrice);
+		model.addAttribute("sort", sort);
 		return "products";
 	}
 }

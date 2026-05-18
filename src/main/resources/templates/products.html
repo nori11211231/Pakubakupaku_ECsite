@@ -155,27 +155,27 @@
             <h4>キーワード</h4>
             <input type="text" name="keyword" th:value="${keyword}" placeholder="例：鮭 いくら" aria-label="キーワード" />
 
-            <h4>カテゴリー</h4>
-            <select name="categoryId" aria-label="カテゴリー">
-              <option value="" th:selected="${categoryId} == null">すべて</option>
-              <option th:each="cat : ${categories}"
-                      th:value="${cat.id}"
-                      th:text="${cat.name}"
-                      th:selected="${cat.id} == ${categoryId}">
-                選択肢
-              </option>
-            </select>
+			<h4>カテゴリー</h4>
+			<select name="categoryId" aria-label="カテゴリー">
+			  <option value="" th:selected="${categoryId} == null">すべて</option>
+			  <option th:each="cat : ${categories}"
+			          th:value="${cat.id}"
+			          th:text="${cat.categoryName}"
+			          th:selected="${cat.id} == ${categoryId}">
+			    選択肢
+			  </option>
+			</select>
 
-            <h4>地域</h4>
-            <select name="regionId" aria-label="地域">
-              <option value="" th:selected="${regionId} == null">すべて</option>
-              <option th:each="reg : ${regions}"
-                      th:value="${reg.id}"
-                      th:text="${reg.name}"
-                      th:selected="${reg.id} == ${regionId}">
-                選択肢
-              </option>
-            </select>
+			<h4>地域</h4>
+			<select name="regionId" aria-label="地域">
+			  <option value="" th:selected="${regionId} == null">すべて</option>
+			  <option th:each="reg : ${regions}"
+			          th:value="${reg.id}"
+			          th:text="${reg.regionName}"
+			          th:selected="${reg.id} == ${regionId}">
+			    選択肢
+			  </option>
+			</select>
 
             <h4>値段帯</h4>
             <div style="display:flex;gap:8px;align-items:center;">
@@ -211,7 +211,9 @@
         <section class="product-grid" aria-label="商品一覧">
           <article class="card" th:each="p : ${products}" th:attr="aria-labelledby=${'title-' + p.id}">
             <a th:href="@{|/products/${p.id}|}" style="text-decoration:none;color:inherit;" aria-hidden="false">
-              <img th:src="${p.imageUrl != null} ? ${p.imageUrl} : @{/images/placeholder.png}" th:alt="${p.productName}" />
+				<img th:src="${p.imageUrl != null} ? @{${p.imageUrl}} : @{/images/placeholder.png}"
+				     th:alt="${p.productName}" />
+
             </a>
 
             <div class="card-body">
