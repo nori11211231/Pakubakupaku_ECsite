@@ -14,7 +14,7 @@ public interface UserMapper {
 	User findByEmail(String email);
 
 	/** ユーザを登録する */
-	@Insert("INSERT INTO users (name, email,address,phone, password,point,totalPurchaseAmount,rankId) VALUES (#{name}, #{email},#{address},#{phone}, #{password},0,0,#{rankId})")
+	@Insert("INSERT INTO users (name,email,address,phone,password,point,totalPurchaseAmount,rankId) VALUES (#{name}, #{email},#{address},#{phone}, #{password},0,0,#{rankId})")
 	void insert(User user);
 }
 
