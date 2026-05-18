@@ -3,7 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
  
-<mapper namespace="com.example.hokkaidoec.mapper.ProductMapper">
+<mapper namespace="com.example.hokkaidoec.mapper.ProductsMapper">
 
   <select id="findAll" resultType="com.example.hokkaidoec.entity.Product">
       SELECT
