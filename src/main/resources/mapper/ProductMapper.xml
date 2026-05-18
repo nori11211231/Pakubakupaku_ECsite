@@ -4,26 +4,69 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
  
 <mapper namespace="com.example.hokkaidoec.mapper.ProductMapper">
+
+  <select id="findAll" resultType="com.example.hokkaidoec.entity.Product">
+      SELECT
+      id,
+      product_name AS productName,
+      description,
+      price,
+      stock,
+      image_url AS imageUrl,
+      category_id AS categoryId,
+      region_id AS regionId
+    FROM products
+    ORDER BY id;
+  </select>
  
+  <select id="findById" resultType="com.example.hokkaidoec.entity.Product">
+     SELECT
+      id,
+      product_name AS productName,
+      description,
+      price,
+      stock,
+      image_url AS imageUrl,
+      category_id AS categoryId,
+      region_id AS regionId
+    FROM products
+    WHERE id = #{id};
+  </select> 
+<!--  理解できていないので保留-->
+
+<select id="search" resultType="com.example.hokkaidoec.entity.Product">
+    SELECT
+      id,
+      product_name AS productName,
+      description,
+      price,
+      stock,
+      image_url AS imageUrl,
+      category_id AS categoryId,
+      region_id AS regionId
+    FROM products
+    <where>
+      <if test="keyword != null and keyword != ''">
+        AND product_name ILIKE '%' || #{keyword} || '%'
+      </if>
+      <if test="categoryId != null">
+        AND category_id = #{categoryId}
+      </if>
+      <if test="regionId != null">
+        AND region_id = #{regionId}
+      </if>
+      <if test="minPrice != null">
+        AND price >= #{minPrice}
+      </if>
+      <if test="maxPrice != null">
+        AND price &lt;= #{maxPrice}
+      </if>
+<!--<←これが打てない-->
+    </where>
+    <choose>
+      <when test="sort == 'price_asc'">ORDER BY price ASC</when>
+      <when test="sort == 'price_desc'">ORDER BY price DESC</when>
+      <otherwise>ORDER BY id ASC</otherwise>
+    </choose>
+     </select>
 </mapper>
-<!--<?xml version="1.0" encoding="UTF-8" ?>-->
-<!--<!DOCTYPE mapper-->
-<!--  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"-->
-<!--  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">-->
-
-<!--<mapper namespace="com.example.ecsample.mapper.ProductMapper">-->
-
-<!--  <select id="findAll" resultType="com.example.ecsample.entity.Product">-->
-<!--    SELECT id, name, price-->
-<!--    FROM products-->
-<!--    ORDER BY id-->
-<!--  </select>-->
-<!--   This is a test comment -->
-
-<!--  <select id="findById" resultType="com.example.ecsample.entity.Product">-->
-<!--    SELECT id, name, price-->
-<!--    FROM products-->
-<!--    WHERE id = #{id}-->
-<!--  </select>-->
-
-<!--</mapper>-->
