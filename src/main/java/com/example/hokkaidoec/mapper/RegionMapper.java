@@ -1,5 +1,14 @@
 package com.example.hokkaidoec.mapper;
 
+import org.apache.ibatis.annotations.Mapper;
+
+import com.example.hokkaidoec.entity.Region;
+
+@Mapper
+public interface RegionMapper {
+	Region findById(Integer id);
+}
+
 //import java.util.List;
 //
 //import org.apache.ibatis.annotations.Mapper;
