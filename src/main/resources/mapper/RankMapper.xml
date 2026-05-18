@@ -1,8 +1,57 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
- 
+        "http://mybatis.org/dtd/mybatis-3-3-mapper.dtd">
+
+<!-- namespaceには、対になるJavaのMapperインターフェースのフルパスを指定します -->
 <mapper namespace="com.example.hokkaidoec.mapper.RankMapper">
- 
+
+    <!-- 💡 resultMap: データベースの列名(column)とJavaの変数名(property)を紐付ける設定 -->
+    <!-- これを定義しておくと、SQL側で毎回「AS rankName」のように書く必要がなくなります！ -->
+    <resultMap id="RankResultMap" type="com.example.hokkaidoec.entity.Rank">
+        <id property="id" column="id" />
+        <result property="rankName" column="rank_name" />
+        <result property="minAmount" column="min_amount" />
+        <result property="pointRate" column="point_rate" />
+    </resultMap>
+
+    <!-- 1. 全件取得 -->
+    <!-- resultMapには、上で定義した id="RankResultMap" を指定します -->
+    <select id="findAll" resultMap="RankResultMap">
+        SELECT id, rank_name, min_amount, point_rate 
+        FROM ranks 
+        ORDER BY min_amount ASC
+    </select>
+
+    <!-- 2. 1件取得 -->
+    <!-- parameterTypeには、引数の型（Integer）を指定します -->
+    <select id="findById" parameterType="java.lang.Integer" resultMap="RankResultMap">
+        SELECT id, rank_name, min_amount, point_rate 
+        FROM ranks 
+        WHERE id = #{id}
+    </select>
+
+    <!-- 3. 新規追加 -->
+    <!-- useGeneratedKeysとkeyPropertyで、自動採番されたIDをEntityに書き戻します -->
+    <insert id="insert" parameterType="com.example.hokkaidoec.entity.Rank" 
+            useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO ranks (rank_name, min_amount, point_rate) 
+        VALUES (#{rankName}, #{minAmount}, #{pointRate})
+    </insert>
+
+    <!-- 4. 更新 -->
+    <update id="update" parameterType="com.example.hokkaidoec.entity.Rank">
+        UPDATE ranks 
+        SET rank_name = #{rankName}, 
+            min_amount = #{minAmount}, 
+            point_rate = #{pointRate} 
+        WHERE id = #{id}
+    </update>
+
+    <!-- 5. 削除 -->
+    <delete id="delete" parameterType="java.lang.Integer">
+        DELETE FROM ranks 
+        WHERE id = #{id}
+    </delete>
+
 </mapper>
