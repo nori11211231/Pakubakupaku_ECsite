@@ -3,9 +3,9 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.example.pakubakupaku_ecsite.mapper.AiGrowthMapper">
+<mapper namespace="com.example.hokkaidoec.mapper.AiGrowthMapper">
 
-    <resultMap id="AiGrowthResultMap" type="com.example.pakubakupaku_ecsite.entity.AiGrowth">
+    <resultMap id="AiGrowthResultMap" type="com.example.hokkaidoec.entity.AiGrowth">
         <id property="id" column="id"/>
         <result property="userId" column="user_id"/>
         <result property="name" column="name"/>
@@ -31,7 +31,7 @@
     </select>
 
     <insert id="insert"
-            parameterType="com.example.pakubakupaku_ecsite.entity.AiGrowth"
+            parameterType="com.example.hokkaidoec.entity.AiGrowth"
             useGeneratedKeys="true"
             keyProperty="id">
         INSERT INTO ai_growth (
