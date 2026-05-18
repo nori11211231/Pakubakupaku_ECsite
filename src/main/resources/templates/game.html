@@ -1,57 +1,170 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>ガチャ</title>
+    <title>ポイントガチャ</title>
+    <link rel="stylesheet" th:href="@{/css/game.css}">
 </head>
 
-    <h1>ガチャ</h1>
+<body>
+<div class="page">
 
-    <p>
-        現在ポイント：
-        <span th:text="${currentPoint}">0</span>
-        pt
-    </p>
-
-     エラーメッセージ 
-    <p th:if="${errorMessage}" th:text="${errorMessage}" style="color: red;">
-        エラーメッセージ
-    </p>
-
-    <form th:action="@{/game}" th:object="${gameForm}" method="post">
-
+    <header class="site-header">
         <div>
-            <label for="betPoint">ベットポイント</label>
-            <input type="number"
-                   id="betPoint"
-                   th:field="*{betPoint}"
-                   min="1"
-                   required>
+            <div class="logo-title">北の幻想紀行</div>
+            <div class="logo-sub">HOKKAIDO FANTASIA</div>
         </div>
 
-        <div>
-            <button type="submit">ガチャを引く</button>
+        <nav class="nav">
+            <a th:href="@{/}">ホーム</a>
+            <a th:href="@{/products}">ショップ</a>
+            <a th:href="@{/mypage}">マイページ</a>
+            <a th:href="@{/points/history}">ポイント履歴</a>
+        </nav>
+
+        <div class="header-point">
+            <small>所持ポイント</small>
+            <strong>
+                <span th:text="${currentPoint}">1250</span> pt
+            </strong>
         </div>
+    </header>
 
-    </form>
+    <main class="main">
 
-    <hr>
+        <section class="hero-title">
+            <h1>ポイントガチャ</h1>
+            <p>ポイントを使って運試し！当たるとポイント大量獲得！</p>
+        </section>
 
-    <h2>ガチャ内容</h2>
+        <section class="gacha-layout">
 
-    <ul>
-        <li>大当たり：ベットポイントの10倍</li>
-        <li>当たり：ベットポイントの2倍</li>
-        <li>はずれ：獲得ポイント0</li>
-    </ul>
+            <aside class="panel point-panel">
+                <div class="point-label">現在のポイント</div>
 
-    <p>
-        <a th:href="@{/game/history}">ガチャ履歴を見る</a>
-    </p>
+                <div>
+                    <span class="point-number" th:text="${currentPoint}">1250</span>
+                    <span class="point-unit">pt</span>
+                </div>
+            </aside>
 
-    <p>
-        <a th:href="@{/}">トップページへ戻る</a>
-    </p>
+            <section class="machine-area">
+                <div class="machine-aura"></div>
+
+                <div class="side-phrase left">
+                    異端が集う、奇跡の箱
+                </div>
+
+                <img
+                    class="machine-image"
+                    th:src="@{/img/game/gacha-machine.png}"
+                    alt="ポイントガチャの機械">
+
+                <div class="side-phrase right">
+                    北海道発、背徳の運試し
+                </div>
+            </section>
+
+            <section class="panel control-panel">
+
+                <div class="section-title">ベットポイントを選ぶ</div>
+
+                <p class="error-box" th:if="${errorMessage}" th:text="${errorMessage}">
+                    ポイントが不足しています。
+                </p>
+
+                <form th:action="@{/game/result}" method="post" th:object="${gameForm}">
+
+                    <div class="bet-buttons">
+                        <button type="button" class="bet-button" onclick="setBetPoint(10)">
+                            10pt
+                        </button>
+
+                        <button type="button" class="bet-button active" onclick="setBetPoint(50)">
+                            50pt
+                        </button>
+
+                        <button type="button" class="bet-button" onclick="setBetPoint(100)">
+                            100pt
+                        </button>
+                    </div>
+
+                    <div class="input-row">
+                        <label for="betPoint">自由入力</label>
+
+                        <div class="input-wrap">
+                            <input
+                                type="number"
+                                id="betPoint"
+                                th:field="*{betPoint}"
+                                min="1"
+                                value="50">
+                            <span>pt</span>
+                        </div>
+
+                        <div class="edit-icon">✎</div>
+                    </div>
+
+                    <button type="submit" class="main-button">
+                        ガチャを引く
+                    </button>
+
+                </form>
+
+                <div class="sub-buttons">
+                    <a class="sub-button" th:href="@{/game/history}">
+                        ↺ ガチャ履歴を見る
+                    </a>
+
+                    <a class="sub-button" th:href="@{/}">
+                        ⌂ トップへ戻る
+                    </a>
+                </div>
+
+            </section>
+
+        </section>
+
+        <section class="promo">
+            <img
+                class="treasure-img"
+                th:src="@{/img/game/treasure.png}"
+                alt="宝箱">
+
+            <div>
+                <h2>当たるとポイント大量獲得！</h2>
+                <p>
+                    超大当たりは1600分の1でポイント100倍！<br>
+                    当たりならポイント10倍、はずれなら10倍消費！
+                </p>
+            </div>
+
+            <div class="bear-mark">🐻</div>
+        </section>
+
+        <p class="footer-note">
+            ※獲得したポイントは本サイト内でご利用いただけます。
+        </p>
+
+    </main>
+</div>
+
+<script>
+    function setBetPoint(point) {
+        const input = document.getElementById("betPoint");
+        input.value = point;
+
+        const buttons = document.querySelectorAll(".bet-button");
+
+        buttons.forEach(button => {
+            button.classList.remove("active");
+
+            if (button.textContent.trim() === point + "pt") {
+                button.classList.add("active");
+            }
+        });
+    }
+</script>
 
 </body>
 </html>
