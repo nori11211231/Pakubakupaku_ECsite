@@ -2,9 +2,9 @@ package com.example.hokkaidoec.mapper;
 
 import java.util.List;
 
-
 import org.apache.ibatis.annotations.Mapper;
-import org.springframework.data.repository.query.Param;
+//import org.springframework.data.repository.query.Param;
+import org.apache.ibatis.annotations.Param;
 
 import com.example.hokkaidoec.entity.GamePlayHistory;
 
