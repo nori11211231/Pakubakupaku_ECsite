@@ -1,0 +1,270 @@
+@charset "UTF-8";
+
+* {
+	box-sizing: border-box;
+}
+
+body {
+	margin: 0;
+	min-height: 100vh;
+	font-family: "Yu Mincho", "Hiragino Mincho ProN", serif;
+	color: #f8e7b2;
+	background:
+		linear-gradient(rgba(2, 5, 12, 0.78), rgba(2, 5, 12, 0.92)),
+		url("/img/game/gacha-bg.png");
+	background-size: cover;
+	background-position: center;
+	background-attachment: fixed;
+}
+
+a {
+	color: inherit;
+	text-decoration: none;
+}
+
+.history-page {
+	min-height: 100vh;
+	border: 2px solid rgba(217, 168, 72, 0.65);
+	background:
+		radial-gradient(circle at 50% 18%, rgba(255, 201, 74, 0.16), transparent 34%),
+		radial-gradient(circle at 85% 30%, rgba(90, 64, 180, 0.2), transparent 28%);
+}
+
+.history-header {
+	height: 76px;
+	padding: 0 48px;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	background: rgba(3, 7, 16, 0.9);
+	border-bottom: 1px solid rgba(217, 168, 72, 0.45);
+}
+
+.logo-title {
+	font-size: 26px;
+	letter-spacing: 0.18em;
+	color: #ffe08a;
+	text-shadow: 0 0 16px rgba(255, 210, 95, 0.55);
+}
+
+.logo-sub {
+	font-size: 11px;
+	letter-spacing: 0.25em;
+	color: #b9964b;
+	margin-top: 4px;
+}
+
+.header-point {
+	min-width: 210px;
+	padding: 9px 18px;
+	text-align: center;
+	border: 1px solid rgba(217, 168, 72, 0.85);
+	background: rgba(8, 12, 25, 0.85);
+	box-shadow: inset 0 0 18px rgba(217, 168, 72, 0.08);
+}
+
+.header-point small {
+	display: block;
+	font-size: 12px;
+	color: #cdb06a;
+}
+
+.header-point strong {
+	display: block;
+	font-size: 22px;
+	color: #ffe38c;
+}
+
+.history-main {
+	width: min(1180px, calc(100% - 72px));
+	margin: 0 auto;
+	padding: 42px 0 40px;
+}
+
+.history-title {
+	text-align: center;
+	margin-bottom: 30px;
+}
+
+.history-title h1 {
+	margin: 0;
+	font-size: clamp(52px, 6vw, 86px);
+	letter-spacing: 0.2em;
+	color: #ffe38c;
+	text-shadow:
+		0 0 14px rgba(255, 216, 112, 0.9),
+		0 0 38px rgba(217, 168, 72, 0.6);
+}
+
+.history-title p {
+	margin: 12px 0 0;
+	font-size: 20px;
+	letter-spacing: 0.18em;
+	color: #f4dfaa;
+}
+
+.summary-area {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(260px, 1fr));
+	gap: 24px;
+	margin-bottom: 30px;
+}
+
+.summary-card {
+	padding: 24px;
+	text-align: center;
+	border: 1px solid rgba(217, 168, 72, 0.78);
+	background: rgba(5, 10, 22, 0.86);
+	box-shadow:
+		0 0 30px rgba(0, 0, 0, 0.45),
+		inset 0 0 24px rgba(255, 220, 130, 0.08);
+}
+
+.summary-label {
+	display: block;
+	margin-bottom: 10px;
+	font-size: 17px;
+	letter-spacing: 0.14em;
+	color: #d9bd77;
+}
+
+.summary-card strong {
+	font-size: 42px;
+	color: #ffe38c;
+	text-shadow: 0 0 22px rgba(255, 218, 114, 0.75);
+}
+
+.history-card {
+	padding: 30px;
+	border: 1px solid rgba(217, 168, 72, 0.82);
+	background: rgba(5, 10, 22, 0.9);
+	box-shadow:
+		0 0 46px rgba(0, 0, 0, 0.65),
+		inset 0 0 30px rgba(255, 220, 130, 0.08);
+}
+
+.history-table {
+	width: 100%;
+	border-collapse: collapse;
+	overflow: hidden;
+}
+
+.history-table th,
+.history-table td {
+	padding: 18px 14px;
+	text-align: center;
+	border-bottom: 1px solid rgba(217, 168, 72, 0.28);
+}
+
+.history-table th {
+	font-size: 18px;
+	letter-spacing: 0.12em;
+	color: #ffe38c;
+	background: rgba(217, 168, 72, 0.14);
+}
+
+.history-table td {
+	font-size: 17px;
+	color: #f8e7b2;
+}
+
+.history-table tr:hover td {
+	background: rgba(217, 168, 72, 0.08);
+}
+
+.result-badge {
+	display: inline-block;
+	min-width: 120px;
+	padding: 8px 14px;
+	border-radius: 999px;
+	font-weight: bold;
+	letter-spacing: 0.08em;
+}
+
+.badge-super {
+	color: #2a1600;
+	background: linear-gradient(180deg, #fff4a8, #ffba33);
+	box-shadow:
+		0 0 18px rgba(255, 224, 95, 0.9),
+		0 0 34px rgba(255, 160, 35, 0.7);
+}
+
+.badge-win {
+	color: #261200;
+	background: linear-gradient(180deg, #ffe28c, #d88b1c);
+	box-shadow: 0 0 18px rgba(255, 194, 64, 0.65);
+}
+
+.badge-lose {
+	color: #d8e4ff;
+	background: linear-gradient(180deg, #2a3148, #111827);
+	border: 1px solid rgba(150, 170, 220, 0.5);
+	box-shadow: 0 0 14px rgba(120, 140, 190, 0.32);
+}
+
+.point-plus {
+	color: #ffe38c;
+	font-weight: bold;
+	text-shadow: 0 0 16px rgba(255, 218, 114, 0.7);
+}
+
+.point-zero {
+	color: #9ec4ff;
+	font-weight: bold;
+}
+
+.empty-message {
+	padding: 44px 20px;
+	text-align: center;
+	font-size: 22px;
+	letter-spacing: 0.1em;
+	color: #f4dfaa;
+}
+
+.history-buttons {
+	display: flex;
+	justify-content: center;
+	gap: 18px;
+	margin-top: 30px;
+	flex-wrap: wrap;
+}
+
+.main-link,
+.sub-link {
+	min-width: 210px;
+	padding: 16px 24px;
+	text-align: center;
+	border: 1px solid rgba(217, 168, 72, 0.75);
+	background: rgba(8, 13, 27, 0.9);
+	transition: 0.2s;
+}
+
+.main-link {
+	background: linear-gradient(180deg, #ffd76f, #b86c0a);
+	color: #fff7d0;
+	box-shadow: 0 0 24px rgba(255, 183, 54, 0.65);
+}
+
+.main-link:hover,
+.sub-link:hover {
+	transform: translateY(-2px);
+	box-shadow: 0 0 26px rgba(255, 194, 64, 0.6);
+}
+
+@media (max-width: 900px) {
+	.history-header {
+		padding: 0 20px;
+	}
+
+	.summary-area {
+		grid-template-columns: 1fr;
+	}
+
+	.history-card {
+		overflow-x: auto;
+	}
+
+	.history-table {
+		min-width: 760px;
+	}
+}

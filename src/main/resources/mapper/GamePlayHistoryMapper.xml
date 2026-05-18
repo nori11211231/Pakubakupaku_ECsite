@@ -3,50 +3,51 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.example.hokkaidoec.mapper.GamePlayHistoryMapper">
+<mapper
+	namespace="com.example.hokkaidoec.mapper.GamePlayHistoryMapper">
 
-    <resultMap id="GamePlayHistoryResultMap" type="com.example.hokkaidoec.entity.GamePlayHistory">
-        <id property="id" column="id"/>
-        <result property="userId" column="user_id"/>
-        <result property="betPoint" column="bet_point"/>
-        <result property="result" column="result"/>
-        <result property="earnedPoint" column="earned_point"/>
-        <result property="playedAt" column="played_at"/>
-    </resultMap>
+	<resultMap id="GamePlayHistoryResultMap"
+		type="com.example.hokkaidoec.entity.GamePlayHistory">
+		<id property="id" column="id" />
+		<result property="userId" column="user_id" />
+		<result property="betPoint" column="bet_point" />
+		<result property="result" column="result" />
+		<result property="earnedPoint" column="earned_point" />
+		<result property="playedAt" column="played_at" />
+	</resultMap>
 
-    <insert id="insert"
-            parameterType="com.example.hokkaidoec.entity.GamePlayHistory"
-            useGeneratedKeys="true"
-            keyProperty="id">
-        INSERT INTO game_play_history (
-            user_id,
-            bet_point,
-            result,
-            earned_point,
-            played_at
-        ) VALUES (
-            #{userId},
-            #{betPoint},
-            #{result},
-            #{earnedPoint},
-            CURRENT_TIMESTAMP
-        )
-    </insert>
+	<insert id="insert"
+		parameterType="com.example.hokkaidoec.entity.GamePlayHistory"
+		useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO game_play_history (
+		user_id,
+		bet_point,
+		result,
+		earned_point,
+		played_at
+		) VALUES (
+		#{userId},
+		#{betPoint},
+		#{result},
+		#{earnedPoint},
+		CURRENT_TIMESTAMP
+		)
+	</insert>
 
-    <select id="findByUserId" resultMap="GamePlayHistoryResultMap">
-        SELECT
-            id,
-            user_id,
-            bet_point,
-            result,
-            earned_point,
-            played_at
-        FROM
-            game_play_history
-        WHERE
-            user_id = #{userId}
-        ORDER BY
-            played_at DESC
-    </select>
+	<select id="findByUserId" resultMap="GamePlayHistoryResultMap">
+		SELECT
+		id,
+		user_id,
+		bet_point,
+		result,
+		earned_point,
+		played_at
+		FROM
+		game_play_history
+		WHERE
+		user_id = #{userId}
+		ORDER BY
+		played_at DESC
+	</select>
 
 </mapper>

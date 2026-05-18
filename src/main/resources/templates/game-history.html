@@ -1,60 +1,124 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="ja">
+
 <head>
-    <meta charset="UTF-8">
-    <title>ガチャ履歴</title>
+	<meta charset="UTF-8">
+	<title>ガチャ履歴</title>
+	<link rel="stylesheet" th:href="@{/css/game-history.css}">
 </head>
+
 <body>
+	<div class="history-page">
 
-    <h1>ガチャ履歴</h1>
+		<header class="history-header">
+			<div>
+				<div class="logo-title">北の幻想紀行</div>
+				<div class="logo-sub">GACHA HISTORY</div>
+			</div>
 
-    <table border="1">
-        <thead>
-            <tr>
-                <th>日時</th>
-                <th>ベットポイント</th>
-                <th>結果</th>
-                <th>獲得ポイント</th>
-            </tr>
-        </thead>
+			<div class="header-point">
+				<small>現在のポイント</small>
+				<strong>
+					<span th:text="${currentPoint}">1250</span> pt
+				</strong>
+			</div>
+		</header>
 
-        <tbody>
-            <tr th:each="history : ${gameHistories}">
-                <td th:text="${#temporals.format(history.playedAt, 'yyyy/MM/dd HH:mm')}">
-                    2026/05/15 12:00
-                </td>
+		<main class="history-main">
 
-                <td>
-                    <span th:text="${history.betPoint}">0</span> pt
-                </td>
+			<section class="history-title">
+				<h1>ガチャ履歴</h1>
+				<p>これまでの運命の記録</p>
+			</section>
 
-                <td>
-                    <span th:if="${history.resultType == 'SUPER_JACKPOT'}">超大当たり</span>
-                    <span th:if="${history.resultType == 'BIG_WIN'}">大当たり</span>
-                    <span th:if="${history.resultType == 'WIN'}">当たり</span>
-                    <span th:if="${history.resultType == 'LOSE'}">はずれ</span>
-                </td>
+			<section class="summary-area">
+				<div class="summary-card">
+					<span class="summary-label">現在ポイント</span>
+					<strong>
+						<span th:text="${currentPoint}">1250</span> pt
+					</strong>
+				</div>
 
-                <td>
-                    <span th:text="${history.earnedPoint}">0</span> pt
-                </td>
-            </tr>
-        </tbody>
-    </table>
+				<div class="summary-card">
+					<span class="summary-label">履歴件数</span>
+					<strong>
+						<span th:text="${#lists.size(gameHistories)}">0</span> 回
+					</strong>
+				</div>
+			</section>
 
-    <p th:if="${#lists.isEmpty(gameHistories)}">
-        まだガチャ履歴はありません。
-    </p>
+			<section class="history-card">
 
-    <hr>
+				<div th:if="${#lists.isEmpty(gameHistories)}" class="empty-message">
+					<p>まだガチャ履歴はありません。</p>
+					<p>最初の一回で運命を試そう。</p>
+				</div>
 
-    <p>
-        <a th:href="@{/game}">ガチャ画面へ戻る</a>
-    </p>
+				<table th:if="${!#lists.isEmpty(gameHistories)}" class="history-table">
+					<thead>
+						<tr>
+							<th>日時</th>
+							<th>ベット</th>
+							<th>結果</th>
+							<th>獲得ポイント</th>
+						</tr>
+					</thead>
 
-    <p>
-        <a th:href="@{/}">トップページへ戻る</a>
-    </p>
+					<tbody>
+						<tr th:each="history : ${gameHistories}">
+							<td th:text="${#temporals.format(history.playedAt, 'yyyy/MM/dd HH:mm')}">
+								2026/05/18 15:00
+							</td>
 
+							<td>
+								<span th:text="${history.betPoint}">100</span> pt
+							</td>
+
+							<td>
+								<span th:if="${history.result == false}" class="result-badge badge-lose">
+									はずれ
+								</span>
+
+								<span
+									th:if="${history.result == true and history.earnedPoint == history.betPoint * 100}"
+									class="result-badge badge-super">
+									超大当たり
+								</span>
+
+								<span th:if="${history.result == true and history.earnedPoint == history.betPoint * 10}"
+									class="result-badge badge-win">
+									当たり
+								</span>
+
+								<span
+									th:if="${history.result == true and history.earnedPoint != history.betPoint * 100 and history.earnedPoint != history.betPoint * 10}"
+									class="result-badge badge-win">
+									当たり
+								</span>
+							</td>
+
+							<td>
+								<span th:text="${history.earnedPoint}"
+									th:classappend="${history.earnedPoint > 0} ? ' point-plus' : ' point-zero'">
+									0
+								</span>
+								pt
+							</td>
+						</tr>
+					</tbody>
+				</table>
+
+			</section>
+
+			<div class="history-buttons">
+				<a th:href="@{/game}" class="main-link">ガチャへ戻る</a>
+				<a th:href="@{/points/history}" class="sub-link">ポイント履歴を見る</a>
+				<a th:href="@{/}" class="sub-link">トップへ戻る</a>
+			</div>
+
+		</main>
+
+	</div>
 </body>
+
 </html>

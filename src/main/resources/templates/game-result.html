@@ -1,63 +1,141 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="ja">
 
 <head>
 	<meta charset="UTF-8">
 	<title>ガチャ結果</title>
+	<link rel="stylesheet" th:href="@{/css/game-result.css}">
 </head>
 
-<body>
+<body th:class="'result-' + ${effectType}">
 
-	<h1>ガチャ結果</h1>
-
-	 結果動画 
-	<div>
-		<video width="500" autoplay muted playsinline controls>
-			<source th:src="@{${videoPath}}" type="video/mp4">
+	<!-- 動画だけ表示するエリア -->
+	<div id="videoOverlay" class="video-overlay" th:if="${videoPath != null}">
+		<video id="resultVideo" class="result-video-full" autoplay muted playsinline>
+			<source th:src="${videoPath}" type="video/mp4">
 			お使いのブラウザは動画再生に対応していません。
 		</video>
+
+		<button id="skipButton" class="skip-button" type="button">
+			SKIP
+		</button>
 	</div>
 
-	<hr>
+	<!-- 詳細結果エリア -->
+	<div id="detailArea" class="detail-area" th:classappend="${videoPath != null} ? ' hidden' : ' show-detail'">
 
-	 結果表示 
-	<h2 th:text="${resultText}">結果</h2>
+		<section class="detail-card">
 
-	<p th:text="${message}">
-		結果メッセージ
-	</p>
+			<div class="detail-head">
+				<p class="detail-subtitle">GACHA RESULT</p>
+				<h1 class="detail-title" th:text="${resultText}">
+					10連結果：当たりあり！
+				</h1>
+				<p class="detail-message" th:text="${message}">
+					10回分の結果をまとめて表示します。
+				</p>
+			</div>
 
-	<p>
-		ベットポイント：
-		<span th:text="${betPoint}">0</span>
-		pt
-	</p>
+			<div class="detail-summary">
+				<div class="summary-box">
+					<span class="label">ベットポイント</span>
+					<strong>
+						<span th:text="${betPoint}">100</span> pt
+					</strong>
+				</div>
 
-	<p>
-		獲得ポイント：
-		<span th:text="${earnedPoint}">0</span>
-		pt
-	</p>
+				<div class="summary-box">
+					<span class="label">獲得ポイント</span>
+					<strong class="plus-point">
+						+<span th:text="${earnedPoint}">3000</span> pt
+					</strong>
+				</div>
 
-	<p>
-		現在ポイント：
-		<span th:text="${currentPoint}">0</span>
-		pt
-	</p>
+				<div class="summary-box">
+					<span class="label">消費ポイント</span>
+					<strong class="minus-point">
+						-<span th:text="${lostPoint}">700</span> pt
+					</strong>
+				</div>
 
-	<hr>
+				<div class="summary-box">
+					<span class="label">現在ポイント</span>
+					<strong>
+						<span th:text="${currentPoint}">3300</span> pt
+					</strong>
+				</div>
+			</div>
 
-	<p>
-		<a th:href="@{/game}">もう一度ガチャを引く</a>
-	</p>
+			<div class="ten-result-list" th:if="${isTenRoll}">
+				<h2>10連結果一覧</h2>
 
-	<p>
-		<a th:href="@{/game/history}">ガチャ履歴を見る</a>
-	</p>
+				<div class="ten-result-grid">
+					<div class="ten-result-item" th:each="item : ${results}" th:classappend="${item.effectType == 'super'} ? ' ten-super' :
+                                         (${item.effectType == 'win'} ? ' ten-win' : ' ten-lose')">
 
-	<p>
-		<a th:href="@{/}">トップページへ戻る</a>
-	</p>
+						<span class="roll-number">
+							<span th:text="${item.index}">1</span>回目
+						</span>
+
+						<strong th:text="${item.resultText}">
+							当たり
+						</strong>
+
+						<span th:if="${item.effectType != 'lose'}" class="gain-text">
+							+<span th:text="${item.earnedPoint}">1000</span> pt
+						</span>
+
+						<span th:if="${item.effectType == 'lose'}" class="lose-text">
+							-<span th:text="${item.lostPoint}">100</span> pt
+						</span>
+					</div>
+				</div>
+			</div>
+
+			<div class="detail-buttons">
+				<a th:href="@{/game}" class="main-button">
+					もう一度ガチャを引く
+				</a>
+
+				<a th:href="@{/game/history}" class="sub-button">
+					ガチャ履歴を見る
+				</a>
+
+				<a href="/" class="sub-button">
+					トップへ戻る
+				</a>
+			</div>
+
+		</section>
+
+	</div>
+
+	<script>
+		const videoOverlay = document.getElementById("videoOverlay");
+		const resultVideo = document.getElementById("resultVideo");
+		const detailArea = document.getElementById("detailArea");
+		const skipButton = document.getElementById("skipButton");
+
+		function showDetail() {
+			if (videoOverlay) {
+				videoOverlay.classList.add("fade-out");
+
+				setTimeout(() => {
+					videoOverlay.style.display = "none";
+					detailArea.classList.remove("hidden");
+					detailArea.classList.add("show-detail");
+				}, 500);
+			}
+		}
+
+		if (resultVideo) {
+			resultVideo.addEventListener("ended", showDetail);
+		}
+
+		if (skipButton) {
+			skipButton.addEventListener("click", showDetail);
+		}
+	</script>
 
 </body>
 

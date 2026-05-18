@@ -109,5 +109,4 @@ public class GamePlayHistory {
 		this.currentPoint = currentPoint;
 	}
 
-
 }
