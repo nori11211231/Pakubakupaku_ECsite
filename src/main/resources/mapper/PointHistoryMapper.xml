@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.example.demo.mapper.PointHistoryMapper">
+<mapper namespace="com.example.hokkaidoec.mapper.PointHistoryMapper">
 
-    <insert id="insert" parameterType="com.example.demo.entity.PointHistory" useGeneratedKeys="true" keyProperty="id">
+    <insert id="insert" parameterType="com.example.hokkaidoec.entity.PointHistory" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO point_history (
             user_id,
             point_change,
@@ -16,7 +16,7 @@
         )
     </insert>
 
-    <select id="findByUserId" resultType="com.example.demo.entity.PointHistory">
+    <select id="findByUserId" resultType="com.example.hokkaidoec.entity.PointHistory">
         SELECT 
             id,
             user_id AS userId,
@@ -28,7 +28,7 @@
         ORDER BY created_at DESC
     </select>
 
-    <select id="findRecentByUserId" resultType="com.example.demo.entity.PointHistory">
+    <select id="findRecentByUserId" resultType="com.example.hokkaidoec.entity.PointHistory">
         SELECT 
             id,
             user_id AS userId,
