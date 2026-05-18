@@ -23,7 +23,7 @@ public class UserController {
 	@GetMapping("/register")
 	public String showForm(Model model) {
 		model.addAttribute("form", new UserForm());
-		return "user/register";
+		return "register";
 	}
 
 	@PostMapping("/register")
@@ -32,12 +32,12 @@ public class UserController {
 			BindingResult bindingResult,
 			Model model) {
 		if (bindingResult.hasErrors()) {
-			return "user/register"; // エラー時はフォームに戻す
+			return "register"; // エラー時はフォームに戻す
 		}
 
 		userService.register(form);
 
 		model.addAttribute("form", form);
-		return "user/result";
+		return "result";
 	}
 }
