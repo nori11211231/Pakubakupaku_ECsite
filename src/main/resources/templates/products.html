@@ -1,235 +1,235 @@
-<!doctype html>
-<html lang="ja" xmlns:th="http://www.thymeleaf.org">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>商品一覧 - 北海道EC</title>
+<!--<!doctype html>-->
+<!--<html lang="ja" xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--  <meta charset="utf-8" />-->
+<!--  <meta name="viewport" content="width=device-width,initial-scale=1" />-->
+<!--  <title>商品一覧 - 北海道EC</title>-->
 
   
-  <style>
-    :root{
-      --bg:#ffffff;
-      --muted:#666666;
-      --border:#e6e6e6;
-      --accent:#007bff;
-      --danger:#d9534f;
-      --card-radius:10px;
-      --gap:16px;
-      --container-max:1200px;
-      --shadow: 0 2px 6px rgba(0,0,0,0.04);
-      --font-sans: system-ui, -apple-system, "Hiragino Kaku Gothic ProN", "Noto Sans JP", "Yu Gothic", sans-serif;
-    }
+<!--  <style>-->
+<!--    :root{-->
+<!--      --bg:#ffffff;-->
+<!--      --muted:#666666;-->
+<!--      --border:#e6e6e6;-->
+<!--      --accent:#007bff;-->
+<!--      --danger:#d9534f;-->
+<!--      --card-radius:10px;-->
+<!--      --gap:16px;-->
+<!--      --container-max:1200px;-->
+<!--      --shadow: 0 2px 6px rgba(0,0,0,0.04);-->
+<!--      --font-sans: system-ui, -apple-system, "Hiragino Kaku Gothic ProN", "Noto Sans JP", "Yu Gothic", sans-serif;-->
+<!--    }-->
 
-    /* Reset-ish */
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0;
-      font-family:var(--font-sans);
-      color:#222;
-      background:#fafafa;
-      -webkit-font-smoothing:antialiased;
-      -moz-osx-font-smoothing:grayscale;
-      line-height:1.45;
-    }
+<!--    /* Reset-ish */-->
+<!--    *{box-sizing:border-box}-->
+<!--    html,body{height:100%}-->
+<!--    body{-->
+<!--      margin:0;-->
+<!--      font-family:var(--font-sans);-->
+<!--      color:#222;-->
+<!--      background:#fafafa;-->
+<!--      -webkit-font-smoothing:antialiased;-->
+<!--      -moz-osx-font-smoothing:grayscale;-->
+<!--      line-height:1.45;-->
+<!--    }-->
 
-    .container{
-      max-width:var(--container-max);
-      margin:0 auto;
-      padding:20px;
-    }
+<!--    .container{-->
+<!--      max-width:var(--container-max);-->
+<!--      margin:0 auto;-->
+<!--      padding:20px;-->
+<!--    }-->
 
-    header{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
-      padding:8px 0 18px 0;
-    }
+<!--    header{-->
+<!--      display:flex;-->
+<!--      align-items:center;-->
+<!--      justify-content:space-between;-->
+<!--      gap:12px;-->
+<!--      padding:8px 0 18px 0;-->
+<!--    }-->
 
-    .brand { display:flex; align-items:center; gap:12px; }
-    .brand h1{ margin:0; font-size:20px; letter-spacing:0.2px; }
+<!--    .brand { display:flex; align-items:center; gap:12px; }-->
+<!--    .brand h1{ margin:0; font-size:20px; letter-spacing:0.2px; }-->
 
-    /* Search bar */
-    .searchbar { display:flex; gap:8px; align-items:center; }
-    .searchbar input[type="text"]{
-      padding:10px 12px;
-      border:1px solid var(--border);
-      border-radius:8px;
-      min-width:220px;
-      outline:none;
-      background:#fff;
-    }
-    .searchbar button{ padding:10px 12px; border-radius:8px; border:1px solid var(--accent); background:var(--accent); color:#fff; cursor:pointer; }
+<!--    /* Search bar */-->
+<!--    .searchbar { display:flex; gap:8px; align-items:center; }-->
+<!--    .searchbar input[type="text"]{-->
+<!--      padding:10px 12px;-->
+<!--      border:1px solid var(--border);-->
+<!--      border-radius:8px;-->
+<!--      min-width:220px;-->
+<!--      outline:none;-->
+<!--      background:#fff;-->
+<!--    }-->
+<!--    .searchbar button{ padding:10px 12px; border-radius:8px; border:1px solid var(--accent); background:var(--accent); color:#fff; cursor:pointer; }-->
 
-    .user-area { display:flex; gap:12px; align-items:center; font-size:14px; color:var(--muted); }
+<!--    .user-area { display:flex; gap:12px; align-items:center; font-size:14px; color:var(--muted); }-->
 
-    /* Layout */
-    .layout{ display:flex; gap:24px; align-items:flex-start; margin-top:8px; }
-    .sidebar{ width:280px; background:#fff; padding:16px; border-radius:var(--card-radius); box-shadow:var(--shadow); border:1px solid #f0f0f0; }
-    .main{ flex:1; }
+<!--    /* Layout */-->
+<!--    .layout{ display:flex; gap:24px; align-items:flex-start; margin-top:8px; }-->
+<!--    .sidebar{ width:280px; background:#fff; padding:16px; border-radius:var(--card-radius); box-shadow:var(--shadow); border:1px solid #f0f0f0; }-->
+<!--    .main{ flex:1; }-->
 
-    /* Filters */
-    .filters h3{ margin:0 0 10px 0; font-size:16px; }
-    .filters h4{ margin:12px 0 6px 0; font-size:13px; color:#333; }
-    .filters input[type="text"], .filters input[type="number"], .filters select{
-      width:100%; padding:8px; border:1px solid var(--border); border-radius:8px; background:#fff;
-    }
-    .filters label{ display:flex; align-items:center; gap:8px; font-size:13px; color:#333; cursor:pointer; }
+<!--    /* Filters */-->
+<!--    .filters h3{ margin:0 0 10px 0; font-size:16px; }-->
+<!--    .filters h4{ margin:12px 0 6px 0; font-size:13px; color:#333; }-->
+<!--    .filters input[type="text"], .filters input[type="number"], .filters select{-->
+<!--      width:100%; padding:8px; border:1px solid var(--border); border-radius:8px; background:#fff;-->
+<!--    }-->
+<!--    .filters label{ display:flex; align-items:center; gap:8px; font-size:13px; color:#333; cursor:pointer; }-->
 
-    .filter-actions{ margin-top:12px; display:flex; gap:8px; }
-    .btn{ display:inline-flex; align-items:center; justify-content:center; gap:8px; padding:8px 12px; border-radius:8px; border:1px solid #ccc; background:#fff; color:inherit; text-decoration:none; cursor:pointer; font-size:14px; }
-    .btn-primary{ background:var(--accent); color:#fff; border-color:var(--accent); }
-    .btn-ghost{ background:transparent; border-color:#ddd; }
+<!--    .filter-actions{ margin-top:12px; display:flex; gap:8px; }-->
+<!--    .btn{ display:inline-flex; align-items:center; justify-content:center; gap:8px; padding:8px 12px; border-radius:8px; border:1px solid #ccc; background:#fff; color:inherit; text-decoration:none; cursor:pointer; font-size:14px; }-->
+<!--    .btn-primary{ background:var(--accent); color:#fff; border-color:var(--accent); }-->
+<!--    .btn-ghost{ background:transparent; border-color:#ddd; }-->
 
-    /* Product grid */
-    .product-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:16px; }
-    .card{ background:#fff; border-radius:var(--card-radius); overflow:hidden; border:1px solid var(--border); box-shadow:var(--shadow); display:flex; flex-direction:column; transition:transform .12s ease, box-shadow .12s ease; }
-    .card:hover{ transform:translateY(-4px); box-shadow:0 6px 18px rgba(0,0,0,0.06); }
-    .card img{ width:100%; height:160px; object-fit:cover; background:#f6f6f6; display:block; }
-    .card-body{ padding:12px; display:flex; flex-direction:column; gap:8px; min-height:150px; }
-    .card-title{ font-weight:700; font-size:15px; color:#111; }
-    .card-desc{ font-size:13px; color:var(--muted); flex:1; }
-    .card-meta{ display:flex; justify-content:space-between; align-items:center; gap:8px; font-size:13px; color:var(--muted); }
-    .price{ color:var(--danger); font-weight:700; }
+<!--    /* Product grid */-->
+<!--    .product-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:16px; }-->
+<!--    .card{ background:#fff; border-radius:var(--card-radius); overflow:hidden; border:1px solid var(--border); box-shadow:var(--shadow); display:flex; flex-direction:column; transition:transform .12s ease, box-shadow .12s ease; }-->
+<!--    .card:hover{ transform:translateY(-4px); box-shadow:0 6px 18px rgba(0,0,0,0.06); }-->
+<!--    .card img{ width:100%; height:160px; object-fit:cover; background:#f6f6f6; display:block; }-->
+<!--    .card-body{ padding:12px; display:flex; flex-direction:column; gap:8px; min-height:150px; }-->
+<!--    .card-title{ font-weight:700; font-size:15px; color:#111; }-->
+<!--    .card-desc{ font-size:13px; color:var(--muted); flex:1; }-->
+<!--    .card-meta{ display:flex; justify-content:space-between; align-items:center; gap:8px; font-size:13px; color:var(--muted); }-->
+<!--    .price{ color:var(--danger); font-weight:700; }-->
 
-    .card-actions{ display:flex; gap:8px; margin-top:8px; }
-    .card-actions form{ margin:0; }
+<!--    .card-actions{ display:flex; gap:8px; margin-top:8px; }-->
+<!--    .card-actions form{ margin:0; }-->
 
-    /* Pagination */
-    nav.pagination{ margin-top:18px; display:flex; justify-content:center; align-items:center; gap:12px; font-size:14px; color:var(--muted); }
+<!--    /* Pagination */-->
+<!--    nav.pagination{ margin-top:18px; display:flex; justify-content:center; align-items:center; gap:12px; font-size:14px; color:var(--muted); }-->
 
-    /* Footer note */
-    .footer-note{ margin-top:18px; font-size:13px; color:var(--muted); }
+<!--    /* Footer note */-->
+<!--    .footer-note{ margin-top:18px; font-size:13px; color:var(--muted); }-->
 
-    /* Responsive */
-    @media (max-width:1000px){
-      .sidebar{ width:100%; order:2; }
-      .layout{ flex-direction:column-reverse; }
-    }
-    @media (max-width:520px){
-      .searchbar input[type="text"]{ min-width:120px; }
-      .card img{ height:140px; }
-    }
+<!--    /* Responsive */-->
+<!--    @media (max-width:1000px){-->
+<!--      .sidebar{ width:100%; order:2; }-->
+<!--      .layout{ flex-direction:column-reverse; }-->
+<!--    }-->
+<!--    @media (max-width:520px){-->
+<!--      .searchbar input[type="text"]{ min-width:120px; }-->
+<!--      .card img{ height:140px; }-->
+<!--    }-->
 
-    /* Accessibility focus */
-    a:focus, button:focus, input:focus { outline:3px solid rgba(0,123,255,0.18); outline-offset:2px; }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <header>
-      <div class="brand">
-        <h1>北海道EC</h1>
+<!--    /* Accessibility focus */-->
+<!--    a:focus, button:focus, input:focus { outline:3px solid rgba(0,123,255,0.18); outline-offset:2px; }-->
+<!--  </style>-->
+<!--</head>-->
+<!--<body>-->
+<!--  <div class="container">-->
+<!--    <header>-->
+<!--      <div class="brand">-->
+<!--        <h1>北海道EC</h1>-->
 
-        <form th:action="@{/products}" method="get" class="searchbar" aria-label="サイト内検索">
-          <input type="text" name="keyword" placeholder="商品名で検索" th:value="${keyword}" aria-label="商品名で検索" />
-          <button type="submit" class="btn-primary">検索</button>
-        </form>
-      </div>
+<!--        <form th:action="@{/products}" method="get" class="searchbar" aria-label="サイト内検索">-->
+<!--          <input type="text" name="keyword" placeholder="商品名で検索" th:value="${keyword}" aria-label="商品名で検索" />-->
+<!--          <button type="submit" class="btn-primary">検索</button>-->
+<!--        </form>-->
+<!--      </div>-->
 
-      <div class="user-area" aria-hidden="false">
-        <div><strong th:text="${userPoints} ?: '0'">1,250</strong> pt</div>
-        <a th:href="@{/mypage}" class="btn">マイページ</a>
-      </div>
-    </header>
+<!--      <div class="user-area" aria-hidden="false">-->
+<!--        <div><strong th:text="${userPoints} ?: '0'">1,250</strong> pt</div>-->
+<!--        <a th:href="@{/mypage}" class="btn">マイページ</a>-->
+<!--      </div>-->
+<!--    </header>-->
 
-    <div class="layout">
-       サイドバー 
-      <aside class="sidebar" aria-labelledby="filter-heading">
-        <form th:action="@{/products}" method="get" id="filter-form">
-          <div class="filters">
-            <h3 id="filter-heading">検索・絞り込み</h3>
+<!--    <div class="layout">-->
+<!--       サイドバー -->
+<!--      <aside class="sidebar" aria-labelledby="filter-heading">-->
+<!--        <form th:action="@{/products}" method="get" id="filter-form">-->
+<!--          <div class="filters">-->
+<!--            <h3 id="filter-heading">検索・絞り込み</h3>-->
 
-            <h4>キーワード</h4>
-            <input type="text" name="keyword" th:value="${keyword}" placeholder="例：鮭 いくら" aria-label="キーワード" />
+<!--            <h4>キーワード</h4>-->
+<!--            <input type="text" name="keyword" th:value="${keyword}" placeholder="例：鮭 いくら" aria-label="キーワード" />-->
 
-            <h4>カテゴリー</h4>
-            <div th:each="cat : ${categories}">
-              <label>
-                <input type="radio" name="categoryId" th:value="${cat.id}" th:checked="${cat.id} == ${categoryId}" />
-                <span th:text="${cat.name}">選択肢</span>
-              </label>
-            </div>
+<!--            <h4>カテゴリー</h4>-->
+<!--            <div th:each="cat : ${categories}">-->
+<!--              <label>-->
+<!--                <input type="radio" name="categoryId" th:value="${cat.id}" th:checked="${cat.id} == ${categoryId}" />-->
+<!--                <span th:text="${cat.name}">選択肢</span>-->
+<!--              </label>-->
+<!--            </div>-->
 
-            <h4>地域</h4>
-            <div th:each="reg : ${regions}">
-              <label>
-                <input type="radio" name="regionId" th:value="${reg.id}" th:checked="${reg.id} == ${regionId}" />
-                <span th:text="${reg.name}">選択肢</span>
-              </label>
-            </div>
+<!--            <h4>地域</h4>-->
+<!--            <div th:each="reg : ${regions}">-->
+<!--              <label>-->
+<!--                <input type="radio" name="regionId" th:value="${reg.id}" th:checked="${reg.id} == ${regionId}" />-->
+<!--                <span th:text="${reg.name}">選択肢</span>-->
+<!--              </label>-->
+<!--            </div>-->
 
-            <h4>値段帯</h4>
-            <div style="display:flex;gap:8px;">
-              <input type="number" name="minPrice" th:value="${minPrice}" placeholder="最小" aria-label="最小価格" />
-              <input type="number" name="maxPrice" th:value="${maxPrice}" placeholder="最大" aria-label="最大価格" />
-            </div>
+<!--            <h4>値段帯</h4>-->
+<!--            <div style="display:flex;gap:8px;">-->
+<!--              <input type="number" name="minPrice" th:value="${minPrice}" placeholder="最小" aria-label="最小価格" />-->
+<!--              <input type="number" name="maxPrice" th:value="${maxPrice}" placeholder="最大" aria-label="最大価格" />-->
+<!--            </div>-->
 
-            <h4>並べ替え</h4>
-            <select name="sort" th:value="${sort}" aria-label="並べ替え">
-              <option value="">おすすめ順</option>
-              <option value="price_asc" th:selected="${sort} == 'price_asc'">価格が安い順</option>
-              <option value="price_desc" th:selected="${sort} == 'price_desc'">価格が高い順</option>
-            </select>
+<!--            <h4>並べ替え</h4>-->
+<!--            <select name="sort" th:value="${sort}" aria-label="並べ替え">-->
+<!--              <option value="">おすすめ順</option>-->
+<!--              <option value="price_asc" th:selected="${sort} == 'price_asc'">価格が安い順</option>-->
+<!--              <option value="price_desc" th:selected="${sort} == 'price_desc'">価格が高い順</option>-->
+<!--            </select>-->
 
-            <div class="filter-actions">
-              <button type="submit" class="btn btn-primary">絞り込みを実行</button>
-              <a th:href="@{/products}" class="btn btn-ghost" role="button">リセット</a>
-            </div>
-          </div>
-        </form>
-      </aside>
+<!--            <div class="filter-actions">-->
+<!--              <button type="submit" class="btn btn-primary">絞り込みを実行</button>-->
+<!--              <a th:href="@{/products}" class="btn btn-ghost" role="button">リセット</a>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </form>-->
+<!--      </aside>-->
 
-       メイン 
-      <main class="main" role="main">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-          <h2 style="margin:0;">商品一覧</h2>
-          <div style="font-size:14px;color:var(--muted);">
-            <span th:text="${#lists.size(products)} + ' 件'">8 件</span>
-          </div>
-        </div>
+<!--       メイン -->
+<!--      <main class="main" role="main">-->
+<!--        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">-->
+<!--          <h2 style="margin:0;">商品一覧</h2>-->
+<!--          <div style="font-size:14px;color:var(--muted);">-->
+<!--            <span th:text="${#lists.size(products)} + ' 件'">8 件</span>-->
+<!--          </div>-->
+<!--        </div>-->
 
-        <section class="product-grid" aria-label="商品一覧">
-          <article class="card" th:each="p : ${products}" th:attr="aria-labelledby=${'title-' + p.id}">
-            <a th:href="@{|/products/${p.id}|}" style="text-decoration:none;color:inherit;" aria-hidden="false">
-              <img th:src="${p.imageUrl != null} ? ${p.imageUrl} : @{/images/placeholder.png}" th:alt="${p.productName}" />
-            </a>
+<!--        <section class="product-grid" aria-label="商品一覧">-->
+<!--          <article class="card" th:each="p : ${products}" th:attr="aria-labelledby=${'title-' + p.id}">-->
+<!--            <a th:href="@{|/products/${p.id}|}" style="text-decoration:none;color:inherit;" aria-hidden="false">-->
+<!--              <img th:src="${p.imageUrl != null} ? ${p.imageUrl} : @{/images/placeholder.png}" th:alt="${p.productName}" />-->
+<!--            </a>-->
 
-            <div class="card-body">
-              <div class="card-title" th:id="${'title-' + p.id}" th:text="${p.productName}">商品名</div>
-              <div class="card-desc" th:text="${p.description}">短い説明が入ります。季節のおすすめなど。</div>
+<!--            <div class="card-body">-->
+<!--              <div class="card-title" th:id="${'title-' + p.id}" th:text="${p.productName}">商品名</div>-->
+<!--              <div class="card-desc" th:text="${p.description}">短い説明が入ります。季節のおすすめなど。</div>-->
 
-              <div class="card-meta">
-                <div class="price" th:text="${p.price} + ' 円'">1,200 円</div>
-                <div style="font-size:12px;color:#888;" th:text="'在庫: ' + ${p.stock}">在庫: 10</div>
-              </div>
+<!--              <div class="card-meta">-->
+<!--                <div class="price" th:text="${p.price} + ' 円'">1,200 円</div>-->
+<!--                <div style="font-size:12px;color:#888;" th:text="'在庫: ' + ${p.stock}">在庫: 10</div>-->
+<!--              </div>-->
 
-              <div class="card-actions">
-                <a th:href="@{|/products/${p.id}|}" class="btn" aria-label="詳細を見る">詳細</a>
+<!--              <div class="card-actions">-->
+<!--                <a th:href="@{|/products/${p.id}|}" class="btn" aria-label="詳細を見る">詳細</a>-->
 
-                <form th:action="@{/cart/add}" method="post" style="display:inline;">
-                  <input type="hidden" name="productId" th:value="${p.id}" />
-                  <button type="submit" class="btn btn-primary" aria-label="カートに入れる">カートに入れる</button>
-                </form>
-              </div>
-            </div>
-          </article>
-        </section>
+<!--                <form th:action="@{/cart/add}" method="post" style="display:inline;">-->
+<!--                  <input type="hidden" name="productId" th:value="${p.id}" />-->
+<!--                  <button type="submit" class="btn btn-primary" aria-label="カートに入れる">カートに入れる</button>-->
+<!--                </form>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </article>-->
+<!--        </section>-->
 
-         ページネーション（コントローラで prevPage 等を渡す想定） 
-        <nav class="pagination" aria-label="ページネーション">
-          <a th:if="${prevPage != null}" th:href="@{/products(page=${prevPage}, keyword=${keyword}, categoryId=${categoryId}, regionId=${regionId}, minPrice=${minPrice}, maxPrice=${maxPrice}, sort=${sort})}" class="btn">前へ</a>
-          <span th:text="'ページ ' + ${currentPage} + ' / ' + ${totalPages}">ページ 1 / 5</span>
-          <a th:if="${nextPage != null}" th:href="@{/products(page=${nextPage}, keyword=${keyword}, categoryId=${categoryId}, regionId=${regionId}, minPrice=${minPrice}, maxPrice=${maxPrice}, sort=${sort})}" class="btn">次へ</a>
-        </nav>
+<!--         ページネーション（コントローラで prevPage 等を渡す想定） -->
+<!--        <nav class="pagination" aria-label="ページネーション">-->
+<!--          <a th:if="${prevPage != null}" th:href="@{/products(page=${prevPage}, keyword=${keyword}, categoryId=${categoryId}, regionId=${regionId}, minPrice=${minPrice}, maxPrice=${maxPrice}, sort=${sort})}" class="btn">前へ</a>-->
+<!--          <span th:text="'ページ ' + ${currentPage} + ' / ' + ${totalPages}">ページ 1 / 5</span>-->
+<!--          <a th:if="${nextPage != null}" th:href="@{/products(page=${nextPage}, keyword=${keyword}, categoryId=${categoryId}, regionId=${regionId}, minPrice=${minPrice}, maxPrice=${maxPrice}, sort=${sort})}" class="btn">次へ</a>-->
+<!--        </nav>-->
 
-        <div class="footer-note" aria-hidden="true">
-          <div>使うDB: products / categories / regions</div>
-          <div>商品を検索〜カテゴリー・地域・価格順の絞り込みに対応</div>
-        </div>
-      </main>
-    </div>
-  </div>
-</body>
-</html>
+<!--        <div class="footer-note" aria-hidden="true">-->
+<!--          <div>使うDB: products / categories / regions</div>-->
+<!--          <div>商品を検索〜カテゴリー・地域・価格順の絞り込みに対応</div>-->
+<!--        </div>-->
+<!--      </main>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</body>-->
+<!--</html>-->
