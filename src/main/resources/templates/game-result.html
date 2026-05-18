@@ -1,64 +1,106 @@
-<!--<!DOCTYPE html>-->
-<!--<html xmlns:th="http://www.thymeleaf.org">-->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>ガチャ結果</title>
+    <link rel="stylesheet" th:href="@{/css/game-result.css}">
+</head>
 
-<!--<head>-->
-<!--	<meta charset="UTF-8">-->
-<!--	<title>ガチャ結果</title>-->
-<!--</head>-->
+<body>
+<div class="result-page">
 
-<!--<body>-->
+    <div class="result-card">
 
-<!--	<h1>ガチャ結果</h1>-->
+        <h1 class="result-title">ガチャ結果</h1>
 
-<!--	 結果動画 -->
-<!--	<div>-->
-<!--		<video width="500" autoplay muted playsinline controls>-->
-<!--			<source th:src="@{${videoPath}}" type="video/mp4">-->
-<!--			お使いのブラウザは動画再生に対応していません。-->
-<!--		</video>-->
-<!--	</div>-->
+         超大当たり動画 
+        <div th:if="${effectType == 'super'}" class="video-area super-area">
+            <video autoplay muted playsinline class="result-video">
+                <source th:src="@{/video/game/tyouatari.mp4}" type="video/mp4">
+                お使いのブラウザは動画再生に対応していません。
+            </video>
 
-<!--	<hr>-->
+            <h2 class="super-title">超大当たり！！！</h2>
+            <p class="result-message">
+                奇跡の1600分の1！ポイント100倍獲得！
+            </p>
+        </div>
 
-<!--	 結果表示 -->
-<!--	<h2 th:text="${resultText}">結果</h2>-->
+         当たり動画 
+        <div th:if="${effectType == 'win'}" class="video-area win-area">
+            <video autoplay muted playsinline class="result-video">
+                <source th:src="@{/video/game/atari.mp4}" type="video/mp4">
+                お使いのブラウザは動画再生に対応していません。
+            </video>
 
-<!--	<p th:text="${message}">-->
-<!--		結果メッセージ-->
-<!--	</p>-->
+            <h2 class="win-title">当たり！</h2>
+            <p class="result-message">
+                おめでとう！ポイント10倍獲得！
+            </p>
+        </div>
 
-<!--	<p>-->
-<!--		ベットポイント：-->
-<!--		<span th:text="${betPoint}">0</span>-->
-<!--		pt-->
-<!--	</p>-->
+         はずれ動画 
+        <div th:if="${effectType == 'lose'}" class="video-area lose-area">
+            <video autoplay muted playsinline class="result-video">
+                <source th:src="@{/video/game/hazure.mp4}" type="video/mp4">
+                お使いのブラウザは動画再生に対応していません。
+            </video>
 
-<!--	<p>-->
-<!--		獲得ポイント：-->
-<!--		<span th:text="${earnedPoint}">0</span>-->
-<!--		pt-->
-<!--	</p>-->
+            <h2 class="lose-title">はずれ……</h2>
+            <p class="result-message">
+                ベットポイントの10倍を失いました。
+            </p>
+        </div>
 
-<!--	<p>-->
-<!--		現在ポイント：-->
-<!--		<span th:text="${currentPoint}">0</span>-->
-<!--		pt-->
-<!--	</p>-->
+         結果情報 
+        <div class="point-result">
 
-<!--	<hr>-->
+            <p>
+                結果：
+                <span th:text="${resultText}">当たり</span>
+            </p>
 
-<!--	<p>-->
-<!--		<a th:href="@{/game}">もう一度ガチャを引く</a>-->
-<!--	</p>-->
+            <p>
+                使用ポイント：
+                <span th:text="${betPoint}">100</span> pt
+            </p>
 
-<!--	<p>-->
-<!--		<a th:href="@{/game/history}">ガチャ履歴を見る</a>-->
-<!--	</p>-->
+            <p th:if="${result}">
+                獲得ポイント：
+                <span th:text="${earnedPoint}">1000</span> pt
+            </p>
 
-<!--	<p>-->
-<!--		<a th:href="@{/}">トップページへ戻る</a>-->
-<!--	</p>-->
+            <p th:if="${!result}">
+                消費ポイント：
+                <span th:text="${lostPoint}">1000</span> pt
+            </p>
 
-<!--</body>-->
+            <p>
+                現在のポイント：
+                <span th:text="${currentPoint}">1250</span> pt
+            </p>
 
-<!--</html>-->
+        </div>
+
+         ボタン 
+        <div class="result-buttons">
+
+            <a th:href="@{/game}" class="main-link">
+                もう一度ガチャを引く
+            </a>
+
+            <a th:href="@{/game/history}" class="sub-link">
+                ガチャ履歴を見る
+            </a>
+
+            <a th:href="@{/}" class="sub-link">
+                トップへ戻る
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+</body>
+</html>
