@@ -1,36 +1,36 @@
-<!--<!DOCTYPE html>-->
-<!--<html xmlns:th="http://www.thymeleaf.org">-->
-<!--<head>-->
-<!--    <meta charset="UTF-8">-->
-<!--    <title>ガチャ履歴</title>-->
-<!--</head>-->
-<!--<body>-->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>ガチャ履歴</title>
+</head>
+<body>
 
-<!--<h1>ガチャ履歴</h1>-->
+<h1>ガチャ履歴</h1>
 
-<!--<table border="1">-->
-<!--    <tr>-->
-<!--        <th>プレイ日時</th>-->
-<!--        <th>使用ポイント</th>-->
-<!--        <th>結果</th>-->
-<!--        <th>獲得ポイント</th>-->
-<!--    </tr>-->
+<table border="1">
+    <tr>
+        <th>プレイ日時</th>
+        <th>使用ポイント</th>
+        <th>結果</th>
+        <th>獲得ポイント</th>
+    </tr>
 
-<!--    <tr th:each="history : ${gameHistories}">-->
-<!--        <td th:text="${#temporals.format(history.playedAt, 'yyyy/MM/dd HH:mm')}">日時</td>-->
-<!--        <td th:text="${history.betPoint}">0</td>-->
-<!--        <td th:text="${history.result} ? '当たり' : 'はずれ'">結果</td>-->
-<!--        <td th:text="${history.earnedPoint}">0</td>-->
-<!--    </tr>-->
-<!--</table>-->
+    <tr th:each="history : ${gameHistories}">
+        <td th:text="${#temporals.format(history.playedAt, 'yyyy/MM/dd HH:mm')}">日時</td>
+        <td th:text="${history.betPoint}">0</td>
+        <td th:text="${history.result} ? '当たり' : 'はずれ'">結果</td>
+        <td th:text="${history.earnedPoint}">0</td>
+    </tr>
+</table>
 
-<!--<p>-->
-<!--    <a th:href="@{/game}">ガチャ画面へ戻る</a>-->
-<!--</p>-->
+<p>
+    <a th:href="@{/game}">ガチャ画面へ戻る</a>
+</p>
 
-<!--<p>-->
-<!--    <a th:href="@{/mypage}">マイページへ戻る</a>-->
-<!--</p>-->
+<p>
+    <a th:href="@{/mypage}">マイページへ戻る</a>
+</p>
 
-<!--</body>-->
-<!--</html>-->
+</body>
+</html>

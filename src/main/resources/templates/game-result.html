@@ -1,106 +1,106 @@
-<!--<!DOCTYPE html>-->
-<!--<html xmlns:th="http://www.thymeleaf.org" lang="ja">-->
-<!--<head>-->
-<!--    <meta charset="UTF-8">-->
-<!--    <title>ガチャ結果</title>-->
-<!--    <link rel="stylesheet" th:href="@{/css/game-result.css}">-->
-<!--</head>-->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>ガチャ結果</title>
+    <link rel="stylesheet" th:href="@{/css/game-result.css}">
+</head>
 
-<!--<body>-->
-<!--<div class="result-page">-->
+<body>
+<div class="result-page">
 
-<!--    <div class="result-card">-->
+    <div class="result-card">
 
-<!--        <h1 class="result-title">ガチャ結果</h1>-->
+        <h1 class="result-title">ガチャ結果</h1>
 
-<!--         超大当たり動画 -->
-<!--        <div th:if="${effectType == 'super'}" class="video-area super-area">-->
-<!--            <video autoplay muted playsinline class="result-video">-->
-<!--                <source th:src="@{/video/game/tyouatari.mp4}" type="video/mp4">-->
-<!--                お使いのブラウザは動画再生に対応していません。-->
-<!--            </video>-->
+         超大当たり動画 
+        <div th:if="${effectType == 'super'}" class="video-area super-area">
+            <video autoplay muted playsinline class="result-video">
+                <source th:src="@{/video/game/tyouatari.mp4}" type="video/mp4">
+                お使いのブラウザは動画再生に対応していません。
+            </video>
 
-<!--            <h2 class="super-title">超大当たり！！！</h2>-->
-<!--            <p class="result-message">-->
-<!--                奇跡の1600分の1！ポイント100倍獲得！-->
-<!--            </p>-->
-<!--        </div>-->
+            <h2 class="super-title">超大当たり！！！</h2>
+            <p class="result-message">
+                奇跡の1600分の1！ポイント100倍獲得！
+            </p>
+        </div>
 
-<!--         当たり動画 -->
-<!--        <div th:if="${effectType == 'win'}" class="video-area win-area">-->
-<!--            <video autoplay muted playsinline class="result-video">-->
-<!--                <source th:src="@{/video/game/atari.mp4}" type="video/mp4">-->
-<!--                お使いのブラウザは動画再生に対応していません。-->
-<!--            </video>-->
+         当たり動画 
+        <div th:if="${effectType == 'win'}" class="video-area win-area">
+            <video autoplay muted playsinline class="result-video">
+                <source th:src="@{/video/game/atari.mp4}" type="video/mp4">
+                お使いのブラウザは動画再生に対応していません。
+            </video>
 
-<!--            <h2 class="win-title">当たり！</h2>-->
-<!--            <p class="result-message">-->
-<!--                おめでとう！ポイント10倍獲得！-->
-<!--            </p>-->
-<!--        </div>-->
+            <h2 class="win-title">当たり！</h2>
+            <p class="result-message">
+                おめでとう！ポイント10倍獲得！
+            </p>
+        </div>
 
-<!--         はずれ動画 -->
-<!--        <div th:if="${effectType == 'lose'}" class="video-area lose-area">-->
-<!--            <video autoplay muted playsinline class="result-video">-->
-<!--                <source th:src="@{/video/game/hazure.mp4}" type="video/mp4">-->
-<!--                お使いのブラウザは動画再生に対応していません。-->
-<!--            </video>-->
+         はずれ動画 
+        <div th:if="${effectType == 'lose'}" class="video-area lose-area">
+            <video autoplay muted playsinline class="result-video">
+                <source th:src="@{/video/game/hazure.mp4}" type="video/mp4">
+                お使いのブラウザは動画再生に対応していません。
+            </video>
 
-<!--            <h2 class="lose-title">はずれ……</h2>-->
-<!--            <p class="result-message">-->
-<!--                ベットポイントの10倍を失いました。-->
-<!--            </p>-->
-<!--        </div>-->
+            <h2 class="lose-title">はずれ……</h2>
+            <p class="result-message">
+                ベットポイントの10倍を失いました。
+            </p>
+        </div>
 
-<!--         結果情報 -->
-<!--        <div class="point-result">-->
+         結果情報 
+        <div class="point-result">
 
-<!--            <p>-->
-<!--                結果：-->
-<!--                <span th:text="${resultText}">当たり</span>-->
-<!--            </p>-->
+            <p>
+                結果：
+                <span th:text="${resultText}">当たり</span>
+            </p>
 
-<!--            <p>-->
-<!--                使用ポイント：-->
-<!--                <span th:text="${betPoint}">100</span> pt-->
-<!--            </p>-->
+            <p>
+                使用ポイント：
+                <span th:text="${betPoint}">100</span> pt
+            </p>
 
-<!--            <p th:if="${result}">-->
-<!--                獲得ポイント：-->
-<!--                <span th:text="${earnedPoint}">1000</span> pt-->
-<!--            </p>-->
+            <p th:if="${result}">
+                獲得ポイント：
+                <span th:text="${earnedPoint}">1000</span> pt
+            </p>
 
-<!--            <p th:if="${!result}">-->
-<!--                消費ポイント：-->
-<!--                <span th:text="${lostPoint}">1000</span> pt-->
-<!--            </p>-->
+            <p th:if="${!result}">
+                消費ポイント：
+                <span th:text="${lostPoint}">1000</span> pt
+            </p>
 
-<!--            <p>-->
-<!--                現在のポイント：-->
-<!--                <span th:text="${currentPoint}">1250</span> pt-->
-<!--            </p>-->
+            <p>
+                現在のポイント：
+                <span th:text="${currentPoint}">1250</span> pt
+            </p>
 
-<!--        </div>-->
+        </div>
 
-<!--         ボタン -->
-<!--        <div class="result-buttons">-->
+         ボタン 
+        <div class="result-buttons">
 
-<!--            <a th:href="@{/game}" class="main-link">-->
-<!--                もう一度ガチャを引く-->
-<!--            </a>-->
+            <a th:href="@{/game}" class="main-link">
+                もう一度ガチャを引く
+            </a>
 
-<!--            <a th:href="@{/game/history}" class="sub-link">-->
-<!--                ガチャ履歴を見る-->
-<!--            </a>-->
+            <a th:href="@{/game/history}" class="sub-link">
+                ガチャ履歴を見る
+            </a>
 
-<!--            <a th:href="@{/}" class="sub-link">-->
-<!--                トップへ戻る-->
-<!--            </a>-->
+            <a th:href="@{/}" class="sub-link">
+                トップへ戻る
+            </a>
 
-<!--        </div>-->
+        </div>
 
-<!--    </div>-->
+    </div>
 
-<!--</div>-->
-<!--</body>-->
-<!--</html>-->
+</div>
+</body>
+</html>
