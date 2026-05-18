@@ -1,10 +1,281 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="ja">
 <head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>商品詳細 - 北海道EC</title>
+  <style>
+    :root{ --accent:#ff7a00; --muted:#666; --bg:#f8f8f8; --card:#fff; --max-width:1100px; }
+    body{ font-family:"Noto Sans JP",system-ui,-apple-system,"Segoe UI",Roboto,Arial; background:var(--bg); color:#222; margin:0; padding:24px; display:flex; justify-content:center; }
+    .container{ width:100%; max-width:var(--max-width); background:var(--card); box-shadow:0 2px 8px rgba(0,0,0,0.06); border-radius:8px; padding:24px; box-sizing:border-box; }
+    .layout{ display:grid; grid-template-columns: 1fr 420px; gap:28px; align-items:start; }
+    .image-wrap{ background:#fff; border-radius:6px; overflow:hidden; display:flex; align-items:center; justify-content:center; min-height:420px; border:1px solid #eee; }
+    .image-wrap img{ max-width:100%; max-height:100%; object-fit:contain; display:block; }
+    .detail{ background:linear-gradient(180deg,#fff,#fff); padding:18px; border-radius:6px; border:1px solid #eee; }
+    .title{ font-size:20px; font-weight:700; margin:0 0 8px 0; }
+    .meta{ color:var(--muted); font-size:14px; margin-bottom:12px; }
+    .desc{ font-size:15px; line-height:1.6; color:#333; margin-bottom:16px; white-space:pre-wrap; }
+    .price-stock{ display:flex; align-items:center; gap:16px; margin-bottom:18px; }
+    .price{ font-size:22px; font-weight:800; color:var(--accent); }
+    .stock{ color:var(--muted); font-size:14px; }
+    .purchase{ display:flex; gap:12px; align-items:center; margin-bottom:18px; }
+    .qty{ display:flex; align-items:center; border:1px solid #ddd; border-radius:6px; overflow:hidden; background:#fff; }
+    .qty button{ width:36px; height:36px; border:0; background:#fafafa; cursor:pointer; font-size:18px; }
+    .qty input{ width:64px; height:36px; border:0; text-align:center; font-size:15px; outline:none; }
+    .add-cart{ background:var(--accent); color:#fff; border:0; padding:10px 16px; border-radius:6px; font-weight:700; cursor:pointer; box-shadow:0 2px 6px rgba(255,122,0,0.18); }
+    .add-cart:disabled{ opacity:0.5; cursor:not-allowed; }
+    .extras{ margin-top:18px; display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+    .card{ background:#fff; border:1px solid #eee; padding:12px; border-radius:6px; min-height:120px; }
+    .card h4{ margin:0 0 8px 0; font-size:15px; }
+    .review-list{ font-size:14px; color:#333; }
+    @media (max-width:980px){ .layout{ grid-template-columns:1fr; } .detail{ margin-top:12px; } .extras{ grid-template-columns:1fr; } }
+  </style>
 </head>
 <body>
+  <div class="container" id="product-page">
+    <header style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;">
+      <div style="font-weight:800;font-size:18px;">北海道EC</div>
+      <div style="display:flex;gap:12px;align-items:center;">
+        <input type="search" placeholder="検索" style="padding:8px 10px;border-radius:6px;border:1px solid #ddd;" />
+        <div style="color:var(--muted);font-weight:700;">1,250 pt</div>
+        <a href="/mypage" style="text-decoration:none;color:var(--muted);">マイページ</a>
+      </div>
+    </header>
 
+    <main class="layout" role="main">
+      <div class="image-wrap" id="imageWrap">
+        <img id="productImage" src="" alt="商品画像" />
+      </div>
+
+      <aside class="detail" aria-labelledby="productTitle">
+        <h1 id="productTitle" class="title">商品名がここに入ります</h1>
+        <div class="meta">
+          <strong>産地</strong>：<span id="productRegion">—</span>
+          &nbsp;｜&nbsp;
+          <strong>カテゴリ</strong>：<span id="productCategory">—</span>
+        </div>
+
+        <div class="desc" id="productDescription">商品説明がここに入ります。</div>
+
+        <div class="price-stock">
+          <div class="price" id="productPrice">¥0</div>
+          <div class="stock" id="productStock">在庫：—</div>
+        </div>
+
+        <div class="purchase" aria-label="購入操作">
+          <div class="qty" aria-hidden="false">
+            <button type="button" id="decreaseBtn" aria-label="数量を減らす">−</button>
+            <input type="number" id="qtyInput" value="1" min="1" step="1" aria-label="数量" />
+            <button type="button" id="increaseBtn" aria-label="数量を増やす">＋</button>
+          </div>
+
+          <button class="add-cart" id="addCartBtn">カートに追加</button>
+        </div>
+
+        <div style="font-size:13px;color:var(--muted);">※ 配送・支払いはカートで選択してください。</div>
+
+        <div class="extras" style="margin-top:18px;">
+          <div class="card" id="aiConcierge">
+            <h4>AIコンシェルジュ</h4>
+            <div id="aiContent">おすすめ情報を読み込み中...</div>
+          </div>
+
+          <div class="card" id="reviews">
+            <h4>レビュー欄</h4>
+            <div class="review-list" id="reviewList">レビューを読み込み中...</div>
+          </div>
+        </div>
+      </aside>
+    </main>
+  </div>
+
+  <!--
+    サーバー側で初期データを埋め込む場合はここに JSON を入れてください。
+    例:
+    <script id="initial-data" type="application/json">
+      {"id":13,"product_name":"檜山産じゃがいも","price":1500,"region_name":"檜山","category_name":"農産物","image_url":"/images/products/hiyama_potato.webp"}
+    </script>
+  -->
+
+  <script>
+    (function(){
+      // productId を URL から取得
+      const productId = (function(){
+        const m = location.pathname.match(/\/products\/(\d+)/);
+        return m ? m[1] : null;
+      })();
+
+      // DOM
+      const imgEl = document.getElementById('productImage');
+      const titleEl = document.getElementById('productTitle');
+      const regionEl = document.getElementById('productRegion');
+      const categoryEl = document.getElementById('productCategory');
+      const descEl = document.getElementById('productDescription');
+      const priceEl = document.getElementById('productPrice');
+      const stockEl = document.getElementById('productStock');
+      const qtyInput = document.getElementById('qtyInput');
+      const decBtn = document.getElementById('decreaseBtn');
+      const incBtn = document.getElementById('increaseBtn');
+      const addCartBtn = document.getElementById('addCartBtn');
+      const aiContent = document.getElementById('aiContent');
+      const reviewList = document.getElementById('reviewList');
+
+      let product = null;
+
+      // 数量操作
+      decBtn.addEventListener('click', ()=> { qtyInput.value = Math.max(1, parseInt(qtyInput.value || 1, 10) - 1); });
+      incBtn.addEventListener('click', ()=> { qtyInput.value = Math.max(1, parseInt(qtyInput.value || 1, 10) + 1); });
+      qtyInput.addEventListener('input', ()=> { let v = parseInt(qtyInput.value || 1, 10); if (isNaN(v) || v < 1) v = 1; qtyInput.value = v; });
+
+      // カート追加（実装はサーバー側APIに合わせてください）
+      addCartBtn.addEventListener('click', async ()=> {
+        if (!product) return;
+        const qty = parseInt(qtyInput.value, 10);
+        if (qty > (product.stock || 0)) { alert('在庫が足りません。数量を調整してください。'); return; }
+        addCartBtn.disabled = true; addCartBtn.textContent = '追加中...';
+        try {
+          // POST /api/cart { product_id, quantity } などに合わせて実装
+          setTimeout(()=> { addCartBtn.disabled = false; addCartBtn.textContent = 'カートに追加'; alert('カートに追加しました'); }, 700);
+        } catch (e) {
+          addCartBtn.disabled = false; addCartBtn.textContent = 'カートに追加'; alert('エラーが発生しました');
+        }
+      });
+
+      // 描画（DBカラム名に合わせる）
+      function renderProduct(p){
+        product = p || {};
+        // 商品名・価格・産地・カテゴリを即時表示
+        titleEl.textContent = p.product_name || p.productName || '商品名';
+        priceEl.textContent = '¥' + ((p.price != null) ? Number(p.price).toLocaleString('ja-JP') : '0');
+        regionEl.textContent = p.region_name || p.regionName || (p.region_id ? '地域ID:' + p.region_id : '—');
+        categoryEl.textContent = p.category_name || p.categoryName || (p.category_id ? 'カテゴリID:' + p.category_id : '—');
+
+        // 説明・在庫・画像はあれば表示（なくても上の4項目は即時表示される）
+        descEl.textContent = p.description || '';
+        const stockVal = (p.stock != null) ? Number(p.stock) : null;
+        stockEl.textContent = '在庫：' + (stockVal != null ? stockVal + '個' : '—');
+        imgEl.src = p.image_url || p.imageUrl || '/assets/placeholder.png';
+        imgEl.alt = p.product_name || p.productName || '商品画像';
+
+        if (stockVal === 0) { addCartBtn.disabled = true; addCartBtn.textContent = '在庫なし'; }
+        else { addCartBtn.disabled = false; addCartBtn.textContent = 'カートに追加'; }
+
+        aiContent.textContent = `おすすめ：${p.product_name || ''} に合う提案を表示します。`;
+        if (p.reviews && p.reviews.length) {
+          reviewList.innerHTML = '';
+          p.reviews.forEach(r => {
+            const div = document.createElement('div');
+            div.style.marginBottom = '8px';
+            div.textContent = `${r.user || r.user_name || '匿名'}：${r.comment || r.body || ''}`;
+            reviewList.appendChild(div);
+          });
+        } else {
+          reviewList.textContent = 'レビューがまだありません。';
+        }
+      }
+
+      // サーバー埋め込みの初期データを優先して即時描画
+      function getInitialDataFromScript(){
+        try {
+          const el = document.getElementById('initial-data');
+          if (!el) return null;
+          return JSON.parse(el.textContent);
+        } catch (e) {
+          console.warn('initial-data parse error', e);
+          return null;
+        }
+      }
+
+      // region/category 補完フェッチ（APIが未提供の場合にのみ呼ぶ）
+      async function fetchRegionName(regionId){
+        try {
+          const res = await fetch(`/api/regions/${regionId}`);
+          if (!res.ok) throw new Error('region fetch failed');
+          const data = await res.json();
+          return data.region_name || data.regionName || null;
+        } catch (e) { return null; }
+      }
+      async function fetchCategoryName(categoryId){
+        try {
+          const res = await fetch(`/api/categories/${categoryId}`);
+          if (!res.ok) throw new Error('category fetch failed');
+          const data = await res.json();
+          return data.category_name || data.categoryName || null;
+        } catch (e) { return null; }
+      }
+
+      // 商品取得（初期データが無ければ API を呼ぶ）
+      async function fetchProduct(){
+        // まずサーバー埋め込みを確認
+        const initial = getInitialDataFromScript();
+        if (initial) {
+          // 即時表示（最低限の4項目はここで表示される）
+          renderProduct(initial);
+
+          // 補完が必要なら非同期で補完（例: region_name が無ければ取得）
+          (async ()=>{
+            let data = initial;
+            let changed = false;
+            if (!data.region_name && data.region_id) {
+              const rn = await fetchRegionName(data.region_id);
+              if (rn) { data.region_name = rn; changed = true; }
+            }
+            if (!data.category_name && data.category_id) {
+              const cn = await fetchCategoryName(data.category_id);
+              if (cn) { data.category_name = cn; changed = true; }
+            }
+            if (changed) renderProduct(data);
+          })();
+          return;
+        }
+
+        // 埋め込みが無ければ API を呼ぶ（既存の挙動）
+        if (!productId) {
+          // 開発用ダミー（schema のサンプル）
+          renderProduct({
+            id: 13,
+            product_name: '檜山産じゃがいも',
+            description: 'ホクホク食感が特徴のじゃがいもです。',
+            price: 1500,
+            stock: 35,
+            image_url: '/images/products/hiyama_potato.webp',
+            category_id: 3,
+            region_id: 7,
+            region_name: '檜山',
+            category_name: '農産物',
+            reviews: [{ user: '山田', comment: 'ホクホクで美味しい' }]
+          });
+          return;
+        }
+
+        try {
+          const res = await fetch(`/api/products/${productId}`);
+          if (!res.ok) {
+            if (res.status === 404) { alert('商品が見つかりません'); return; }
+            throw new Error('商品取得失敗');
+          }
+          const data = await res.json();
+
+          // 補完
+          if (!data.region_name && data.region_id) {
+            const rn = await fetchRegionName(data.region_id);
+            if (rn) data.region_name = rn;
+          }
+          if (!data.category_name && data.category_id) {
+            const cn = await fetchCategoryName(data.category_id);
+            if (cn) data.category_name = cn;
+          }
+
+          renderProduct(data);
+        } catch (err) {
+          console.error(err);
+          alert('商品情報の取得に失敗しました');
+        }
+      }
+
+      // 初期フェッチ
+      fetchProduct();
+    })();
+  </script>
 </body>
 </html>
