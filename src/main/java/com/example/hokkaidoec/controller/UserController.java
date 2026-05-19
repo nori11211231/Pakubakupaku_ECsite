@@ -38,4 +38,17 @@ public class UserController {
 			return "register";
 		}
 	}
+
+	@GetMapping("/mypage")
+	public String showMypage(Model model) {
+		// 本来はログイン中のユーザー情報をサービスから取得します
+		// User面、AI面、注文履歴面のオブジェクトをModelに登録する
+
+		// 例：
+		// model.addAttribute("user", loginUser);
+		// model.addAttribute("ai", userAiData);
+		// model.addAttribute("orders", orderHistoryList);
+
+		return "mypage";
+	}
 }
