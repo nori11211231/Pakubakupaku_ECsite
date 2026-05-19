@@ -1,0 +1,148 @@
+@charset "UTF-8";@charset "UTF-8";
+
+/* 基本変数 */
+:root{
+  --bg:#f5f5f5;
+  --card:#ffffff;
+  --muted:#555;
+  --accent:#ffb74d;
+  --shadow: 0 4px 16px rgba(0,0,0,0.06);
+  --radius:12px;
+  --container-max:1100px;
+}
+
+/* ページ全体 */
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  padding:0;
+  font-family: system-ui, -apple-system, "Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif;
+  color:#222;
+  background:var(--bg);
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+}
+
+/* コンテナ */
+.map-wrap{
+  max-width:var(--container-max);
+  margin:24px auto;
+  padding:0 16px 32px;
+  background:var(--card);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+}
+
+/* 見出し */
+h2{ margin:16px 0 4px; }
+p.desc{ margin:0 0 16px; color:var(--muted); }
+
+/* SVG コンテナ
+   ここで背景画像を指定します。
+   画像は static/images/hokkaido.png に置いてください。
+*/
+.svg-container{
+  position:relative;
+  width:100%;
+  height:auto;
+  border-radius:8px;
+  overflow:hidden;
+  background-image: url('/img/hokkaido.png');
+  background-size: cover;          /* 枠に自然にフィット（トリミング） */
+  background-position: center;
+  background-repeat: no-repeat;
+  padding: 24px;                   /* SVG の周囲に余白を作る（任意） */
+}
+
+/* SVG 自体は透明背景で上に重なる */
+svg{
+  width:100%;
+  height:auto;
+  display:block;
+  background: transparent;
+}
+
+/* 地域パスの見た目 */
+.region-shape{
+/*  cursor:pointer;*/
+  stroke:#ffffff;
+  stroke-width:2;
+  transition: fill 0.15s ease, transform 0.15s ease;
+  mix-blend-mode: multiply; /* 背景画像と馴染ませる（任意） */
+}
+
+/* ホバー・フォーカス時の強調 */
+.region-shape:hover,
+.region-shape:focus{
+  fill: var(--accent) !important;
+  transform: translateY(-2px);
+  outline: none;
+}
+
+/* ラベル */
+.region-label{
+  font-size:20px;
+  fill:#ffffff;
+  text-shadow:0 0 4px rgba(0,0,0,0.6);
+  pointer-events:none;
+}
+
+/* ツールチップ */
+#tooltip{
+  position:absolute;
+  pointer-events:none;
+  background:rgba(0,0,0,0.85);
+  color:#fff;
+  padding:6px 8px;
+  border-radius:6px;
+  font-size:13px;
+  transform:translate(-50%, -120%);
+  white-space:nowrap;
+  display:none;
+  z-index:50;
+}
+/* プレートとアイコンのスタイル */
+.region-btn { cursor: pointer; outline: none; }
+.region-btn .plate {
+  fill: rgb(128, 128, 255);
+  stroke: rgb(128, 128, 255);
+  stroke-width: 1;
+  filter: drop-shadow(0 4px 10px rgb(128, 128, 255));
+}
+.region-btn .cup {
+  fill: rgb(128, 128, 255); /* カップの色 */
+  transform-origin: center;
+}
+/*文字の色*/
+.region-btn .region-text {
+  font-family: "Noto Sans JP", system-ui, -apple-system, "Hiragino Kaku Gothic ProN", sans-serif;
+  font-size: 12px;
+  fill: rgb(255, 255, 255);
+  pointer-events: none;
+}
+
+/* ホバー / フォーカス時の強調 */
+.region-btn:hover .plate,
+.region-btn:focus .plate {
+  fill: rgb(128, 128, 255);
+  stroke: rgb(128, 128, 255);
+  transform: translateY(-4px);
+}
+.region-btn:hover .cup,
+.region-btn:focus .cup {
+  transform: translateY(-2px) scale(1.02);
+}
+.region-btn:focus { outline: 3px solid rgb(128, 128, 255); }
+
+/* クリック領域を広げたい場合は rect の width/height を調整してください */
+
+
+
+
+/* レスポンシブ調整 */
+@media (max-width:900px){
+  .map-wrap{ margin:12px; padding:0 12px 24px; }
+  .svg-container{ padding:16px; }
+  .region-label{ font-size:16px; }
+}

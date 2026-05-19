@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.validation.annotation.Validated;
 
 import com.example.hokkaidoec.entity.Product;
 
@@ -16,9 +17,8 @@ public interface ProductsMapper {
 	Product findById(@Param("id") int id);
 
 	//	検索条件（カテゴリ、地域、価格帯、キーワード、並べ替え）を受け取るメソッド
-	//	まだ理解はできていないので保留
 	List<Product> search(
-			@Param("keyword") String keyword,
+			@Validated @Param("keyword") String keyword,
 			@Param("categoryId") Integer categoryId,
 			@Param("regionId") Integer regionId,
 			@Param("minPrice") Integer minPrice,
