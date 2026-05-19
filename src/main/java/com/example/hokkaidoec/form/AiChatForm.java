@@ -2,17 +2,25 @@ package com.example.hokkaidoec.form;
 
 public class AiChatForm {
 
-	/** ユーザーがAIに送信したメッセージ */
-	private String message;
+	// ユーザーが入力した質問文
+	private String userMessage;
 
-	public AiChatForm() {
+	// AIコンシェルジュの返答文
+	private String aiReply;
+
+	public String getUserMessage() {
+		return userMessage;
 	}
 
-	public String getMessage() {
-		return message;
+	public void setUserMessage(String userMessage) {
+		this.userMessage = userMessage;
 	}
 
-	public void setMessage(String message) {
-		this.message = message;
+	public String getAiReply() {
+		return aiReply;
+	}
+
+	public void setAiReply(String aiReply) {
+		this.aiReply = aiReply;
 	}
 }
