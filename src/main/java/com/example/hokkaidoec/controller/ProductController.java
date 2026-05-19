@@ -33,9 +33,9 @@ public class ProductController {
 		// 商品本体
 		Product product = productMapper.findById(productId);
 		if (product == null) {
-			// 本当に存在しない ID のとき
+			// 存在しない ID のとき
 			model.addAttribute("errorMessage", "商品が見つかりません");
-			// 一覧に戻す or 専用エラーページへ
+			// 一覧に戻す
 			return "redirect:/products";
 		}
 		// カテゴリ名を取得
