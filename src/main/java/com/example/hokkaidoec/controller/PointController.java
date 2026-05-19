@@ -7,7 +7,6 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.example.hokkaidoec.entity.PointHistory;
 import com.example.hokkaidoec.entity.User;
@@ -15,7 +14,6 @@ import com.example.hokkaidoec.mapper.PointHistoryMapper;
 import com.example.hokkaidoec.mapper.UserMapper;
 
 @Controller
-@RequestMapping("/points") // ポイント関連のパスを指定
 public class PointController {
 
 	// 責任者ルールに基づき、既存のMapperをインジェクションして利用
@@ -31,7 +29,7 @@ public class PointController {
 	/**
 	 * ポイントページの表示
 	 */
-	@GetMapping
+	@GetMapping("/point")
 	public String showPointPage(HttpSession session, Model model) {
 
 		// 1. セッション等からログイン中のユーザーIDを取得（※実装に合わせて調整してください）
@@ -60,6 +58,6 @@ public class PointController {
 		model.addAttribute("user", currentUser); // ユーザー情報・保有ポイント(currentUser.getPoint())
 		model.addAttribute("pointHistoryList", latestHistory); // ポイント履歴の一部
 
-		return "templates/point"; // ポイントページ（HTML）を表示
+		return "point"; // ポイントページ（HTML）を表示
 	}
 }

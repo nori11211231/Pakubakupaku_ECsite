@@ -19,7 +19,7 @@ public interface PointHistoryMapper {
 	/**
 	 * 特定ユーザーのポイント履歴を全件取得する（ポイント履歴画面用）
 	 */
-	List<PointHistory> findByUserId(String Email);
+	List<PointHistory> findByUserEmail(String Email);
 
 	/**
 	 * 特定ユーザーのポイント履歴を、最新のものから指定件数だけ取得する（ポイントページの一部表示用）
