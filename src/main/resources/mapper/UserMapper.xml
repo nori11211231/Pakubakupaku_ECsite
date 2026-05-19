@@ -6,16 +6,16 @@
 <mapper namespace="com.example.hokkaidoec.mapper.UserMapper">
 
 
-  <select id="findAll" resultType="com.example.hokkaidoec.entity.User">
-    SELECT name, email,address,phone, password,point,totalPurchaseAmount,rankId
-    FROM users
-    ORDER BY id
-  </select>
+<!--  <select id="findAll" resultType="com.example.hokkaidoec.entity.User">-->
+<!--    SELECT name, email,address,phone, password,point,totalPurchaseAmount,rankId-->
+<!--    FROM users-->
+<!--    ORDER BY id-->
+<!--  </select>-->
 
-  <select id="findById" resultType="com.example.hokkaidoec.entity.User">
-    SELECT name, email,address,phone, password,point,totalPurchaseAmount,rankId
-    FROM users
-    WHERE id = #{id}
-  </select>
+<!--  <select id="findById" resultType="com.example.hokkaidoec.entity.User">-->
+<!--    SELECT name, email,address,phone, password,point,totalPurchaseAmount,rankId-->
+<!--    FROM users-->
+<!--    WHERE id = #{id}-->
+<!--  </select>-->
 
 </mapper>
