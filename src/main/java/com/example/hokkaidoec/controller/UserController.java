@@ -1,5 +1,7 @@
 package com.example.hokkaidoec.controller;
 
+import jakarta.servlet.http.HttpSession;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,14 +42,29 @@ public class UserController {
 	}
 
 	@GetMapping("/mypage")
-	public String showMypage(Model model) {
-		// 本来はログイン中のユーザー情報をサービスから取得します
-		// User面、AI面、注文履歴面のオブジェクトをModelに登録する
+	public String showMypage(Model model, HttpSession session) {
+		// 1. 【修正】(UserForm) ではなく (com.example.hokkaidoec.entity.User) でキャストする
+		// ※インポート(import)していない場合は、型名を「User」にしてください
+		com.example.hokkaidoec.entity.User loginUser = (com.example.hokkaidoec.entity.User) session
+				.getAttribute("loginUser");
 
-		// 例：
-		// model.addAttribute("user", loginUser);
-		// model.addAttribute("ai", userAiData);
-		// model.addAttribute("orders", orderHistoryList);
+		// セッションが空ならログイン画面へ
+		if (loginUser == null) {
+			return "redirect:/login";
+		}
+
+		// 2. 本物のユーザー情報をModelに登録
+		// HTML側の `${user.name}` や `${user.email}` を読みに行きます
+		model.addAttribute("user", loginUser);
+
+		// 3. AIのダミーデータ（Map）
+		java.util.Map<String, Object> dummyAi = new java.util.HashMap<>();
+		dummyAi.put("level", 3);
+		dummyAi.put("exp", 7800);
+		model.addAttribute("ai", dummyAi);
+
+		// 4. 注文履歴のダミーデータ（必要であれば追加）
+		// 前回のList<Map>をここに置いておくと、注文履歴もエラーにならず表示されます！
 
 		return "mypage";
 	}
