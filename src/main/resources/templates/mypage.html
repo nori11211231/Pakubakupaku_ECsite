@@ -1,10 +1,109 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
+    <meta charset="UTF-8">
+    <title>マイページ - 北海道EC</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
+<body class="bg-gray-50 text-gray-800">
+
+    <div th:replace="~{fragments/_header :: header}"></div>
+
+    <main class="max-w-7xl mx-auto p-6 mt-6">
+        
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold text-slate-800">5. マイページ</h1>
+            <p class="text-gray-500 text-sm mt-1">注文履歴・ポイント・AI成長・ミニゲーム履歴をまとめる</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10">
+            
+            <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm flex flex-col justify-center min-h-[140px]">
+                <p class="text-xs text-gray-400 font-semibold mb-1">ユーザー情報</p>
+                <p class="text-lg font-bold text-gray-700" th:text="${user.name}">山田 太郎</p>
+                <p class="text-sm text-gray-500" th:text="${user.email}">taro@example.com</p>
+            </div>
+
+            <div class="bg-amber-100 p-6 rounded-xl border border-amber-200 shadow-sm flex flex-col justify-center text-center min-h-[140px]">
+                <p class="text-sm font-bold text-amber-800">保有ポイント</p>
+                <p class="text-2xl font-extrabold text-amber-900 mt-1">
+                    <span th:text="${user.point}">1,250</span> pt
+                </p>
+            </div>
+
+            <div class="bg-purple-50 p-6 rounded-xl border border-purple-200 shadow-sm flex flex-col justify-center text-center min-h-[140px]">
+                <p class="text-sm font-bold text-purple-800">育成AI</p>
+                <p class="text-xl font-extrabold text-purple-900 mt-1">
+                    Lv.<span th:text="${ai.level}">3</span> / 経験値 <span th:text="${ai.exp}">7,800</span>
+                </p>
+            </div>
+
+            <div class="bg-slate-50 p-6 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-center text-center min-h-[140px]">
+                <p class="text-sm font-medium text-slate-600">次のおすすめ商品</p>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
+            
+            <div class="lg:col-span-2">
+                <h2 class="text-2xl font-bold text-slate-800 mb-4">注文履歴</h2>
+                
+                <div class="space-y-3">
+                    <div th:each="order : ${orders}" class="bg-white p-4 rounded-lg border border-gray-200 shadow-sm flex justify-between items-center">
+                        <div class="flex space-x-6 text-sm text-gray-600">
+                            <span class="font-mono font-bold" th:text="${order.id}">注文ID 001</span>
+                            <span><span th:text="${#numbers.formatInteger(order.price, 1, 'COMMA')}">3,900</span>円</span>
+                        </div>
+                        <span class="text-sm font-medium text-gray-500" th:text="${order.status}">注文完了</span>
+                    </div>
+
+                    <div th:if="${orders == null}" class="space-y-3">
+                        <div class="bg-white p-4 rounded-lg border border-gray-200 shadow-sm flex justify-between items-center">
+                            <div class="flex space-x-6 text-sm text-gray-600">
+                                <span class="font-mono font-bold">注文ID 001</span>
+                                <span>3,900円</span>
+                            </div>
+                            <span class="text-sm font-medium text-emerald-600 font-bold">注文完了</span>
+                        </div>
+                        <div class="bg-white p-4 rounded-lg border border-gray-200 shadow-sm flex justify-between items-center">
+                            <div class="flex space-x-6 text-sm text-gray-600">
+                                <span class="font-mono font-bold">注文ID 002</span>
+                                <span>2,100円</span>
+                            </div>
+                            <span class="text-sm font-medium text-orange-500 font-bold">発送準備中</span>
+                        </div>
+                        <div class="bg-white p-4 rounded-lg border border-gray-200 shadow-sm flex justify-between items-center">
+                            <div class="flex space-x-6 text-sm text-gray-600">
+                                <span class="font-mono font-bold">注文ID 003</span>
+                                <span>1,500円</span>
+                            </div>
+                            <span class="text-sm font-medium text-gray-500">注文完了</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div>
+                <h2 class="text-2xl font-bold text-slate-800 mb-4">履歴・管理</h2>
+                
+                <div class="space-y-3">
+                    <a th:href="@{/mypage/minigame-history}" class="block w-full text-center bg-slate-50 hover:bg-slate-100 text-slate-700 font-medium py-3 px-4 rounded-lg border border-slate-200 shadow-sm transition">
+                        ミニゲーム履歴
+                    </a>
+                    <a th:href="@{/mypage/profile}" class="block w-full text-center bg-slate-50 hover:bg-slate-100 text-slate-700 font-medium py-3 px-4 rounded-lg border border-slate-200 shadow-sm transition">
+                        登録情報確認
+                    </a>
+                    <form th:action="@{/logout}" method="post" class="block w-full">
+                        <button type="submit" class="w-full text-center bg-slate-50 hover:bg-red-50 text-red-600 font-medium py-3 px-4 rounded-lg border border-slate-200 shadow-sm transition">
+                            ログアウト
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </main>
 
 </body>
 </html>

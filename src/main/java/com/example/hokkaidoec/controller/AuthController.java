@@ -55,7 +55,7 @@ public class AuthController {
 
 		// ログイン成功：セッションにユーザ情報を保存する
 		session.setAttribute("loginUser", user);
-		return "redirect:/product";
+		return "redirect:/top";
 	}
 
 	/** ログアウト処理を行う */
