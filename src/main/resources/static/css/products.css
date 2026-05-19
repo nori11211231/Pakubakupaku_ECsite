@@ -26,6 +26,129 @@ body{
   line-height:1.45;
 }
 
+
+/*----ここから---*/
+.site-header {
+         background-color: #ffffff;
+         border-bottom: 2px solid #ccc;
+         padding: 15px 0;
+         font-family: "Noto Sans JP", sans-serif;
+     }
+
+     .header-inner {
+         display: flex;
+         justify-content: space-between;
+         align-items: center;
+         max-width: 1200px;
+         margin: 0 auto;
+         padding: 0 20px;
+     }
+
+     .header-logo a {
+         font-weight: bold;
+         font-size: 20px;
+         color: #003366;
+         text-decoration: none;
+     }
+
+     .header-search {
+         display: flex;
+         align-items: center;
+     }
+
+     .header-search input {
+         width: 220px;
+         padding: 6px 10px;
+         border: 1px solid #ccc;
+         border-radius: 4px;
+         font-size: 14px;
+     }
+
+     .header-search button {
+         margin-left: 8px;
+         background-color: #e0f0ff;
+         color: #003366;
+         border: 1px solid #003366;
+         border-radius: 4px;
+         padding: 6px 12px;
+         cursor: pointer;
+         font-weight: bold;
+     }
+
+     .header-search button:hover {
+         background-color: #cce0ff;
+     }
+
+     .header-nav a {
+         margin: 0 10px;
+         color: #c00000;
+         text-decoration: none;
+         font-size: 14px;
+     }
+
+     .header-nav a:hover {
+         text-decoration: underline;
+     }
+
+     .point-badge {
+         background-color: #ffeb99;
+         color: #000;
+         border-radius: 4px;
+         padding: 6px 10px;
+         font-weight: bold;
+         text-decoration: none;
+     }
+
+     .header-auth a {
+         margin-left: 10px;
+         color: #003366;
+         text-decoration: none;
+         font-size: 14px;
+     }
+
+     .header-auth a:hover {
+         text-decoration: underline;
+     }
+
+.site-footer {
+           background-color: #f8f8f8;
+           border-top: 2px solid #ccc;
+           padding: 20px 0;
+           font-family: "Noto Sans JP", sans-serif;
+       }
+
+       .footer-inner {
+           display: flex;
+           justify-content: space-between;
+           align-items: center;
+           max-width: 1200px;
+           margin: 0 auto;
+           padding: 0 20px;
+       }
+
+       .footer-logo {
+           font-weight: bold;
+           color: #003366;
+           font-size: 18px;
+       }
+
+       .footer-nav a {
+           margin: 0 10px;
+           color: #c00000;
+           text-decoration: none;
+           font-size: 14px;
+       }
+
+       .footer-nav a:hover {
+           text-decoration: underline;
+       }
+
+       .footer-copy {
+           text-align: right;
+           font-size: 12px;
+           color: #666;
+       }
+/*-----ここまで----*/
 .container{
   max-width:var(--container-max);
   margin:0 auto;
