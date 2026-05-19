@@ -2,6 +2,8 @@ package com.example.hokkaidoec.controller;
 
 import java.util.List;
 
+import jakarta.servlet.http.HttpSession;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.example.hokkaidoec.entity.Category;
 import com.example.hokkaidoec.entity.Product;
 import com.example.hokkaidoec.entity.Region;
+import com.example.hokkaidoec.entity.User;
 import com.example.hokkaidoec.mapper.CategoryMapper;
 import com.example.hokkaidoec.mapper.ProductsMapper;
 import com.example.hokkaidoec.mapper.RegionMapper;
@@ -28,7 +31,10 @@ public class ProductController {
 	}
 
 	@GetMapping("/products/{productId}")
-	public String detail(@PathVariable Integer productId, Model model) {
+	public String detail(@PathVariable Integer productId, Model model, HttpSession session) {
+		// ログインユーザーを取得
+		User loginUser = (User) session.getAttribute("loginUser");
+		model.addAttribute("loginUser", loginUser);
 
 		// 商品本体
 		Product product = productMapper.findById(productId);
@@ -53,6 +59,7 @@ public class ProductController {
 	}
 
 	@GetMapping("/products")
+
 	public String showList(
 			@RequestParam(value = "keyword", required = false) String keyword,
 			@RequestParam(value = "categoryId", required = false) Integer categoryId,
@@ -60,8 +67,11 @@ public class ProductController {
 			@RequestParam(value = "minPrice", required = false) Integer minPrice,
 			@RequestParam(value = "maxPrice", required = false) Integer maxPrice,
 			@RequestParam(value = "sort", required = false) String sort,
-			Model model) {
+			Model model, HttpSession session) {
 		// 商品検索をするコード
+		// ログインユーザーを取得
+		User loginUser = (User) session.getAttribute("loginUser");
+		model.addAttribute("loginUser", loginUser);
 		List<Product> products = productMapper.search(
 				keyword, categoryId, regionId, minPrice, maxPrice, sort);
 

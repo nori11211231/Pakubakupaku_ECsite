@@ -149,6 +149,29 @@ body{
            color: #666;
        }
 /*-----ここまで----*/
+
+.floating-checkout-btn {
+  position: fixed;
+  bottom: 20px;        /* 画面下からの距離 */
+  right: 20px;         /* 画面右からの距離 */
+  background-color: #ff7f50;
+  color: #fff;
+  padding: 16px 28px;
+  border-radius: 50px;
+  font-size: 18px;
+  font-weight: bold;
+  text-align: center;
+  text-decoration: none;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+  z-index: 9999;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.floating-checkout-btn:hover {
+  transform: scale(1.05);
+  opacity: 0.9;
+}
+/*----このうえは注文を確認するボタンの中身だよ---------------*/
 .container{
   max-width:var(--container-max);
   margin:0 auto;
