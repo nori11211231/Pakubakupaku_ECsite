@@ -29,7 +29,7 @@ public class PointController {
 	/**
 	 * ポイントページの表示
 	 */
-	@GetMapping("/point")
+	@GetMapping("/points")
 	public String showPointPage(HttpSession session, Model model) {
 
 		// 1. セッション等からログイン中のユーザーIDを取得（※実装に合わせて調整してください）
