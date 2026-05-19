@@ -9,6 +9,9 @@
 <body>
 <!--  <header th:replace="layout/_header :: header"></header>-->
 
+<!-- ★3. 重複エラーがある場合だけ、赤い文字でメッセージを表示する -->
+<p th:if="${registerError}" style="color:red">[[${registerError}]]</p>
+
   <main>
   <h1>ユーザ登録フォーム</h1>
 
@@ -51,6 +54,7 @@
             <span th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}" style="color:red;"></span>
     </p>
 <!--     追加ココマデ -->
+
 
     <p><button type="submit">登録</button></p>
   </form>

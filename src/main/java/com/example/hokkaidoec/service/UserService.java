@@ -19,23 +19,23 @@ public class UserService {
 	}
 
 	public void register(UserForm form) {
+		// ★1. メールアドレスで重複チェックを行う
+		User existingUser = userMapper.findByEmail(form.getEmail());
+		if (existingUser != null) {
+			// すでにユーザーが見つかった場合は、エラーメッセージを持たせた例外を投げる
+			throw new IllegalArgumentException("このメールアドレスはすでに登録されています。");
+		}
+
 		System.out.println("ユーザ登録：" + form.getName() + " <" + form.getEmail() + ">");
 
 		User user = new User();
 		user.setName(form.getName());
 		user.setEmail(form.getEmail());
-
-		// パスワードを暗号化してセット（これは元のコードでバッチリでした！）
 		user.setPassword(passwordEncoder.encode(form.getPassword()));
-
-		// ★2. フォームから追加した項目をしっかりエンティティに詰め替える！
 		user.setAddress(form.getAddress());
 		user.setPhone(form.getPhone());
-
-		// ★3. 最初の質問で決めた「初期ランクのID（例: 1 = 一般会員）」を設定！
 		user.setRankId(1);
 
-		// データベースへ保存
 		userMapper.insert(user);
 	}
 }

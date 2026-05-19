@@ -16,4 +16,6 @@ public interface UserMapper {
 	/** ユーザを登録する */
 	@Insert("INSERT INTO users (name,email,address,phone,password,point,total_purchase_amount,rank_id) VALUES (#{name}, #{email},#{address},#{phone}, #{password},0,0,#{rankId})")
 	void insert(User user);
+
+	//	登録済みですをだす。
 }

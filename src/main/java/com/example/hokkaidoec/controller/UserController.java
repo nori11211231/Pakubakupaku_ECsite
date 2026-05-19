@@ -2,8 +2,6 @@ package com.example.hokkaidoec.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,17 +25,17 @@ public class UserController {
 	}
 
 	@PostMapping("/register")
-	public String submitForm(
-			@Validated @ModelAttribute("form") UserForm form,
-			BindingResult bindingResult,
-			Model model) {
-		if (bindingResult.hasErrors()) {
-			return "register"; // エラー時はフォームに戻す
+	public String registerUser(@ModelAttribute UserForm form, Model model) {
+		try {
+			// 登録処理を実行
+			userService.register(form);
+			return "redirect:/login"; // 成功したらログイン画面へ
+
+		} catch (IllegalArgumentException e) {
+			// ★2. 重複エラーをキャッチして、画面にエラーメッセージを送る
+			model.addAttribute("registerError", e.getMessage());
+			return "register"; // 失敗したら登録画面に戻る
 		}
 
-		userService.register(form);
-
-		model.addAttribute("form", form);
-		return "result";
 	}
 }
