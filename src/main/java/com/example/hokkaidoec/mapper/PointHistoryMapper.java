@@ -19,10 +19,13 @@ public interface PointHistoryMapper {
 	/**
 	 * 特定ユーザーのポイント履歴を全件取得する（ポイント履歴画面用）
 	 */
-	List<PointHistory> findByUserId(Integer userId);
+	List<PointHistory> findByUserEmail(String Email);
 
 	/**
 	 * 特定ユーザーのポイント履歴を、最新のものから指定件数だけ取得する（ポイントページの一部表示用）
 	 */
-	List<PointHistory> findRecentByUserId(@Param("userId") Integer userId, @Param("limit") Integer limit);
+	List<PointHistory> findRecentByUserEmail(@Param("userEmail") String userEmail, @Param("limit") Integer limit);
+
+	List<PointHistory> findLatestByUserEmail(@Param("userEmail") String userEmail);
+
 }

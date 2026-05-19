@@ -1,55 +1,55 @@
-<!--<!DOCTYPE html>-->
-<!--<html xmlns:th="http://www.thymeleaf.org">-->
-<!--<head>-->
-<!--    <meta charset="UTF-8">-->
-<!--    <title>ポイント履歴 - 北海道物産ECサイト</title>-->
-<!--    <link rel="stylesheet" th:href="@{/css/style.css}">-->
-<!--    <style>-->
-<!--        /* 簡易的なレイアウト調整用スタイル */-->
-<!--        .container { max-width: 960px; margin: 0 auto; padding: 20px; }-->
-<!--        .history-table { width: 100%; border-collapse: collapse; margin-top: 20px; }-->
-<!--        .history-table th, .history-table td { border: 1px solid #ddd; padding: 12px; text-align: center; }-->
-<!--        .history-table th { background-color: #f4f4f4; }-->
-<!--        .point-plus { color: #28a745; font-weight: bold; }-->
-<!--        .point-minus { color: #dc3545; font-weight: bold; }-->
-<!--        .btn-back { display: inline-block; margin-top: 20px; padding: 10px 20px; background-color: #6c757d; color: #fff; text-decoration: none; border-radius: 4px; }-->
-<!--        .btn-back:hover { background-color: #5a6268; }-->
-<!--    </style>-->
-<!--</head>-->
-<!--<body>-->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>ポイント履歴 - 北海道物産ECサイト</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <style>
+        /* 簡易的なレイアウト調整用スタイル */
+        .container { max-width: 960px; margin: 0 auto; padding: 20px; }
+        .history-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        .history-table th, .history-table td { border: 1px solid #ddd; padding: 12px; text-align: center; }
+        .history-table th { background-color: #f4f4f4; }
+        .point-plus { color: #28a745; font-weight: bold; }
+        .point-minus { color: #dc3545; font-weight: bold; }
+        .btn-back { display: inline-block; margin-top: 20px; padding: 10px 20px; background-color: #6c757d; color: #fff; text-decoration: none; border-radius: 4px; }
+        .btn-back:hover { background-color: #5a6268; }
+    </style>
+</head>
+<body>
 
-<!--    <div class="container">-->
-<!--        <h2>ポイント履歴</h2>-->
-<!--        <p>これまでのポイントの増減履歴です。</p>-->
+    <div class="container">
+        <h2>ポイント履歴</h2>
+        <p>これまでのポイントの増減履歴です。</p>
 
-<!--        <div th:if="${#lists.isEmpty(pointHistoryList)}" style="text-align: center; margin-top: 40px;">-->
-<!--            <p>ポイントの履歴はまだありません。</p>-->
-<!--        </div>-->
+        <div th:if="${#lists.isEmpty(pointHistoryList)}" style="text-align: center; margin-top: 40px;">
+            <p>ポイントの履歴はまだありません。</p>
+        </div>
 
-<!--        <table class="history-table" th:if="${!#lists.isEmpty(pointHistoryList)}">-->
-<!--            <thead>-->
-<!--                <tr>-->
-<!--                    <th>発生日時</th>-->
-<!--                    <th>増減ポイント</th>-->
-<!--                    <th>理由・内容</th>-->
-<!--                </tr>-->
-<!--            </thead>-->
-<!--            <tbody>-->
-<!--                <tr th:each="history : ${pointHistoryList}">-->
-<!--                    <td th:text="${#temporals.format(history.createdAt, 'yyyy/MM/dd HH:mm')}">2026/05/18 12:00</td>-->
+        <table class="history-table" th:if="${!#lists.isEmpty(pointHistoryList)}">
+            <thead>
+                <tr>
+                    <th>発生日時</th>
+                    <th>増減ポイント</th>
+                    <th>理由・内容</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="history : ${pointHistoryList}">
+                    <td th:text="${#temporals.format(history.createdAt, 'yyyy/MM/dd HH:mm')}">2026/05/18 12:00</td>
                     
-<!--                    <td>-->
-<!--                        <span th:if="${history.pointChange > 0}" class="point-plus" th:text="${'+' + history.pointChange}">+100</span>-->
-<!--                        <span th:if="${history.pointChange <= 0}" class="point-minus" th:text="${history.pointChange}">-50</span>-->
-<!--                    </td>-->
+                    <td>
+                        <span th:if="${history.pointChange > 0}" class="point-plus" th:text="${'+' + history.pointChange}">+100</span>
+                        <span th:if="${history.pointChange <= 0}" class="point-minus" th:text="${history.pointChange}">-50</span>
+                    </td>
                     
-<!--                    <td th:text="${history.reason}">購入</td>-->
-<!--                </tr>-->
-<!--            </tbody>-->
-<!--        </table>-->
+                    <td th:text="${history.reason}">購入</td>
+                </tr>
+            </tbody>
+        </table>
 
-<!--        <a th:href="@{/point}" class="btn-back">ポイントページに戻る</a>-->
-<!--    </div>-->
+        <a th:href="@{/point}" class="btn-back">ポイントページに戻る</a>
+    </div>
 
-<!--    </body>-->
-<!--</html>-->
+    </body>
+</html>
