@@ -93,14 +93,14 @@ VALUES
 INSERT INTO users
 (id, name, email, password, address, phone, point, total_purchase_amount, rank_id)
 VALUES
-(1, '山田 太郎', 'taro@example.com', 'password', '北海道札幌市中央区1-1-1', '090-1111-1111', 450, 6500, 1),
-(2, '佐藤 花子', 'hanako@example.com', 'password', '北海道函館市五稜郭町2-2-2', '090-2222-2222', 1200, 22000, 2),
-(3, '鈴木 一郎', 'ichiro@example.com', 'password', '北海道旭川市3条通3-3-3', '090-3333-3333', 2400, 52000, 3),
-(4, '高橋 美咲', 'misaki@example.com', 'password', '北海道帯広市西1条4-4-4', '090-4444-4444', 6000, 125000, 4),
-(5, '田中 健', 'ken@example.com', 'password', '北海道小樽市色内5-5-5', '090-5555-5555', 300, 8000, 1),
-(6, '伊藤 さくら', 'sakura@example.com', 'password', '北海道釧路市末広町6-6-6', '090-6666-6666', 1800, 35000, 2),
-(7, '渡辺 翔', 'sho@example.com', 'password', '北海道北見市中央町7-7-7', '090-7777-7777', 3200, 72000, 3),
-(8, '中村 葵', 'aoi@example.com', 'password', '北海道根室市花咲町8-8-8', '090-8888-8888', 8500, 150000, 4);
+(1, '山田 太郎', 'taro@example.com', '$2a$10$Nyn9XP/nXmOGetznSGCJz.NzYgS05Ae9aVgsQyrUpwdow4BUOPpSm', '北海道札幌市中央区1-1-1', '090-1111-1111', 450, 6500, 1),
+(2, '佐藤 花子', 'hanako@example.com', '$2a$10$Nyn9XP/nXmOGetznSGCJz.NzYgS05Ae9aVgsQyrUpwdow4BUOPpSm', '北海道函館市五稜郭町2-2-2', '090-2222-2222', 1200, 22000, 2),
+(3, '鈴木 一郎', 'ichiro@example.com', '$2a$10$Nyn9XP/nXmOGetznSGCJz.NzYgS05Ae9aVgsQyrUpwdow4BUOPpSm', '北海道旭川市3条通3-3-3', '090-3333-3333', 2400, 52000, 3),
+(4, '高橋 美咲', 'misaki@example.com', '$2a$10$Nyn9XP/nXmOGetznSGCJz.NzYgS05Ae9aVgsQyrUpwdow4BUOPpSm', '北海道帯広市西1条4-4-4', '090-4444-4444', 6000, 125000, 4),
+(5, '田中 健', 'ken@example.com', '$2a$10$Nyn9XP/nXmOGetznSGCJz.NzYgS05Ae9aVgsQyrUpwdow4BUOPpSm', '北海道小樽市色内5-5-5', '090-5555-5555', 300, 8000, 1),
+(6, '伊藤 さくら', 'sakura@example.com', '$2a$10$Nyn9XP/nXmOGetznSGCJz.NzYgS05Ae9aVgsQyrUpwdow4BUOPpSm', '北海道釧路市末広町6-6-6', '090-6666-6666', 1800, 35000, 2),
+(7, '渡辺 翔', 'sho@example.com', '$2a$10$Nyn9XP/nXmOGetznSGCJz.NzYgS05Ae9aVgsQyrUpwdow4BUOPpSm', '北海道北見市中央町7-7-7', '090-7777-7777', 3200, 72000, 3),
+(8, '中村 葵', 'aoi@example.com', '$2a$10$Nyn9XP/nXmOGetznSGCJz.NzYgS05Ae9aVgsQyrUpwdow4BUOPpSm', '北海道根室市花咲町8-8-8', '090-8888-8888', 8500, 150000, 4);
 
 -- =========================
 -- orders
