@@ -45,19 +45,19 @@ INSERT INTO products
 (id, product_name, description, price, stock, image_url, category_id, region_id)
 VALUES
 (1, '夕張メロンゼリー', '空知地域の夕張メロンを使った香り豊かなゼリーです。', 1200, 50, '/img/product/yuubarimeron.jpg', 4, 1),
-(2, '空知産ゆめぴりか 5kg', '北海道米ゆめぴりかの5kgパックです。', 3200, 30, '/images/products/sorachi_yumepirika.webp', 3, 1),
+(2, '空知産ゆめぴりか 5kg', '北海道米ゆめぴりかの5kgパックです。', 3200, 30, '/img/product/yumepirika.webp', 3, 1),
 
-(3, '石狩鍋セット', '鮭と野菜の旨味を楽しめる北海道名物の鍋セットです。', 4500, 20, '/images/products/ishikari_nabe.webp', 5, 2),
-(4, '札幌スープカレー', 'スパイスの効いた札幌名物スープカレーです。', 980, 80, '/images/products/sapporo_soup_curry.webp', 5, 2),
+(3, '石狩鍋セット', '鮭と野菜の旨味を楽しめる北海道名物の鍋セットです。', 4500, 20, '/img/product/isikarinabe.jpg', 5, 2),
+(4, '札幌スープカレー', 'スパイスの効いた札幌名物スープカレーです。', 980, 80, '/img/product/sapporokare-.png', 5, 2),
 
-(5, '小樽チーズケーキ', '濃厚なチーズの風味が楽しめる小樽スイーツです。', 1800, 40, '/images/products/otaru_cheesecake.webp', 4, 3),
-(6, 'ニセコ高原牛乳', '後志地域の自然で育まれたまろやかな牛乳です。', 450, 100, '/images/products/niseko_milk.webp', 2, 3),
+(5, '小樽チーズケーキ', '濃厚なチーズの風味が楽しめる小樽スイーツです。', 1800, 40, '/img/product/otaruce-ki.jpg', 4, 3),
+(6, 'ニセコ高原牛乳', '後志地域の自然で育まれたまろやかな牛乳です。', 450, 100, '/img/product/milk.webp', 2, 3),
 
-(7, '登別温泉まんじゅう', '胆振地域の温泉地をイメージした定番まんじゅうです。', 900, 60, '/images/products/noboribetsu_manju.webp', 4, 4),
-(8, '苫小牧ホッキカレー', 'ホッキ貝の旨味を生かしたご当地カレーです。', 750, 70, '/images/products/tomakomai_hokki_curry.webp', 5, 4),
+(7, '登別温泉まんじゅう', '胆振地域の温泉地をイメージした定番まんじゅうです。', 900, 60, '/img/product/noboribetsu_manju.jpg', 4, 4),
+(8, '苫小牧ホッキカレー', 'ホッキ貝の旨味を生かしたご当地カレーです。', 750, 70, '/img/product/tomakomai_hokki_curry.jpg', 5, 4),
 
-(9, '日高昆布', 'だしに最適な日高産昆布です。', 1300, 45, '/images/products/hidaka_konbu.webp', 1, 5),
-(10, '日高ヨーグルト', 'さっぱりとした味わいの北海道ヨーグルトです。', 380, 90, '/images/products/hidaka_yogurt.webp', 2, 5),
+(9, '日高昆布', 'だしに最適な日高産昆布です。', 1300, 45, '/img/product/hidaka_konbu.jpg', 1, 5),
+(10, '日高ヨーグルト', 'さっぱりとした味わいの北海道ヨーグルトです。', 380, 90, '/img/product/hidaka_yogurt.webp', 2, 5),
 
 (11, '函館塩辛', '新鮮なイカを使った函館名物の塩辛です。', 1100, 55, '/images/products/hakodate_shiokara.webp', 1, 6),
 (12, '函館ラーメン', 'あっさり塩味の函館ラーメンセットです。', 850, 75, '/images/products/hakodate_ramen.webp', 5, 6),
@@ -93,14 +93,14 @@ VALUES
 INSERT INTO users
 (id, name, email, password, address, phone, point, total_purchase_amount, rank_id)
 VALUES
-(1, '山田 太郎', 'taro@example.com', 'password', '北海道札幌市中央区1-1-1', '090-1111-1111', 450, 6500, 1),
-(2, '佐藤 花子', 'hanako@example.com', 'password', '北海道函館市五稜郭町2-2-2', '090-2222-2222', 1200, 22000, 2),
-(3, '鈴木 一郎', 'ichiro@example.com', 'password', '北海道旭川市3条通3-3-3', '090-3333-3333', 2400, 52000, 3),
-(4, '高橋 美咲', 'misaki@example.com', 'password', '北海道帯広市西1条4-4-4', '090-4444-4444', 6000, 125000, 4),
-(5, '田中 健', 'ken@example.com', 'password', '北海道小樽市色内5-5-5', '090-5555-5555', 300, 8000, 1),
-(6, '伊藤 さくら', 'sakura@example.com', 'password', '北海道釧路市末広町6-6-6', '090-6666-6666', 1800, 35000, 2),
-(7, '渡辺 翔', 'sho@example.com', 'password', '北海道北見市中央町7-7-7', '090-7777-7777', 3200, 72000, 3),
-(8, '中村 葵', 'aoi@example.com', 'password', '北海道根室市花咲町8-8-8', '090-8888-8888', 8500, 150000, 4);
+(1, '山田 太郎', 'taro@example.com', '$2a$10$Nyn9XP/nXmOGetznSGCJz.NzYgS05Ae9aVgsQyrUpwdow4BUOPpSm', '北海道札幌市中央区1-1-1', '090-1111-1111', 450, 6500, 1),
+(2, '佐藤 花子', 'hanako@example.com', '$2a$10$Nyn9XP/nXmOGetznSGCJz.NzYgS05Ae9aVgsQyrUpwdow4BUOPpSm', '北海道函館市五稜郭町2-2-2', '090-2222-2222', 1200, 22000, 2),
+(3, '鈴木 一郎', 'ichiro@example.com', '$2a$10$Nyn9XP/nXmOGetznSGCJz.NzYgS05Ae9aVgsQyrUpwdow4BUOPpSm', '北海道旭川市3条通3-3-3', '090-3333-3333', 2400, 52000, 3),
+(4, '高橋 美咲', 'misaki@example.com', '$2a$10$Nyn9XP/nXmOGetznSGCJz.NzYgS05Ae9aVgsQyrUpwdow4BUOPpSm', '北海道帯広市西1条4-4-4', '090-4444-4444', 6000, 125000, 4),
+(5, '田中 健', 'ken@example.com', '$2a$10$Nyn9XP/nXmOGetznSGCJz.NzYgS05Ae9aVgsQyrUpwdow4BUOPpSm', '北海道小樽市色内5-5-5', '090-5555-5555', 300, 8000, 1),
+(6, '伊藤 さくら', 'sakura@example.com', '$2a$10$Nyn9XP/nXmOGetznSGCJz.NzYgS05Ae9aVgsQyrUpwdow4BUOPpSm', '北海道釧路市末広町6-6-6', '090-6666-6666', 1800, 35000, 2),
+(7, '渡辺 翔', 'sho@example.com', '$2a$10$Nyn9XP/nXmOGetznSGCJz.NzYgS05Ae9aVgsQyrUpwdow4BUOPpSm', '北海道北見市中央町7-7-7', '090-7777-7777', 3200, 72000, 3),
+(8, '中村 葵', 'aoi@example.com', '$2a$10$Nyn9XP/nXmOGetznSGCJz.NzYgS05Ae9aVgsQyrUpwdow4BUOPpSm', '北海道根室市花咲町8-8-8', '090-8888-8888', 8500, 150000, 4);
 
 -- =========================
 -- orders
