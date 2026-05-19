@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<header th:fragment="header" class="site-header">
+
+    <div class="header-inner">
+
+        <!-- ロゴ -->
+        <div class="header-logo">
+            <a th:href="@{/}">北海道EC</a>
+        </div>
+
+        <!-- 検索フォーム -->
+        <form class="header-search" th:action="@{/products}" method="get">
+            <input
+                type="text"
+                name="keyword"
+                placeholder="商品検索キーワードを入力"
+                th:value="${keyword}">
+            <button type="submit">検索</button>
+        </form>
+
+        <!-- ナビゲーション -->
+        <nav class="header-nav">
+            <a th:href="@{/products}">商品一覧</a>
+            <a th:href="@{/regions}">地域から探す</a>
+            <a th:href="@{/points}">ポイント</a>
+            <a th:href="@{/game}">ミニゲーム</a>
+        </nav>
+
+        <!-- ポイント表示 -->
+        <a class="point-badge" th:href="@{/points}">
+            <span th:if="${loginUser != null}" th:text="${loginUser.point + ' pt'}">1,250 pt</span>
+            <span th:if="${loginUser == null}">0 pt</span>
+        </a>
+
+        <!-- ログイン状態 -->
+        <div class="header-auth">
+            <a th:if="${loginUser == null}" th:href="@{/login}">ログイン</a>
+
+            <a th:if="${loginUser != null}" th:href="@{/mypage}">マイページ</a>
+            <a th:if="${loginUser != null}" th:href="@{/logout}">ログアウト</a>
+        </div>
+
+    </div>
+
+</header>
+
+</body>
+</html>

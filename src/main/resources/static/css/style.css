@@ -1,0 +1,361 @@
+body {
+    margin: 0;
+    font-family: "Yu Gothic", "Meiryo", sans-serif;
+    background-color: #f8fafc;
+    color: #1f2937;
+}
+
+/* =========================
+   共通ヘッダー
+========================= */
+
+.site-header {
+    background-color: #ffffff;
+    border-bottom: 1px solid #cbd5e1;
+}
+
+.header-inner {
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+/* ロゴ */
+.header-logo a {
+    display: block;
+    min-width: 120px;
+    padding: 14px 20px;
+    background-color: #334155;
+    color: #ffffff;
+    text-align: center;
+    text-decoration: none;
+    font-weight: bold;
+    border-radius: 8px;
+}
+
+/* 検索 */
+.header-search {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+    max-width: 560px;
+}
+
+.header-search input {
+    width: 100%;
+    padding: 13px 16px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+.header-search button {
+    padding: 13px 24px;
+    border: 2px solid #2563eb;
+    background-color: #eff6ff;
+    color: #1e3a8a;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.header-search button:hover {
+    background-color: #dbeafe;
+}
+
+/* ナビ */
+.header-nav {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    white-space: nowrap;
+}
+
+.header-nav a {
+    color: #475569;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.header-nav a:hover {
+    color: #2563eb;
+    text-decoration: underline;
+}
+
+/* ポイント */
+.point-badge {
+    min-width: 90px;
+    padding: 13px 16px;
+    border: 2px solid #f59e0b;
+    background-color: #fffbeb;
+    color: #1f2937;
+    text-align: center;
+    text-decoration: none;
+    font-weight: bold;
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+/* ログイン・マイページ */
+.header-auth {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.header-auth a {
+    padding: 13px 20px;
+    border: 1px solid #cbd5e1;
+    background-color: #ffffff;
+    color: #475569;
+    text-decoration: none;
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+.header-auth a:hover {
+    background-color: #f1f5f9;
+}
+
+/* =========================
+   共通フッター
+========================= */
+
+.site-footer {
+    margin-top: 60px;
+    background-color: #334155;
+    color: #ffffff;
+}
+
+.footer-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 32px 24px;
+    text-align: center;
+}
+
+.footer-logo {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 16px;
+}
+
+.footer-nav {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 18px;
+    margin-bottom: 16px;
+}
+
+.footer-nav a {
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.footer-nav a:hover {
+    text-decoration: underline;
+}
+
+.footer-copy {
+    color: #cbd5e1;
+    font-size: 12px;
+}
+
+/* =========================
+   レスポンシブ対応
+========================= */
+
+@media screen and (max-width: 900px) {
+    .header-inner {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .header-search {
+        max-width: none;
+    }
+
+    .header-nav {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .point-badge,
+    .header-auth a {
+        text-align: center;
+    }
+
+    .header-auth {
+        justify-content: center;
+    }
+}
+.main-content {
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 32px 24px;
+}
+
+.top-hero-area {
+    display: grid;
+    grid-template-columns: 2fr 1.6fr;
+    gap: 40px;
+    align-items: center;
+    margin-bottom: 56px;
+}
+
+.main-visual {
+    padding: 44px 24px;
+    background-color: #f1f5f9;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.main-visual h1 {
+    margin: 0;
+    font-size: 28px;
+}
+
+.top-side-box {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+}
+
+.login-guide {
+    width: 240px;
+    height: 130px;
+    border: 2px solid #8b5cf6;
+    background-color: #f3e8ff;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.top-buttons {
+    display: flex;
+    gap: 20px;
+}
+
+.top-button {
+    display: flex;
+    width: 140px;
+    height: 70px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.game-button {
+    border: 2px solid #ef4444;
+    background-color: #fee2e2;
+    color: #1f2937;
+}
+
+.mypage-button {
+    border: 2px solid #22c55e;
+    background-color: #dcfce7;
+    color: #1f2937;
+}
+
+.recommended-section h2 {
+    margin-bottom: 18px;
+}
+
+.product-card-list {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 36px;
+}
+
+.product-card {
+    border: 1px solid #cbd5e1;
+    background-color: #ffffff;
+    border-radius: 8px;
+    padding: 10px;
+}
+
+.product-image {
+    height: 80px;
+    background-color: #e2e8f0;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #64748b;
+    margin-bottom: 10px;
+}
+
+.product-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.product-card h3 {
+    font-size: 15px;
+    margin: 8px 0;
+}
+
+.product-card p {
+    font-size: 13px;
+    color: #64748b;
+}
+
+.product-card-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.product-card-actions a {
+    padding: 6px 18px;
+    border: 2px solid #2563eb;
+    color: #1e3a8a;
+    text-decoration: none;
+    border-radius: 8px;
+    font-size: 13px;
+}
+
+.product-card-actions button {
+    padding: 6px 18px;
+    border: 2px solid #f97316;
+    background-color: #ffffff;
+    color: #9a3412;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+@media screen and (max-width: 900px) {
+    .top-hero-area {
+        grid-template-columns: 1fr;
+    }
+
+    .top-side-box {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .login-guide {
+        width: auto;
+    }
+
+    .top-buttons {
+        justify-content: center;
+    }
+
+    .product-card-list {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
