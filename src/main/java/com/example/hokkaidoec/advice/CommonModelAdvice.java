@@ -1,57 +1,49 @@
-package com.example.hokkaidoec.controller;
+package com.example.hokkaidoec.advice;
 
 import java.lang.reflect.Method;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ModelAttribute;
 
 import com.example.hokkaidoec.entity.AiGrowth;
-import com.example.hokkaidoec.form.AiChatForm;
 import com.example.hokkaidoec.mapper.AiGrowthMapper;
 import com.example.hokkaidoec.service.AiService;
 
-@Controller
-public class AiController {
+@ControllerAdvice
+public class CommonModelAdvice {
 
 	private final AiGrowthMapper aiGrowthMapper;
 	private final AiService aiService;
 
-	public AiController(AiGrowthMapper aiGrowthMapper, AiService aiService) {
+	public CommonModelAdvice(AiGrowthMapper aiGrowthMapper, AiService aiService) {
 		this.aiGrowthMapper = aiGrowthMapper;
 		this.aiService = aiService;
 	}
 
-	@GetMapping("/ai")
-	public String showAiPage(Model model, HttpSession session) {
-		AiChatForm aiChatForm = new AiChatForm();
-
-		AiGrowth aiGrowth = getAiGrowth(session);
-
-		model.addAttribute("aiChatForm", aiChatForm);
-		model.addAttribute("aiGrowth", aiGrowth);
-		model.addAttribute("aiName", aiGrowth.getName());
-		model.addAttribute("aiCharaImageUrl", aiService.resolveCharaImageUrl(aiGrowth));
-
-		return "ai";
+	@ModelAttribute("aiGrowth")
+	public AiGrowth addAiGrowth(HttpSession session) {
+		return getAiGrowth(session);
 	}
 
-	@PostMapping("/ai/chat")
-	public String chat(AiChatForm aiChatForm, Model model, HttpSession session) {
+	@ModelAttribute("aiName")
+	public String addAiName(HttpSession session) {
+		return getAiGrowth(session).getName();
+	}
+
+	@ModelAttribute("aiCharaImageUrl")
+	public String addAiCharaImageUrl(HttpSession session) {
+		return aiService.resolveCharaImageUrl(getAiGrowth(session));
+	}
+
+	@ModelAttribute("aiWidgetMessage")
+	public String addAiWidgetMessage(HttpServletRequest request, HttpSession session) {
+		String currentPath = request.getRequestURI();
 		AiGrowth aiGrowth = getAiGrowth(session);
 
-		String aiReply = aiService.createChatReply(aiChatForm.getUserMessage(), aiGrowth);
-		aiChatForm.setAiReply(aiReply);
-
-		model.addAttribute("aiChatForm", aiChatForm);
-		model.addAttribute("aiGrowth", aiGrowth);
-		model.addAttribute("aiName", aiGrowth.getName());
-		model.addAttribute("aiCharaImageUrl", aiService.resolveCharaImageUrl(aiGrowth));
-
-		return "ai";
+		return aiService.createPageMessage(currentPath, aiGrowth);
 	}
 
 	private AiGrowth getAiGrowth(HttpSession session) {

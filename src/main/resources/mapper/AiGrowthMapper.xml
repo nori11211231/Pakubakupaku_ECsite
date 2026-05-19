@@ -15,7 +15,7 @@
         <result property="charaImageUrl" column="chara_image_url"/>
     </resultMap>
 
-    <select id="findByUserId" resultMap="AiGrowthResultMap">
+    <select id="findByUserId" parameterType="java.lang.Integer" resultMap="AiGrowthResultMap">
         SELECT
             id,
             user_id,
@@ -30,10 +30,8 @@
             user_id = #{userId}
     </select>
 
-    <insert id="insert"
-            parameterType="com.example.hokkaidoec.entity.AiGrowth"
-            useGeneratedKeys="true"
-            keyProperty="id">
+    <insert id="insert" parameterType="com.example.hokkaidoec.entity.AiGrowth"
+            useGeneratedKeys="true" keyProperty="id">
         INSERT INTO ai_growth (
             user_id,
             name,
@@ -51,16 +49,25 @@
         )
     </insert>
 
+    <update id="update" parameterType="com.example.hokkaidoec.entity.AiGrowth">
+        UPDATE
+            ai_growth
+        SET
+            name = #{name},
+            growth_stage = #{growthStage},
+            personality = #{personality},
+            updated_at = CURRENT_TIMESTAMP,
+            chara_image_url = #{charaImageUrl}
+        WHERE
+            id = #{id}
+    </update>
+
     <update id="updateGrowthStage">
         UPDATE
             ai_growth
-        <set>
+        SET
             growth_stage = #{growthStage},
-            updated_at = CURRENT_TIMESTAMP,
-            <if test="charaImageUrl != null and charaImageUrl != ''">
-                chara_image_url = #{charaImageUrl},
-            </if>
-        </set>
+            updated_at = CURRENT_TIMESTAMP
         WHERE
             user_id = #{userId}
     </update>
