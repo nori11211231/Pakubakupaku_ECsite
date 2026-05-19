@@ -10,14 +10,8 @@
 <body>
   <div class="container" id="product-page">
 
-    <header class="header">
-      <div class="logo">北海道EC</div>
-      <div class="header-right">
-        <input type="search" placeholder="検索" />
-        <div class="point">1,250 pt</div>
-        <a href="/mypage">マイページ</a>
-      </div>
-    </header>
+	<header th:replace="fragments/_header :: header"></header>
+
 
     <main>
 
@@ -102,6 +96,7 @@
       });
     })();
   </script>
+  <footer th:replace="fragments/_footer :: footer"></footer>
 
 </body>
 </html>
