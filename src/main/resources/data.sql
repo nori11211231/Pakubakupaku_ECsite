@@ -44,7 +44,7 @@ INSERT INTO regions (id, region_name) VALUES
 INSERT INTO products
 (id, product_name, description, price, stock, image_url, category_id, region_id)
 VALUES
-(1, '夕張メロンゼリー', '空知地域の夕張メロンを使った香り豊かなゼリーです。', 1200, 50, '/images/products/yubari_melon_jelly.webp', 4, 1),
+(1, '夕張メロンゼリー', '空知地域の夕張メロンを使った香り豊かなゼリーです。', 1200, 50, '/img/product/yuubarimeron.jpg', 4, 1),
 (2, '空知産ゆめぴりか 5kg', '北海道米ゆめぴりかの5kgパックです。', 3200, 30, '/images/products/sorachi_yumepirika.webp', 3, 1),
 
 (3, '石狩鍋セット', '鮭と野菜の旨味を楽しめる北海道名物の鍋セットです。', 4500, 20, '/images/products/ishikari_nabe.webp', 5, 2),
