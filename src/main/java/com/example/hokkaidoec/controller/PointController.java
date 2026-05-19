@@ -1,6 +1,8 @@
 package com.example.hokkaidoec.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -16,11 +18,9 @@ import com.example.hokkaidoec.mapper.UserMapper;
 @Controller
 public class PointController {
 
-	// 責任者ルールに基づき、既存のMapperをインジェクションして利用
 	private final UserMapper userMapper;
 	private final PointHistoryMapper pointHistoryMapper;
 
-	// コンストラクタインジェクション
 	public PointController(UserMapper userMapper, PointHistoryMapper pointHistoryMapper) {
 		this.userMapper = userMapper;
 		this.pointHistoryMapper = pointHistoryMapper;
@@ -32,32 +32,52 @@ public class PointController {
 	@GetMapping("/points")
 	public String showPointPage(HttpSession session, Model model) {
 
-		// 1. セッション等からログイン中のユーザーIDを取得（※実装に合わせて調整してください）
-		// 例：ログイン時にセッションにセットされたUserオブジェクト、またはIDから取得
 		User loginUser = (User) session.getAttribute("loginUser");
 
-		// 未ログイン時のエラーハンドリング（最終チェックリストの条件）
 		if (loginUser == null) {
 			model.addAttribute("errorMessage", "ログインが必要です。");
-			return "login"; // ログイン画面へ遷移
+			return "redirect:login";
+		}
+
+		String userEmail = loginUser.getEmail();
+		User currentUser = userMapper.findByEmail(userEmail);
+
+		// ポイントページ用には直近の数件（最新履歴）を渡す
+		List<PointHistory> latestHistory = pointHistoryMapper.findLatestByUserEmail(userEmail);
+
+		model.addAttribute("user", currentUser);
+		model.addAttribute("pointHistoryList", latestHistory);
+
+		// HTML側（point.html）の表示崩れを防ぐためのダミー・補完データ
+		// ※実際の実装フェーズに合わせてAiGrowth系から取得する形に変更してください
+		Map<String, Object> dummyAi = new HashMap<>();
+		dummyAi.put("level", 3);
+		dummyAi.put("exp", 7800);
+		model.addAttribute("aiGrowth", dummyAi);
+		model.addAttribute("nextLevelRequiredAmount", 2200);
+
+		return "point";
+	}
+
+	/**
+	 * ポイント履歴全件ページの表示（新設）
+	 */
+	@GetMapping("/points/history")
+	public String showPointHistoryPage(HttpSession session, Model model) {
+
+		User loginUser = (User) session.getAttribute("loginUser");
+
+		if (loginUser == null) {
+			model.addAttribute("errorMessage", "ログインが必要です。");
+			return "login";
 		}
 
 		String userEmail = loginUser.getEmail();
 
-		// 2. ユーザー情報および現在の保有ポイントを取得
-		// UserMapperのfindByIdを使用して、最新のDB情報を取得（pointやtotal_purchase_amount含む）
-		User currentUser = userMapper.findByEmail(userEmail);
+		// 履歴画面用に全件取得メソッド（findByUserEmail）を呼び出す
+		List<PointHistory> allHistory = pointHistoryMapper.findByUserEmail(userEmail);
+		model.addAttribute("pointHistoryList", allHistory);
 
-		// 3. ポイント履歴の一部（最新の履歴など）を取得
-		// PointHistoryMapperのメソッドを活用
-		List<PointHistory> latestHistory = pointHistoryMapper.findLatestByUserEmail(userEmail);
-		// もし全履歴を表示する場合は、方針に合わせて findByUserId(userId) を使用
-		// List<PointHistory> allHistory = pointHistoryMapper.findByUserId(userId);
-
-		// 4. DTOは作らず、Modelにそのまま必要な情報を格納してHTMLに渡す
-		model.addAttribute("user", currentUser); // ユーザー情報・保有ポイント(currentUser.getPoint())
-		model.addAttribute("pointHistoryList", latestHistory); // ポイント履歴の一部
-
-		return "point"; // ポイントページ（HTML）を表示
+		return "point-history"; // point-history.html を呼び出す
 	}
 }
