@@ -1,6 +1,8 @@
 package com.example.hokkaidoec.service;
 
 import java.lang.reflect.Method;
+import java.time.LocalDateTime;
+import java.util.concurrent.ThreadLocalRandom;
 
 import org.springframework.stereotype.Service;
 
@@ -8,36 +10,91 @@ import com.example.hokkaidoec.entity.AiGrowth;
 import com.example.hokkaidoec.entity.Category;
 import com.example.hokkaidoec.entity.Product;
 import com.example.hokkaidoec.entity.Region;
+import com.example.hokkaidoec.mapper.AiGrowthMapper;
 
 @Service
 public class AiService {
 
+	private final AiGrowthMapper aiGrowthMapper;
+
+	public AiService(AiGrowthMapper aiGrowthMapper) {
+		this.aiGrowthMapper = aiGrowthMapper;
+	}
+
+	/**
+	 * ログインユーザーのAIキャラを取得する。
+	 * まだ存在しない場合は、たまご状態で自動作成する。
+	 */
+	public AiGrowth getOrCreateAiGrowth(Integer userId) {
+		if (userId == null) {
+			return createDefaultAiGrowth();
+		}
+
+		AiGrowth aiGrowth = aiGrowthMapper.findByUserId(userId);
+
+		if (aiGrowth != null) {
+			return aiGrowth;
+		}
+
+		AiGrowth newAiGrowth = new AiGrowth();
+		newAiGrowth.setUserId(userId);
+		newAiGrowth.setName("たまご");
+		newAiGrowth.setGrowthStage(1);
+		newAiGrowth.setPersonality(getRandomPersonality());
+		newAiGrowth.setUpdatedAt(LocalDateTime.now());
+		newAiGrowth.setCharaImageUrl("/img/ai/chara_stage1.png");
+
+		aiGrowthMapper.insert(newAiGrowth);
+
+		return newAiGrowth;
+	}
+
+	/**
+	 * 未ログイン時や一時表示用のAI。
+	 * DBには保存しない。
+	 */
 	public AiGrowth createDefaultAiGrowth() {
 		AiGrowth aiGrowth = new AiGrowth();
-		aiGrowth.setName("コンシェルジュ");
+		aiGrowth.setName("たまご");
 		aiGrowth.setGrowthStage(1);
 		aiGrowth.setPersonality("やさしい");
-		aiGrowth.setCharaImageUrl("/images/ai/chara_stage3.webp");
+		aiGrowth.setCharaImageUrl("/img/ai/chara_stage1.png");
 		return aiGrowth;
+	}
+
+	private String getRandomPersonality() {
+		String[] personalities = {
+				"元気",
+				"明るい",
+				"やさしい",
+				"知的",
+				"上品",
+				"のんびり",
+				"クール",
+				"頼れる"
+		};
+
+		int index = ThreadLocalRandom.current().nextInt(personalities.length);
+		return personalities[index];
 	}
 
 	public String resolveCharaImageUrl(AiGrowth aiGrowth) {
 		if (aiGrowth == null) {
-			return "/images/ai/chara_stage1.webp";
+			return "/img/ai/chara_stage1.png";
 		}
 
 		Integer growthStage = aiGrowth.getGrowthStage();
 
 		if (growthStage == null || growthStage == 1) {
-			return "/images/ai/chara_stage1.webp";
+			return "/img/ai/chara_stage1.png";
 		}
 
 		if (growthStage == 2) {
-			return "/images/ai/chara_stage2.webp";
+			return "/img/ai/chara_stage2.png";
 		}
 
 		if (aiGrowth.getCharaImageUrl() == null || aiGrowth.getCharaImageUrl().isBlank()) {
-			return "/images/ai/chara_stage3.webp";
+			return "/img/ai/chara_stage1.png";
 		}
 
 		return aiGrowth.getCharaImageUrl();
