@@ -7,7 +7,7 @@
   <script src="https://yubinbango.github.io/yubinbango/yubinbango.js" charset="UTF-8" defer></script>
 </head>
 <body>
-  <header th:replace="fragments/_header :: header"></header>
+  <div th:replace="~{fragments/_header :: header}"></div>
 
 <!-- ★3. 重複エラーがある場合だけ、赤い文字でメッセージを表示する -->
 <p th:if="${registerError}" style="color:red">[[${registerError}]]</p>
@@ -62,6 +62,6 @@
   <a href="/">▶ トップページへ戻る</a>
   </main>
 
-  <footer th:replace="fragments/_footer :: footer"></footer>
+  <div th:replace="~{fragments/_footer :: footer}"></div>
 </body>
 </html>

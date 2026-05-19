@@ -25,17 +25,17 @@ public class UserController {
 	}
 
 	@PostMapping("/register")
-	public String registerUser(@ModelAttribute UserForm form, Model model) {
+	// 📁 @ModelAttribute に ("form") を追加するだけ！
+	public String registerUser(@ModelAttribute("form") UserForm form, Model model) {
 		try {
 			// 登録処理を実行
 			userService.register(form);
-			return "redirect:/login"; // 成功したらログイン画面へ
+			return "redirect:/login";// 成功したらログイン画面へ
 
 		} catch (IllegalArgumentException e) {
-			// ★2. 重複エラーをキャッチして、画面にエラーメッセージを送る
+			// これで自動的に "form" という名前で入力中の中身がHTMLに返るようになります
 			model.addAttribute("registerError", e.getMessage());
-			return "register"; // 失敗したら登録画面に戻る
+			return "register";
 		}
-
 	}
 }
