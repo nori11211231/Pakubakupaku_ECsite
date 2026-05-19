@@ -2,7 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.hokkaidoec.mapper.PointHistoryMapper">
 
-    <!-- 1. ポイント履歴の登録 -->
     <insert id="insert" parameterType="com.example.hokkaidoec.entity.PointHistory" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO point_history (
             user_id,
@@ -17,44 +16,45 @@
         )
     </insert>
 
-    <!-- 2. 全件取得（Javaの findByUserEmail に合わせる） -->
     <select id="findByUserEmail" resultType="com.example.hokkaidoec.entity.PointHistory">
         SELECT 
-            id,
-            user_id AS userId,
-            point_change AS pointChange,
-            reason,
-            created_at AS createdAt
-        FROM point_history
-        WHERE user_id = #{Email}
-        ORDER BY created_at DESC
+            ph.id,
+            ph.user_id AS userId,
+            ph.point_change AS pointChange,
+            ph.reason,
+            ph.created_at AS createdAt
+        FROM point_history ph
+        INNER JOIN users u ON ph.user_id = u.id
+        WHERE u.email = #{userEmail}
+        ORDER BY ph.created_at DESC
     </select>
 
-    <!-- 3. 件数指定取得（Javaの findRecentByUserEmail に合わせる） -->
     <select id="findRecentByUserEmail" resultType="com.example.hokkaidoec.entity.PointHistory">
         SELECT 
-            id,
-            user_id AS userId,
-            point_change AS pointChange,
-            reason,
-            created_at AS createdAt
-        FROM point_history
-        WHERE user_id = #{userEmail}
-        ORDER BY created_at DESC
+            ph.id,
+            ph.user_id AS userId,
+            ph.point_change AS pointChange,
+            ph.reason,
+            ph.created_at AS createdAt
+        FROM point_history ph
+        INNER JOIN users u ON ph.user_id = u.id
+        WHERE u.email = #{userEmail}
+        ORDER BY ph.created_at DESC
         LIMIT #{limit}
     </select>
 
-    <!-- 4. 最新履歴の取得（コントローラーが呼んでいる findLatestByUserEmail を新設） -->
     <select id="findLatestByUserEmail" resultType="com.example.hokkaidoec.entity.PointHistory">
         SELECT 
-            id,
-            user_id AS userId,
-            point_change AS pointChange,
-            reason,
-            created_at AS createdAt
-        FROM point_history
-        WHERE user_id = #{userEmail}
-        ORDER BY created_at DESC
+            ph.id,
+            ph.user_id AS userId,
+            ph.point_change AS pointChange,
+            ph.reason,
+            ph.created_at AS createdAt
+        FROM point_history ph
+        INNER JOIN users u ON ph.user_id = u.id
+        WHERE u.email = #{userEmail}
+        ORDER BY ph.created_at DESC
+        LIMIT 5
     </select>
 
 </mapper>

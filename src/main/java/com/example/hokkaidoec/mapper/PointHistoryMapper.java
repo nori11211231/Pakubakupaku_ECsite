@@ -12,20 +12,23 @@ public interface PointHistoryMapper {
 
 	/**
 	 * ポイント増減履歴を登録する
-	 * （注文完了時、スロットプレイ時、ミッション達成時などに他担当からも呼ばれます）
 	 */
 	void insert(PointHistory pointHistory);
 
 	/**
-	 * 特定ユーザーのポイント履歴を全件取得する（ポイント履歴画面用）
+	 * 特定ユーザーのポイント履歴を全件取得する
+	 * ★ @Param("userEmail") を追加しました
 	 */
-	List<PointHistory> findByUserEmail(String Email);
+	List<PointHistory> findByUserEmail(@Param("userEmail") String userEmail);
 
 	/**
-	 * 特定ユーザーのポイント履歴を、最新のものから指定件数だけ取得する（ポイントページの一部表示用）
+	 * 特定ユーザーのポイント履歴を、最新のものから指定件数だけ取得する
 	 */
 	List<PointHistory> findRecentByUserEmail(@Param("userEmail") String userEmail, @Param("limit") Integer limit);
 
+	/**
+	 * 最新履歴の取得
+	 */
 	List<PointHistory> findLatestByUserEmail(@Param("userEmail") String userEmail);
 
 }
