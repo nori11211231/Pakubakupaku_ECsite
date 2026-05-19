@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import jakarta.servlet.http.HttpSession;
+
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,51 +21,56 @@ import com.example.hokkaidoec.mapper.GamePlayHistoryMapper;
 public class GameController {
 
 	private final GamePlayHistoryMapper gamePlayHistoryMapper;
+	private final JdbcTemplate jdbcTemplate;
 	private final Random random = new Random();
 
-	private static final Integer TEMP_USER_ID = 1;
-	private static final Integer TEMP_CURRENT_POINT = 1000;
-
-	public GameController(GamePlayHistoryMapper gamePlayHistoryMapper) {
+	public GameController(GamePlayHistoryMapper gamePlayHistoryMapper, JdbcTemplate jdbcTemplate) {
 		this.gamePlayHistoryMapper = gamePlayHistoryMapper;
+		this.jdbcTemplate = jdbcTemplate;
 	}
 
-	// トップページ表示
-	// すでにHomeControllerに @GetMapping("/") がある場合は、このメソッドを消す
 	@GetMapping("/")
 	public String showTop() {
 		return "top";
 	}
 
-	// ガチャ画面を表示
 	@GetMapping("/game")
-	public String showGame(Model model) {
+	public String showGame(Model model, HttpSession session) {
+
+		Integer userId = getLoginUserId(session);
+		if (userId == null) {
+			return "redirect:/login";
+		}
+
+		Integer currentPoint = getCurrentPoint(userId);
 
 		model.addAttribute("gameForm", new GameForm());
-		model.addAttribute("currentPoint", TEMP_CURRENT_POINT);
+		model.addAttribute("currentPoint", currentPoint);
 
 		return "game";
 	}
 
-	// 1回ガチャ
 	@PostMapping("/game/result")
-	public String playGame(GameForm gameForm, Model model) {
+	public String playGame(GameForm gameForm, Model model, HttpSession session) {
 
+		Integer userId = getLoginUserId(session);
+		if (userId == null) {
+			return "redirect:/login";
+		}
+
+		Integer currentPoint = getCurrentPoint(userId);
 		Integer betPoint = gameForm.getBetPoint();
 
 		if (betPoint == null || betPoint <= 0) {
 			model.addAttribute("gameForm", gameForm);
-			model.addAttribute("currentPoint", TEMP_CURRENT_POINT);
+			model.addAttribute("currentPoint", currentPoint);
 			model.addAttribute("errorMessage", "ベットポイントは1以上で入力してください。");
 			return "game";
 		}
 
-		// はずれの場合はベット額だけ消費
-		Integer maxLostPoint = betPoint;
-
-		if (TEMP_CURRENT_POINT < maxLostPoint) {
+		if (currentPoint < betPoint) {
 			model.addAttribute("gameForm", gameForm);
-			model.addAttribute("currentPoint", TEMP_CURRENT_POINT);
+			model.addAttribute("currentPoint", currentPoint);
 			model.addAttribute("errorMessage", "ポイントが不足しています。");
 			return "game";
 		}
@@ -74,7 +82,7 @@ public class GameController {
 		results.add(result);
 
 		GamePlayHistory history = new GamePlayHistory();
-		history.setUserId(TEMP_USER_ID);
+		history.setUserId(userId);
 		history.setBetPoint(betPoint);
 		history.setResult(result.isWin());
 		history.setEarnedPoint(result.getEarnedPoint());
@@ -82,43 +90,47 @@ public class GameController {
 
 		gamePlayHistoryMapper.insert(history);
 
-		Integer currentPoint = TEMP_CURRENT_POINT + result.getPointChange();
+		Integer newPoint = currentPoint + result.getPointChange();
+		updateCurrentPoint(userId, newPoint);
 
 		model.addAttribute("isTenRoll", false);
 		model.addAttribute("results", results);
-
 		model.addAttribute("resultText", result.getResultText());
 		model.addAttribute("effectType", result.getEffectType());
 		model.addAttribute("betPoint", betPoint);
 		model.addAttribute("earnedPoint", result.getEarnedPoint());
 		model.addAttribute("lostPoint", result.getLostPoint());
 		model.addAttribute("pointChange", result.getPointChange());
-		model.addAttribute("currentPoint", currentPoint);
+		model.addAttribute("currentPoint", newPoint);
 		model.addAttribute("videoPath", result.getVideoPath());
 		model.addAttribute("message", result.getMessage());
 
 		return "game-result";
 	}
 
-	// 10連ガチャ
 	@PostMapping("/game/result/ten")
-	public String playTenGame(GameForm gameForm, Model model) {
+	public String playTenGame(GameForm gameForm, Model model, HttpSession session) {
 
+		Integer userId = getLoginUserId(session);
+		if (userId == null) {
+			return "redirect:/login";
+		}
+
+		Integer currentPoint = getCurrentPoint(userId);
 		Integer betPoint = gameForm.getBetPoint();
 
 		if (betPoint == null || betPoint <= 0) {
 			model.addAttribute("gameForm", gameForm);
-			model.addAttribute("currentPoint", TEMP_CURRENT_POINT);
+			model.addAttribute("currentPoint", currentPoint);
 			model.addAttribute("errorMessage", "ベットポイントは1以上で入力してください。");
 			return "game";
 		}
 
-		// 10連で全てはずれた場合、ベット額×10回分だけ消費
 		Integer maxLostPoint = betPoint * 10;
 
-		if (TEMP_CURRENT_POINT < maxLostPoint) {
+		if (currentPoint < maxLostPoint) {
 			model.addAttribute("gameForm", gameForm);
-			model.addAttribute("currentPoint", TEMP_CURRENT_POINT);
+			model.addAttribute("currentPoint", currentPoint);
 			model.addAttribute("errorMessage", "10連を引くには、ベットポイント×10回分のポイントが必要です。");
 			return "game";
 		}
@@ -150,7 +162,7 @@ public class GameController {
 			}
 
 			GamePlayHistory history = new GamePlayHistory();
-			history.setUserId(TEMP_USER_ID);
+			history.setUserId(userId);
 			history.setBetPoint(betPoint);
 			history.setResult(result.isWin());
 			history.setEarnedPoint(result.getEarnedPoint());
@@ -173,21 +185,20 @@ public class GameController {
 			summaryEffectType = "lose";
 		}
 
-		Integer currentPoint = TEMP_CURRENT_POINT + totalPointChange;
+		Integer newPoint = currentPoint + totalPointChange;
+		updateCurrentPoint(userId, newPoint);
 
 		model.addAttribute("isTenRoll", true);
 		model.addAttribute("results", results);
-
 		model.addAttribute("resultText", summaryText);
 		model.addAttribute("effectType", summaryEffectType);
 		model.addAttribute("betPoint", betPoint);
 		model.addAttribute("earnedPoint", totalEarnedPoint);
 		model.addAttribute("lostPoint", totalLostPoint);
 		model.addAttribute("pointChange", totalPointChange);
-		model.addAttribute("currentPoint", currentPoint);
+		model.addAttribute("currentPoint", newPoint);
 		model.addAttribute("message", "10回分の結果をまとめて表示します。");
 
-		// 10連の最初の動画用
 		if (!results.isEmpty()) {
 			model.addAttribute("videoPath", results.get(0).getVideoPath());
 		}
@@ -195,19 +206,48 @@ public class GameController {
 		return "game-result";
 	}
 
-	// ガチャ履歴画面
 	@GetMapping("/game/history")
-	public String showGameHistory(Model model) {
+	public String showGameHistory(Model model, HttpSession session) {
 
-		List<GamePlayHistory> gameHistories = gamePlayHistoryMapper.findByUserId(TEMP_USER_ID);
+		Integer userId = getLoginUserId(session);
+		if (userId == null) {
+			return "redirect:/login";
+		}
+
+		Integer currentPoint = getCurrentPoint(userId);
+
+		List<GamePlayHistory> gameHistories = gamePlayHistoryMapper.findByUserId(userId);
 
 		model.addAttribute("gameHistories", gameHistories);
-		model.addAttribute("currentPoint", TEMP_CURRENT_POINT);
+		model.addAttribute("currentPoint", currentPoint);
 
 		return "game-history";
 	}
 
-	// ガチャ抽選処理
+	private Integer getLoginUserId(HttpSession session) {
+		Object loginUserId = session.getAttribute("userId");
+
+		if (loginUserId == null) {
+			return null;
+		}
+
+		return (Integer) loginUserId;
+	}
+
+	private Integer getCurrentPoint(Integer userId) {
+		return jdbcTemplate.queryForObject(
+				"SELECT point FROM users WHERE id = ?",
+				Integer.class,
+				userId);
+	}
+
+	private void updateCurrentPoint(Integer userId, Integer newPoint) {
+		jdbcTemplate.update(
+				"UPDATE users SET point = ? WHERE id = ?",
+				newPoint,
+				userId);
+	}
+
 	private GameResultView drawGacha(Integer betPoint) {
 
 		int roll = random.nextInt(1600) + 1;
@@ -216,7 +256,6 @@ public class GameController {
 		result.setBetPoint(betPoint);
 
 		if (roll == 1) {
-			// 超大当たり：1600分の1、100倍
 			result.setWin(true);
 			result.setResultText("超大当たり");
 			result.setEffectType("super");
@@ -227,7 +266,6 @@ public class GameController {
 			result.setMessage("超大当たり！！奇跡の1600分の1！ベットポイントの100倍を獲得！");
 
 		} else if (roll <= 480) {
-			// 当たり：約30%、10倍
 			result.setWin(true);
 			result.setResultText("当たり");
 			result.setEffectType("win");
@@ -238,7 +276,6 @@ public class GameController {
 			result.setMessage("当たり！ベットポイントの10倍を獲得！");
 
 		} else {
-			// はずれ：ベットしたポイントだけ失う
 			result.setWin(false);
 			result.setResultText("はずれ");
 			result.setEffectType("lose");
@@ -252,7 +289,6 @@ public class GameController {
 		return result;
 	}
 
-	// 結果表示用クラス
 	public static class GameResultView {
 
 		private Integer index;
