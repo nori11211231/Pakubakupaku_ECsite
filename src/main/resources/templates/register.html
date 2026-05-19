@@ -1,63 +1,67 @@
-<!--<!DOCTYPE html>-->
-<!--<html xmlns:th="http://www.thymeleaf.org">-->
-<!--<head>-->
-<!--  <meta charset="UTF-8" />-->
-<!--  <title>ユーザ登録</title>-->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <title>ユーザ登録</title>
 <!--   1. 郵便番号検索ライブラリの読み込みを追加 -->
-<!--  <script src="https://yubinbango.github.io/yubinbango/yubinbango.js" charset="UTF-8" defer></script>-->
-<!--</head>-->
-<!--<body>-->
+  <script src="https://yubinbango.github.io/yubinbango/yubinbango.js" charset="UTF-8" defer></script>
+</head>
+<body>
 <!--  <header th:replace="layout/_header :: header"></header>-->
 
-<!--  <main>-->
-<!--  <h1>ユーザ登録フォーム</h1>-->
+<!-- ★3. 重複エラーがある場合だけ、赤い文字でメッセージを表示する -->
+<p th:if="${registerError}" style="color:red">[[${registerError}]]</p>
+
+  <main>
+  <h1>ユーザ登録フォーム</h1>
 
 <!--   2. formタグに class="h-adr" を追加 -->
-<!--  <form th:action="@{/register}" th:object="${form}" method="post" class="h-adr">-->
+  <form th:action="@{/register}" th:object="${form}" method="post" class="h-adr">
 <!--     3. 国名の指定（郵便番号検索に必須の隠し要素）を追加 -->
-<!--    <span class="p-country-name" style="display:none;">Japan</span>-->
+    <span class="p-country-name" style="display:none;">Japan</span>
 
-<!--	<p>-->
-<!--	  名前：<input type="text" th:field="*{name}" />-->
-<!--	        <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}" style="color:red;"></span>-->
-<!--	</p>-->
-<!--	<p>-->
-<!--	  メールアドレス：<input type="email" th:field="*{email}" />-->
-<!--	        <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}" style="color:red;"></span>-->
-<!--	</p>-->
-<!--	<p>-->
-<!--	   メールアドレス（確認用）：<input type="email" th:field="*{emailConfirm}" />-->
-<!--	   <span th:if="${#fields.hasErrors('emailConfirm')}" th:errors="*{emailConfirm}" style="color:red;"></span>-->
-<!--	 </p>-->
+	<p>
+	  名前：<input type="text" th:field="*{name}" />
+	        <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}" style="color:red;"></span>
+	</p>
+	<p>
+	  メールアドレス：<input type="email" th:field="*{email}" />
+	        <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}" style="color:red;"></span>
+	</p>
+	<p>
+	   メールアドレス（確認用）：<input type="email" th:field="*{emailConfirm}" />
+	   <span th:if="${#fields.hasErrors('emailConfirm')}" th:errors="*{emailConfirm}" style="color:red;"></span>
+	 </p>
 
-<!--	 <p th:if="${#fields.hasErrors('emailConfirmed')}" th:errors="*{emailConfirmed}" style="color:red;"></p>-->
+	 <p th:if="${#fields.hasErrors('emailConfirmed')}" th:errors="*{emailConfirmed}" style="color:red;"></p>
 	
-<!--	<p>-->
-<!--	  パスワード：<input type="password" th:field="*{password}" />-->
-<!--	        <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}" style="color:red;"></span>-->
-<!--	</p>-->
+	<p>
+	  パスワード：<input type="password" th:field="*{password}" />
+	        <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}" style="color:red;"></span>
+	</p>
 
 <!--     4. ここから新規追加：郵便番号、住所、電話番号の入力欄 -->
-<!--    <p>-->
-<!--      郵便番号：<input type="text" th:field="*{zipcode}" class="p-postal-code" placeholder="060-0001" />-->
-<!--            <span th:if="${#fields.hasErrors('zipcode')}" th:errors="*{zipcode}" style="color:red;"></span>-->
-<!--    </p>-->
-<!--    <p>-->
-<!--      住所：<input type="text" th:field="*{address}" class="p-region p-locality p-street-address" style="width: 400px;" placeholder="北海道札幌市..." />-->
-<!--            <span th:if="${#fields.hasErrors('address')}" th:errors="*{address}" style="color:red;"></span>-->
-<!--    </p>-->
-<!--    <p>-->
-<!--      電話番号：<input type="text" th:field="*{phone}" placeholder="011-XXX-XXXX" />-->
-<!--            <span th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}" style="color:red;"></span>-->
-<!--    </p>-->
+    <p>
+      郵便番号：<input type="text" th:field="*{zipcode}" class="p-postal-code" placeholder="060-0001" />
+            <span th:if="${#fields.hasErrors('zipcode')}" th:errors="*{zipcode}" style="color:red;"></span>
+    </p>
+    <p>
+      住所：<input type="text" th:field="*{address}" class="p-region p-locality p-street-address" style="width: 400px;" placeholder="北海道札幌市..." />
+            <span th:if="${#fields.hasErrors('address')}" th:errors="*{address}" style="color:red;"></span>
+    </p>
+    <p>
+      電話番号：<input type="text" th:field="*{phone}" placeholder="011-XXX-XXXX" />
+            <span th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}" style="color:red;"></span>
+    </p>
 <!--     追加ココマデ -->
 
-<!--    <p><button type="submit">登録</button></p>-->
-<!--  </form>-->
 
-<!--  <a href="/">▶ トップページへ戻る</a>-->
-<!--  </main>-->
+    <p><button type="submit">登録</button></p>
+  </form>
+
+  <a href="/">▶ トップページへ戻る</a>
+  </main>
 
 <!--  <footer th:replace="layout/_footer :: footer"></footer>-->
-<!--</body>-->
-<!--</html>-->
+</body>
+</html>

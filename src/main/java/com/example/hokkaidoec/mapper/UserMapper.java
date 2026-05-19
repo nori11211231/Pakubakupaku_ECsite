@@ -14,18 +14,8 @@ public interface UserMapper {
 	User findByEmail(String email);
 
 	/** ユーザを登録する */
-	@Insert("INSERT INTO users (name,email,address,phone,password,point,totalPurchaseAmount,rankId) VALUES (#{name}, #{email},#{address},#{phone}, #{password},0,0,#{rankId})")
+	@Insert("INSERT INTO users (name,email,address,phone,password,point,total_purchase_amount,rank_id) VALUES (#{name}, #{email},#{address},#{phone}, #{password},0,0,#{rankId})")
 	void insert(User user);
-}
 
-//★★★Userserviceに書いておく
-////新規ユーザーオブジェクトを作成
-//User newUser = new User();
-//newUser.setName(form.getName());
-////... 他のプロパティをセット ...
-//
-////初期ランクのID（例: 1 = 一般会員）を設定
-//newUser.setRankId(1); 
-//
-////マッパーを呼び出して保存
-//userMapper.insert(newUser);
+	//	登録済みですをだす。
+}
