@@ -1,183 +1,135 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>ポイント・AI・ミニゲーム - 北海道EC</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/tailwind.min.css" rel="stylesheet">
-    <link rel="stylesheet" th:href="@{/css/style.css}">
-    
-    <style>
-        /* 全体の背景調整 */
-        body {
-            background-color: #f4f7f9;
-        }
-        /* 所有ポイントの大きな文字タイトルの装飾 */
-        .point-title {
-            font-size: 2rem;
-            font-weight: bold;
-            color: #212529;
-        }
-        .point-value {
-            font-size: 2.2rem;
-            font-weight: normal;
-            color: #212529;
-        }
-        /* 左側のオレンジ枠のメインカード */
-        .main-point-card {
-            background-color: #fffde6 !important;
-            border: 2px solid #ffb703 !important;
-            border-radius: 8px;
-            padding: 2rem;
-            height: 100%;
-        }
-        /* レベルアップのインラインカード（シルバーからゴールドへの矢印） */
-        .level-up-box {
-            background-color: #ffffff;
-            border: 1px solid #ced4da;
-            border-radius: 6px;
-            padding: 10px 15px;
-            text-align: center;
-            max-width: 280px;
-            margin: 0 auto 1.5rem auto;
-        }
-        /* ミニゲームへボタンのオリジナルスタイル */
-        .btn-minigame {
-            background-color: #ffe3e3;
-            border: 2px solid #f0a3a3;
-            color: #212529;
-            font-size: 1.5rem;
-            font-weight: bold;
-            padding: 15px 30px;
-            border-radius: 8px;
-            transition: all 0.2s;
-            text-decoration: none;
-            display: inline-block;
-        }
-        .btn-minigame:hover {
-            background-color: #fbcbcb;
-            color: #000;
-        }
-        /* 右側ミッションのコンテナと各項目 */
-        .mission-title {
-            font-size: 1.3rem;
-            font-weight: bold;
-            margin-bottom: 1rem;
-        }
-        .mission-item {
-            background-color: #ffffff !important;
-            border: 2px solid #34495e !important;
-            border-radius: 12px !important;
-            padding: 12px 20px !important;
-            margin-bottom: 0.75rem;
-        }
-        /* ミッションのボタン（GET / 挑戦） */
-        .btn-mission-get {
-            background-color: #ffffff;
-            border: 2px solid #34495e;
-            color: #f1c40f;
-            font-weight: bold;
-            border-radius: 6px;
-        }
-        .btn-mission-try {
-            background-color: #ffffff;
-            border: 2px solid #34495e;
-            color: #212529;
-            font-weight: bold;
-            border-radius: 6px;
-        }
-    </style>
+	<meta charset="UTF-8">
+	<title>ポイントページ - 北海道EC</title>
+
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+	<link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
-<body class="bg-light">
 
-    <div th:replace="~{fragments/_header :: header}"></div>
+<body>
 
-    <div class="container my-5">
-        
-        <div class="mb-4">
-            <span class="point-title">所有ポイント</span>
-            <span class="point-value ms-4">現在：<span th:text="${#numbers.formatInteger(user.point, 1, 'COMMA')}">1,250</span> pt</span>
-        </div>
+	<div th:replace="~{fragments/_header :: header}"></div>
 
-        <div class="row g-4">
-            
-            <div class="col-lg-7">
-                <div class="card main-point-card shadow-sm">
-                    <div class="card-body d-flex flex-column justify-content-between">
-                        
-                        <div>
-                            <h6 class="fw-bold text-dark mb-2">使い道</h6>
-                            <ul class="list-unstyled ps-2 mb-4" style="color: #333;">
-                                <li>・ 買い物で利用</li>
-                                <li>・ ミニゲームで利用</li>
-                            </ul>
-                        </div>
+	<main class="container my-5">
 
-                        <div class="level-up-box shadow-sm">
-                            <div class="small text-muted mb-2">
-                                あと <span class="fw-bold text-danger" th:text="${nextLevelRequiredAmount}">2,200</span> 円購入でレベルアップ
-                            </div>
-                            <div class="d-flex align-items-center justify-content-center gap-2">
-                                <span class="fs-4">🥈</span>
-                                <span class="fs-5">➡️</span>
-                                <span class="fs-4">🥇</span>
-                            </div>
-                        </div>
+		<h2 class="mb-4">ポイントページ</h2>
 
-                        <div class="text-center mt-3">
-                            <a th:href="@{/slot}" class="btn btn-minigame w-75">ミニゲームへ</a>
-                        </div>
+		<div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+		<div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
 
-                    </div>
-                </div>
-            </div>
+		<div class="row g-4">
 
-            <div class="col-lg-5">
-                <div class="mission-title">ミッション</div>
-                
-                <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
-                <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+			<div class="col-md-6">
+				<div class="card">
+					<div class="card-header">
+						所有ポイント
+					</div>
+					<div class="card-body">
+						<p class="fs-3 fw-bold mb-3">
+							<span th:text="${#numbers.formatInteger(user.point, 1, 'COMMA')}">0</span> pt
+						</p>
 
-                <div class="vstack">
-                    
-                    <div class="d-flex align-items-center justify-content-between mission-item">
-                        <div class="d-flex align-items-center">
-                            <span class="fs-5 me-2">💰</span>
-                            <span class="fw-bold text-dark">広告を見る</span>
-                        </div>
-                        <form th:action="@{/points/mission/ad}" method="post" class="m-0">
-                            <button type="submit" class="btn btn-mission-get px-4">GET</button>
-                        </form>
-                    </div>
+						<p class="mb-1">ポイントの使い道</p>
+						<ul>
+							<li>買い物で利用</li>
+							<li>ミニゲームで利用</li>
+						</ul>
 
-                    <div class="d-flex align-items-center justify-content-between mission-item">
-                        <div class="d-flex align-items-center">
-                            <span class="fs-5 me-2">💰</span>
-                            <span class="fw-bold text-dark">Xで共有する</span>
-                        </div>
-                        <form th:action="@{/points/mission/share}" method="post" class="m-0">
-                            <button type="submit" class="btn btn-mission-try px-4">挑戦</button>
-                        </form>
-                    </div>
+						<a th:href="@{/game}" class="btn btn-primary">
+							ミニゲームへ
+						</a>
+					</div>
+				</div>
+			</div>
 
-                    <div class="d-flex align-items-center justify-content-between mission-item">
-                        <div class="d-flex align-items-center">
-                            <span class="fs-5 me-2">💰</span>
-                            <span class="fw-bold text-dark">地域サイトを確認</span>
-                        </div>
-                        <form th:action="@{/points/mission/region}" method="post" class="m-0">
-                            <button type="submit" class="btn btn-mission-try px-4">挑戦</button>
-                        </form>
-                    </div>
+			<div class="col-md-6">
+				<div class="card">
+					<div class="card-header">
+						ミッション
+					</div>
 
-                </div>
-            </div>
-            
-        </div>
-    </div>
+					<div class="card-body">
 
-    <div th:replace="~{fragments/ai-widget :: ai-widget}"></div>
-    <div th:replace="~{fragments/_footer :: footer}"></div>
+						<div class="d-flex justify-content-between align-items-center border-bottom py-3">
+							<div>
+								<p class="mb-0 fw-bold">広告を見る</p>
+								<small class="text-muted">10ポイント獲得</small>
+							</div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+							<form th:action="@{/points/mission/ad}" method="post">
+								<button type="submit" class="btn btn-outline-primary btn-sm">
+									GET
+								</button>
+							</form>
+						</div>
+
+						<div class="d-flex justify-content-between align-items-center border-bottom py-3">
+							<div>
+								<p class="mb-0 fw-bold">Xで共有する</p>
+								<small class="text-muted">20ポイント獲得</small>
+							</div>
+
+							<form th:action="@{/points/mission/share}" method="post">
+								<button type="submit" class="btn btn-outline-primary btn-sm">
+									挑戦
+								</button>
+							</form>
+						</div>
+
+					</div>
+				</div>
+			</div>
+
+		</div>
+
+		<div class="card mt-4">
+			<div class="card-header d-flex justify-content-between align-items-center">
+				<span>最近のポイント履歴</span>
+				<a th:href="@{/points/history}" class="btn btn-sm btn-outline-secondary">
+					履歴をすべて見る
+				</a>
+			</div>
+
+			<div class="card-body">
+
+				<div th:if="${#lists.isEmpty(pointHistoryList)}">
+					<p class="text-muted mb-0">ポイント履歴はまだありません。</p>
+				</div>
+
+				<table th:if="${!#lists.isEmpty(pointHistoryList)}" class="table table-bordered table-striped">
+					<thead>
+						<tr>
+							<th>日時</th>
+							<th>内容</th>
+							<th>ポイント</th>
+						</tr>
+					</thead>
+
+					<tbody>
+						<tr th:each="history : ${pointHistoryList}">
+							<td th:text="${#temporals.format(history.createdAt, 'yyyy/MM/dd HH:mm')}">
+								2026/05/19 12:00
+							</td>
+							<td th:text="${history.reason}">
+								広告視聴
+							</td>
+							<td>
+								<span th:text="${history.pointChange}">10</span> pt
+							</td>
+						</tr>
+					</tbody>
+				</table>
+
+			</div>
+		</div>
+
+	</main>
+
+	<div th:replace="~{fragments/_footer :: footer}"></div>
+
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
 </html>
