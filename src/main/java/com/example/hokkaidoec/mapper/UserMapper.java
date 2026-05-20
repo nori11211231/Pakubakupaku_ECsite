@@ -7,7 +7,7 @@ import com.example.hokkaidoec.entity.User;
 @Mapper
 public interface UserMapper {
 
-	User findByUserId(String email);
+	User findByEmail(String email);
 
 	void insert(User user);
 
