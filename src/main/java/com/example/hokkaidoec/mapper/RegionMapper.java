@@ -3,6 +3,7 @@ package com.example.hokkaidoec.mapper;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import com.example.hokkaidoec.entity.Region;
 
@@ -12,7 +13,7 @@ public interface RegionMapper {
 	/** 全商品を取得する */
 	List<Region> findAll();
 
-	Region findById(Integer id);
+	Region findById(@Param("id") int id);
 }
 
 //import java.util.List;

@@ -26,6 +26,55 @@
       margin: 0;
       padding: 0;
     }
+/*--------------------------------*/
+	.floating-checkout-btn {
+	   position: fixed;
+	   bottom: 20px;
+	   right: 20px;
+	   background-color: #ff7f50;
+	   color: #fff;
+	   padding: 16px 28px;
+	   border-radius: 50px;
+	   font-size: 18px;
+	   font-weight: bold;
+	   text-align: center;
+	   text-decoration: none;
+	   box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+	   z-index: 9999;
+	   transition: transform 0.2s ease, opacity 0.2s ease;
+	 }
+
+	 .floating-checkout-btn:hover {
+	   transform: scale(1.05);
+	   opacity: 0.9;
+	 }
+/*	 ---------------注文のやつ--------------*/
+
+
+#decreaseBtn,
+#increaseBtn {
+  font-size: 14px;   /* ← 文字サイズ（小さくしたいならここ） */
+  width: 28px;       /* ← ボタンの横幅 */
+  height: 28px;      /* ← ボタンの高さ */
+  padding: 0;        /* ← 内側の余白 */
+  line-height: 28px; /* ← 文字を中央に揃える */
+}
+
+/*----------プラスマイナスのボタンの大きさ変更------------------*/
+
+/* Chrome, Edge, Safari のスピンボタンを消す */
+#qtyInput::-webkit-inner-spin-button,
+#qtyInput::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox のスピンボタンを消す */
+#qtyInput {
+  -moz-appearance: textfield;
+}
+
+
 
     /* 中央のカードコンテナ（ページのメイン領域） */
     .container {

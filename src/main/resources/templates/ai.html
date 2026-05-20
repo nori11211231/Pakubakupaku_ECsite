@@ -7,20 +7,60 @@
 </head>
 <body>
 
+<div th:replace="~{fragments/_header :: header}"></div>
+
 <main class="ai-page">
     <section class="ai-chat-card">
         <h1>AIコンシェルジュ</h1>
 
         <div class="ai-profile">
-            <img th:src="${aiCharaImageUrl}" alt="AIコンシェルジュ">
-            <div>
+			<img th:src="${aiCharaImageUrl}"
+			     alt="AIコンシェルジュ"
+			     style="width: 150px; height: 150px; object-fit: contain;">
+            <div class="ai-profile-info">
                 <h2 th:text="${aiName}">コンシェルジュ</h2>
                 <p>北海道物産ECサイトの商品探しや操作方法を案内します。</p>
+
+                <div class="ai-status-box">
+                    <div class="ai-status-row">
+                        <span>AIレベル</span>
+                        <strong th:text="${aiLevelText}">Lv.1</strong>
+                    </div>
+
+                    <div class="ai-status-row">
+                        <span>現在ランク</span>
+                        <strong th:text="${aiRankName}">ブロンズ</strong>
+                    </div>
+
+                    <div class="ai-status-row">
+                        <span>経験値</span>
+                        <strong>
+							<span th:text="${aiExpText}">0</span>
+							EXP
+                        </strong>
+                    </div>
+
+                    <div class="ai-exp-bar">
+                        <div class="ai-exp-fill"
+                             th:style="'width:' + ${aiExpRate} + '%;'">
+                        </div>
+                    </div>
+
+                    <p class="ai-next-exp"
+                       th:text="${nextRankMessage}">
+                        次のランクまであと0経験値
+                    </p>
+                </div>
             </div>
         </div>
 
-        <form th:action="@{/ai/chat}" th:object="${aiChatForm}" method="post" class="ai-chat-form">
+        <form th:action="@{/ai/chat}"
+              th:object="${aiChatForm}"
+              method="post"
+              class="ai-chat-form">
+
             <label for="userMessage">質問内容</label>
+
             <textarea id="userMessage"
                       th:field="*{userMessage}"
                       placeholder="例：おすすめ商品を教えて / ポイントはどこで見れる？ / 注文方法を教えて"></textarea>

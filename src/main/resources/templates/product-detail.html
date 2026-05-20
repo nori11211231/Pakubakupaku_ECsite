@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ja">
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
@@ -10,18 +10,20 @@
 <body>
   <div class="container" id="product-page">
 
-	<header th:replace="fragments/_header :: header"></header>
-
+    <header th:replace="fragments/_header :: header"></header>
 
     <main>
 
+      <!-- ========================= -->
+      <!-- 商品情報 -->
+      <!-- ========================= -->
       <div class="product-container">
 
         <!-- 左：商品画像 -->
         <div class="image-wrap">
           <img
             id="productImage"
-            th:src="${product.imageUrl != null} ? @{${product.imageUrl}} : @{/images/placeholder.png}"
+            th:src="${product.imageUrl != null} ? ${product.imageUrl} : '/images/placeholder.png'"
             th:alt="${product.productName}"
           />
         </div>
@@ -62,21 +64,108 @@
         </div>
       </div>
 
-      <!-- 下：レビュー欄 -->
+      <!-- ========================= -->
+      <!-- レビュー平均 -->
+      <!-- ========================= -->
+      <div class="review-summary">
+        <h2>レビュー</h2>
+
+        <p>
+          <strong>平均評価：</strong>
+          <span th:text="${averageRating}"></span> / 5
+          （<span th:text="${reviewCount}"></span> 件）
+        </p>
+
+        <div>
+          <span th:each="i : ${#numbers.sequence(1,5)}">
+            <span th:text="${i <= averageRating ? '★' : '☆'}"></span>
+          </span>
+        </div>
+      </div>
+
+      <hr>
+
+      <!-- ========================= -->
+      <!-- レビュー投稿フォーム -->
+      <!-- ========================= -->
+      <div th:if="${canReview}">
+        <h3>レビューを投稿する</h3>
+
+        <form th:action="@{'/products/' + ${product.id} + '/reviews'}" method="post">
+
+          <input type="hidden" name="orderId" th:value="${orderId}">
+
+          <label>評価（1〜5）</label>
+          <select name="rating" class="form-control w-25 mb-2">
+            <option th:each="i : ${#numbers.sequence(1,5)}"
+                    th:value="${i}"
+                    th:text="${i}">
+            </option>
+          </select>
+
+          <label>コメント</label>
+          <textarea name="comment" class="form-control mb-2" rows="3"></textarea>
+
+          <button type="submit" class="btn btn-primary">投稿する</button>
+        </form>
+      </div>
+
+      <div th:if="${!canReview}">
+        <p class="text-muted">※この商品を購入した方のみレビューを投稿できます。</p>
+      </div>
+
+      <hr>
+
+      <!-- ========================= -->
+      <!-- レビュー一覧 -->
+      <!-- ========================= -->
       <div class="review-section">
-        <h2>レビュー欄</h2>
-        <p>レビューを読み込み中...</p>
+        <h3>みんなのレビュー</h3>
+
+        <div th:if="${#lists.isEmpty(reviews)}">
+          <p>まだレビューはありません。</p>
+        </div>
+
+        <div th:each="review : ${reviews}" class="border p-3 mb-3 rounded">
+
+          <p>
+            <strong>
+              匿名ユーザー
+              <span th:text="${review.userId % 10000}"></span>
+            </strong>
+          </p>
+
+          <p>
+            <span th:each="i : ${#numbers.sequence(1,5)}">
+              <span th:text="${i <= review.rating ? '★' : '☆'}"></span>
+            </span>
+          </p>
+
+          <p th:text="${review.comment}"></p>
+
+          <small class="text-muted" th:text="${#temporals.format(review.createdAt, 'yyyy/MM/dd HH:mm')}"></small>
+        </div>
       </div>
 
     </main>
 
-  </div>
+  </div> <!-- container をここで閉じる（元の構造） -->
 
-  <script>
+  <footer th:replace="fragments/_footer :: footer"></footer>
+
+  <!-- cartItems があるときだけ表示 -->
+  <a th:if="${session.cartItems != null and #lists.size(session.cartItems) > 0}"
+     href="/order/confirm"
+     class="floating-checkout-btn">
+    注文を確認する
+  </a>
+
+  <!-- JS（数量変更・カート追加） -->
+  <script th:inline="javascript">
     (function(){
-      const qtyInput = document.getElementById('qtyInput');
-      const decBtn = document.getElementById('decreaseBtn');
-      const incBtn = document.getElementById('increaseBtn');
+      const qtyInput   = document.getElementById('qtyInput');
+      const decBtn     = document.getElementById('decreaseBtn');
+      const incBtn     = document.getElementById('increaseBtn');
       const addCartBtn = document.querySelector('.add-cart-btn');
 
       decBtn.addEventListener('click', ()=> {
@@ -85,18 +174,74 @@
       incBtn.addEventListener('click', ()=> {
         qtyInput.value = Math.max(1, parseInt(qtyInput.value || 1, 10) + 1);
       });
+
+      qtyInput.addEventListener('keydown', (e) => {
+        if (e.key === "-" || e.key === "e") e.preventDefault();
+      });
+
       qtyInput.addEventListener('input', ()=> {
         let v = parseInt(qtyInput.value || 1, 10);
         if (isNaN(v) || v < 1) v = 1;
         qtyInput.value = v;
       });
 
-      addCartBtn.addEventListener('click', ()=> {
-        alert('カートに追加しました（ダミー）');
+      addCartBtn.addEventListener('click', async ()=> {
+        const qty = qtyInput.value;
+        const productId = /*[[${product.id}]]*/ 0;
+
+        const formData = new FormData();
+        formData.append("productId", productId);
+        formData.append("quantity", qty);
+
+        try {
+          const response = await fetch("/order/add", {
+            method: "POST",
+            body: formData
+          });
+
+          if (response.ok) {
+            showToast("カートに追加しました！");
+            qtyInput.value = 1;
+          } else {
+            showToast("カート追加に失敗しました…", true);
+          }
+
+        } catch (error) {
+          showToast("通信エラーが発生しました", true);
+        }
       });
+
+      function showToast(message, isError = false) {
+        const toast = document.createElement("div");
+        toast.textContent = message;
+        toast.style.position = "fixed";
+        toast.style.top = "20px";
+        toast.style.left = "50%";
+        toast.style.transform = "translateX(-50%)";
+        toast.style.padding = "14px 22px";
+        toast.style.borderRadius = "6px";
+        toast.style.color = "#fff";
+        toast.style.fontSize = "16px";
+        toast.style.zIndex = "9999";
+        toast.style.background = isError ? "#d9534f" : "#5cb85c";
+        toast.style.boxShadow = "0 2px 6px rgba(0,0,0,0.2)";
+        toast.style.opacity = "0";
+        toast.style.transition = "opacity 0.3s ease";
+
+        document.body.appendChild(toast);
+
+        requestAnimationFrame(() => {
+          toast.style.opacity = "1";
+        });
+
+        setTimeout(() => {
+          toast.style.opacity = "0";
+          setTimeout(() => toast.remove(), 500);
+        }, 1500);
+      }
+
     })();
   </script>
-  <footer th:replace="fragments/_footer :: footer"></footer>
 
 </body>
 </html>

@@ -16,6 +16,10 @@ public interface ProductsMapper {
 	/** IDで商品を1件取得する */
 	Product findById(@Param("id") int id);
 
+	//	在庫減算処理
+	int updateStock(@Param("productId") int productId,
+			@Param("quantity") int quantity);
+
 	//	検索条件（カテゴリ、地域、価格帯、キーワード、並べ替え）を受け取るメソッド
 	List<Product> search(
 			@Validated @Param("keyword") String keyword,

@@ -39,21 +39,26 @@
             order_id = #{orderId}
     </select>
 
-    <select id="findDetailByOrderId" parameterType="int" resultType="map">
-        SELECT
-            p.product_name AS productName,
-            oi.quantity AS quantity,
-            oi.product_price AS productPrice,
-            oi.quantity * oi.product_price AS itemSubtotal,
-            p.image_url AS imageUrl
-        FROM
-            order_items oi
-        INNER JOIN
-            products p
-        ON
-            oi.product_id = p.id
-        WHERE
-            oi.order_id = #{orderId}
-    </select>
+<select id="findDetailsByOrderId" parameterType="int" resultType="map">
+    SELECT
+        p.product_name AS "productName",
+        oi.quantity AS "quantity",
+        oi.product_price AS "productPrice",
+        oi.quantity * oi.product_price AS "itemSubtotal",
+        p.image_url AS "imageUrl"
+    FROM
+        order_items oi
+    INNER JOIN
+        products p
+    ON
+        oi.product_id = p.id
+    WHERE
+        oi.order_id = #{orderId}
+</select>
+
+
+
+
+
 
 </mapper>

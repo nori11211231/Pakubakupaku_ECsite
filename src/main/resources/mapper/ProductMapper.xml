@@ -32,7 +32,12 @@
     FROM products
     WHERE id = #{id};
   </select> 
-<!--  理解できていないので保留-->
+<!--  在庫減算処理-->
+<update id="updateStock">
+    UPDATE products
+    SET stock = stock - #{quantity}
+    WHERE id = #{productId}
+</update>
 
 <select id="search" resultType="com.example.hokkaidoec.entity.Product">
     SELECT

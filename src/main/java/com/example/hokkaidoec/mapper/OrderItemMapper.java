@@ -18,5 +18,5 @@ public interface OrderItemMapper {
 	List<OrderItem> findByOrderId(@Param("orderId") Integer orderId);
 
 	// 注文IDから商品名付きの注文明細を取得する
-	List<Map<String, Object>> findDetailByOrderId(@Param("orderId") Integer orderId);
+	List<Map<String, Object>> findDetailsByOrderId(int orderId);
 }

@@ -482,3 +482,20 @@ body {
     border: 2px solid #d9e8f5;
     border-radius: 16px;
 }
+.ai-status-box {
+	margin-top: 12px;
+	padding: 12px 16px;
+	background-color: #fff8e8;
+	border: 1px solid #f0d79a;
+	border-radius: 12px;
+	font-size: 14px;
+}
+
+.ai-status-box p {
+	margin: 4px 0;
+}
+
+.ai-status-box strong {
+	font-size: 18px;
+	color: #d48a00;
+}

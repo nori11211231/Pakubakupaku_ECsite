@@ -1,6 +1,12 @@
 package com.example.hokkaidoec.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
+<<<<<<< HEAD
+=======
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
+>>>>>>> develop
 
 import com.example.hokkaidoec.entity.User;
 
