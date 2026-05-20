@@ -17,49 +17,63 @@ import com.example.hokkaidoec.entity.User;
 import com.example.hokkaidoec.mapper.CategoryMapper;
 import com.example.hokkaidoec.mapper.ProductsMapper;
 import com.example.hokkaidoec.mapper.RegionMapper;
+import com.example.hokkaidoec.service.ReviewService;
 
 @Controller
 public class ProductController {
+
 	private final ProductsMapper productMapper;
 	private final RegionMapper regionMapper;
 	private final CategoryMapper categoryMapper;
+	private final ReviewService reviewService; // ★追加
 
-	public ProductController(ProductsMapper productMapper, CategoryMapper categoryMapper, RegionMapper regionMapper) {
+	public ProductController(
+			ProductsMapper productMapper,
+			CategoryMapper categoryMapper,
+			RegionMapper regionMapper,
+			ReviewService reviewService) { // ★追加
 		this.productMapper = productMapper;
 		this.regionMapper = regionMapper;
 		this.categoryMapper = categoryMapper;
+		this.reviewService = reviewService; // ★追加
 	}
 
 	@GetMapping("/products/{productId}")
 	public String detail(@PathVariable Integer productId, Model model, HttpSession session) {
-		// ログインユーザーを取得
+
+		// ログインユーザー
 		User loginUser = (User) session.getAttribute("loginUser");
 		model.addAttribute("loginUser", loginUser);
 
-		// 商品本体
+		// 商品取得
 		Product product = productMapper.findById(productId);
 		if (product == null) {
-			// 存在しない ID のとき
 			model.addAttribute("errorMessage", "商品が見つかりません");
-			// 一覧に戻す
 			return "redirect:/products";
 		}
-		// カテゴリ名を取得
-		Category category = categoryMapper.findById(product.getCategoryId());
 
-		// 地域名を取得
+		// カテゴリ・地域
+		Category category = categoryMapper.findById(product.getCategoryId());
 		Region region = regionMapper.findById(product.getRegionId());
 
-		// View に渡す
 		model.addAttribute("product", product);
 		model.addAttribute("category", category);
 		model.addAttribute("region", region);
+
+		// ★★★ canReview を必ずセット（null 回避）★★★
+		Integer userId = (loginUser != null) ? loginUser.getId() : null;
+		boolean canReview = false;
+
+		if (userId != null) {
+			canReview = reviewService.canUserReview(userId, productId);
+		}
+
+		model.addAttribute("canReview", canReview);
 
 		return "product-detail";
 	}
 
 	@GetMapping("/products")
-
 	public String showList(
 			@RequestParam(value = "keyword", required = false) String keyword,
 			@RequestParam(value = "categoryId", required = false) Integer categoryId,
@@ -68,28 +82,30 @@ public class ProductController {
 			@RequestParam(value = "maxPrice", required = false) Integer maxPrice,
 			@RequestParam(value = "sort", required = false) String sort,
 			Model model, HttpSession session) {
-		// 商品検索をするコード
-		// ログインユーザーを取得
+
+		// ログインユーザー
 		User loginUser = (User) session.getAttribute("loginUser");
 		model.addAttribute("loginUser", loginUser);
+
+		// 商品検索
 		List<Product> products = productMapper.search(
 				keyword, categoryId, regionId, minPrice, maxPrice, sort);
 
 		List<Category> categories = categoryMapper.findAll();
 		List<Region> regions = regionMapper.findAll();
 
-		// 商品地域カテゴリ一覧
 		model.addAttribute("products", products);
 		model.addAttribute("categories", categories);
 		model.addAttribute("regions", regions);
 
-		// ★ 選択状態を保持
+		// 選択状態保持
 		model.addAttribute("keyword", keyword);
 		model.addAttribute("categoryId", categoryId);
 		model.addAttribute("regionId", regionId);
 		model.addAttribute("minPrice", minPrice);
 		model.addAttribute("maxPrice", maxPrice);
 		model.addAttribute("sort", sort);
+
 		return "products";
 	}
 }

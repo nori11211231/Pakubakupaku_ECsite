@@ -42,6 +42,15 @@
 </insert>
 
 
+<select id="findOrderIdByUserAndProduct" resultType="int">
+        SELECT oi.order_id
+        FROM order_items oi
+        JOIN orders o ON oi.order_id = o.id
+        WHERE o.user_id = #{userId}
+        AND oi.product_id = #{productId}
+        LIMIT 1
+    </select>
+
     <select id="findById" parameterType="int" resultMap="OrderResultMap">
         SELECT
             id,
