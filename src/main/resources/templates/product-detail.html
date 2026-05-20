@@ -179,17 +179,17 @@
 
   </div>
 
-  <footer th:replace="~{fragments/_footer :: footer}"></footer>
+<!--  フッターをコメントアウト-->
+<!--  <footer th:replace="~{fragments/_footer :: footer}"></footer>-->
 
-  <!-- cartItems があるときだけ表示 -->
-  <a th:if="${session.cartItems != null and #lists.size(session.cartItems) > 0}"
-     href="/order/confirm"
-     class="floating-checkout-btn">
-    注文を確認する
-  </a>
+<!--ボタン-->
+<a href="/order/confirm" class="floating-checkout-btn">
+  注文を確認する
+</a>
 
-  <!-- 全画面共通AIウィジェット -->
-  <div th:replace="~{fragments/ai-widget :: aiWidget}"></div>
+
+<!--   全画面共通AIウィジェット -->
+<!--  <div th:replace="~{fragments/ai-widget :: aiWidget}"></div>-->
 
   <!-- JS（数量変更・カート追加） -->
   <script th:inline="javascript">

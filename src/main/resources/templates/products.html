@@ -190,7 +190,7 @@
 </div>
 
 <!-- フッター -->
-<footer th:replace="~{fragments/_footer :: footer}"></footer>
+<!--<footer th:replace="~{fragments/_footer :: footer}"></footer>-->
 
 <!-- 
     _footer.html にAIウィジェットを入れていない場合だけ、この下の1行を使う。
@@ -199,10 +199,8 @@
 <!-- <div th:replace="~{fragments/ai-widget :: aiWidget}"></div> -->
 
 <!-- 固定「注文を確認する」ボタン -->
-<a th:if="${session.cartItems != null and #lists.size(session.cartItems) > 0}"
-   th:href="@{/order/confirm}"
-   class="floating-checkout-btn">
-    注文を確認する
+<a href="/order/confirm" class="floating-checkout-btn">
+  注文を確認する
 </a>
 
 <!-- カート追加処理 -->
