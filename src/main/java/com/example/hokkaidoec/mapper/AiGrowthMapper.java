@@ -1,5 +1,7 @@
 package com.example.hokkaidoec.mapper;
 
+import java.util.Map;
+
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -17,4 +19,6 @@ public interface AiGrowthMapper {
 	void updateGrowthStage(
 			@Param("userId") Integer userId,
 			@Param("growthStage") Integer growthStage);
+
+	Map<String, Object> findAiStatusByUserId(@Param("userId") Integer userId);
 }
