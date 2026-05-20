@@ -1,6 +1,8 @@
 package com.example.hokkaidoec.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import jakarta.servlet.http.HttpSession;
@@ -132,9 +134,10 @@ public class UserController {
 		// 今はまだダミー、もしくはuserService経由でDBからリストを取得する処理をここに書きます
 		// 例: List<MinigameHistory> historyList = userService.getMinigameHistoryByUserId(loginUser.getId());
 		// model.addAttribute("historyList", historyList);
+		List<Map<String, Object>> gameHistories = new ArrayList<>();
 
-		// 4. 表示するHTML（Thymeleafテンプレート）の名前を返す
-		// src/main/resources/templates/minigame-history.html を読み込みます
-		return "minigame-history";
+		model.addAttribute("gameHistories", gameHistories);
+
+		return "game-history";
 	}
 }
