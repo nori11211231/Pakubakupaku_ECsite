@@ -13,9 +13,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import com.example.hokkaidoec.entity.GamePlayHistory;
+import com.example.hokkaidoec.entity.PointHistory;
 import com.example.hokkaidoec.entity.User;
 import com.example.hokkaidoec.form.GameForm;
 import com.example.hokkaidoec.mapper.GamePlayHistoryMapper;
+import com.example.hokkaidoec.mapper.PointHistoryMapper;
 import com.example.hokkaidoec.mapper.UserMapper;
 
 @Controller
@@ -25,15 +27,20 @@ public class GameController {
 
 	private final UserMapper userMapper;
 
+	private final PointHistoryMapper pointHistoryMapper;
+
 	private final Random random = new Random();
 
 	public GameController(
 			GamePlayHistoryMapper gamePlayHistoryMapper,
-			UserMapper userMapper) {
+			UserMapper userMapper,
+			PointHistoryMapper pointHistoryMapper) {
 
 		this.gamePlayHistoryMapper = gamePlayHistoryMapper;
 
 		this.userMapper = userMapper;
+
+		this.pointHistoryMapper = pointHistoryMapper;
 	}
 
 	// ガチャ画面
@@ -167,6 +174,13 @@ public class GameController {
 
 		gamePlayHistoryMapper.insert(
 				history);
+		PointHistory pointHistory = new PointHistory();
+		pointHistory.setUserId(userId);
+		pointHistory.setPointChange(result.getPointChange()); // 当たりならプラス、はずれならマイナスの値
+		pointHistory.setReason("ポイントガチャ");
+		pointHistory.setCreatedAt(LocalDateTime.now());
+
+		pointHistoryMapper.insert(pointHistory);
 
 		model.addAttribute(
 				"isTenRoll",
@@ -350,6 +364,14 @@ public class GameController {
 		session.setAttribute(
 				"loginUser",
 				loginUser);
+
+		PointHistory pointHistory = new PointHistory();
+		pointHistory.setUserId(userId);
+		pointHistory.setPointChange(totalPointChange); // 10回分のトータルの増減値
+		pointHistory.setReason("ポイントガチャ（10連）");
+		pointHistory.setCreatedAt(LocalDateTime.now());
+
+		pointHistoryMapper.insert(pointHistory);
 
 		String summaryText;
 		String summaryEffectType;
