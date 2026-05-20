@@ -54,6 +54,44 @@ public class OrderController {
 		this.aiGrowthMapper = aiGrowthMapper;
 	}
 
+	@GetMapping("/orders/{orderId}")
+	public String orderDetail(@PathVariable("orderId") int orderId,
+			HttpSession session,
+			Model model) {
+
+		User loginUser = (User) session.getAttribute("loginUser");
+		if (loginUser == null) {
+			return "redirect:/login";
+		}
+
+		// 注文情報
+		Order order = orderMapper.findById(orderId);
+
+		// 明細情報
+		List<Map<String, Object>> orderItemDetails = orderItemMapper.findDetailsByOrderId(orderId);
+
+		model.addAttribute("order", order);
+		model.addAttribute("orderItemDetails", orderItemDetails);
+
+		return "order-detail";
+	}
+
+	@GetMapping("/order/history")
+	public String orderHistory(HttpSession session, Model model) {
+
+		User loginUser = (User) session.getAttribute("loginUser");
+		if (loginUser == null) {
+			return "redirect:/login";
+		}
+
+		int userId = loginUser.getId();
+		List<Order> orderList = orderMapper.findByUserId(userId);
+
+		model.addAttribute("orderList", orderList);
+
+		return "order-history";
+	}
+
 	// ============================================================
 	// ① カートに追加
 	// ============================================================
@@ -153,26 +191,32 @@ public class OrderController {
 	public String updateQuantity(
 			@RequestParam("productId") int productId,
 			@RequestParam("quantity") int quantity,
-			HttpSession session) {
+			HttpSession session,
+			Model model) {
 
 		List<Map<String, Object>> cartItems = (List<Map<String, Object>>) session.getAttribute("cartItems");
 
-		if (cartItems != null) {
-			for (Map<String, Object> item : cartItems) {
-				if ((int) item.get("productId") == productId) {
+		if (cartItems == null) {
+			return "redirect:/order/confirm";
+		}
 
-					// 数量更新
-					item.put("quantity", quantity);
+		Product product = productsMapper.findById(productId);
 
-					// 小計更新
-					int price = (int) item.get("price");
-					item.put("itemSubtotal", price * quantity);
-				}
+		if (product.getStock() < quantity) {
+			model.addAttribute("error", product.getProductName() + " の在庫が不足しています。数量を 1 に戻しました。");
+			quantity = 1;
+		}
+
+		for (Map<String, Object> item : cartItems) {
+			if ((int) item.get("productId") == productId) {
+				item.put("quantity", quantity);
+				item.put("itemSubtotal", quantity * (int) item.get("price"));
 			}
 		}
 
 		session.setAttribute("cartItems", cartItems);
 
+		// ★ここを修正
 		return "redirect:/order/confirm";
 	}
 
@@ -183,13 +227,14 @@ public class OrderController {
 	public String completeOrder(OrderForm orderForm, HttpSession session, Model model) {
 
 		List<Map<String, Object>> cartItems = (List<Map<String, Object>>) session.getAttribute("cartItems");
-
+		User loginUser = (User) session.getAttribute("loginUser");
+		// カートが空の場合
 		if (cartItems == null || cartItems.isEmpty()) {
-			model.addAttribute("message", "カートが空です。");
+			model.addAttribute("error", "商品がありません。");
+			model.addAttribute("loginUser", loginUser);
+			model.addAttribute("cartItems", cartItems); // ★追加
 			return "order-confirm";
 		}
-
-		User loginUser = (User) session.getAttribute("loginUser");
 
 		int totalAmount = cartItems.stream()
 				.mapToInt(item -> (int) item.get("itemSubtotal"))
@@ -197,10 +242,15 @@ public class OrderController {
 
 		int usedPoint = orderForm.getUsedPoint() == null ? 0 : orderForm.getUsedPoint();
 
+		// ポイント不足チェック
 		if (usedPoint > loginUser.getPoint()) {
 			model.addAttribute("error", "ポイントが不足しています。");
+			model.addAttribute("loginUser", loginUser);
+			model.addAttribute("cartItems", cartItems); // ★追加
 			return "order-confirm";
 		}
+
+		// 在庫チェック
 		for (Map<String, Object> item : cartItems) {
 			int productId = (int) item.get("productId");
 			int quantity = (int) item.get("quantity");
@@ -209,11 +259,14 @@ public class OrderController {
 
 			if (product.getStock() < quantity) {
 				model.addAttribute("error", product.getProductName() + " の在庫が不足しています。");
+				model.addAttribute("loginUser", loginUser);
+				model.addAttribute("cartItems", cartItems); // ★追加
 				return "order-confirm";
 			}
+
 		}
 
-		// ランク倍率は Rank エンティティを持っていないため固定 1% とする（必要なら RankMapper を追加）
+		// ランク倍率は Rank エンティティを持っていないため固定 1% とする
 		int earnedPoint = (int) Math.floor(totalAmount * 0.01);
 
 		// 注文登録
@@ -276,48 +329,6 @@ public class OrderController {
 		session.removeAttribute("cartItems");
 
 		return "order-complete";
-	}
-
-	//注文履歴
-	@GetMapping("/order/history")
-	public String orderHistory(HttpSession session, Model model) {
-
-		User loginUser = (User) session.getAttribute("loginUser");
-		if (loginUser == null) {
-			return "redirect:/login";
-		}
-
-		int userId = loginUser.getId();
-
-		List<Order> orderList = orderMapper.findByUserId(userId);
-
-		model.addAttribute("orderList", orderList);
-
-		return "order-history";
-	}
-
-	//注文履歴
-	@GetMapping("/orders/{orderId}")
-	public String orderDetail(@PathVariable("orderId") int orderId,
-			HttpSession session,
-			Model model) {
-
-		User loginUser = (User) session.getAttribute("loginUser");
-		if (loginUser == null) {
-			return "redirect:/login";
-		}
-
-		// 注文情報
-		Order order = orderMapper.findById(orderId);
-
-		// 明細情報
-		List<Map<String, Object>> orderItemDetails = orderItemMapper.findDetailsByOrderId(orderId);
-
-		model.addAttribute("order", order);
-		model.addAttribute("orderItemDetails", orderItemDetails);
-
-		return "order-detail";
-
 	}
 
 }

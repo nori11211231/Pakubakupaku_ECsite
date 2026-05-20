@@ -2,9 +2,17 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<!-- 共通CSS：ヘッダー・フッター・AIウィジェット用 -->
+	   <link rel="stylesheet" th:href="@{/css/style.css}">
+
+	   <!-- 商品一覧ページ専用CSS -->
+	   <link rel="stylesheet" th:href="@{/css/orderConfirm.css}">
 <title>Insert title here</title>
 </head>
 <body>
+	<!-- ヘッダー -->
+	<header th:replace="~{fragments/_header :: header}"></header>
+	
 	<h2>注文確認</h2>
 
 	<table>
@@ -49,11 +57,18 @@
 
 
 
-
-
+	<!-- エラーメッセージ表示 -->
+	<p th:if="${errorMessage}" th:text="${errorMessage}" style="color:red; font-weight:bold;"></p>
+	<p th:if="${error}" th:text="${error}" style="color:red; font-weight:bold;"></p>
 
 	
-	<form action="/order/complete" method="post">
+	<!-- カートが空の場合 -->
+	<p th:if="${#lists.isEmpty(cartItems)}" style="color:red; font-weight:bold;">
+	    商品がありません
+	</p>
+
+	<!-- カートが空なら注文ボタンを非表示 -->
+	<form action="/order/complete" method="post" th:if="${!#lists.isEmpty(cartItems)}">
 	    <label>配送先住所：</label>
 	    <input type="text" name="shippingAddress" required>
 
@@ -63,5 +78,7 @@
 	    <button type="submit">注文確定</button>
 	</form>
 
-</body>
+
+
+	</body>
 </html>
