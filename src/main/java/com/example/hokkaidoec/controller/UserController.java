@@ -7,6 +7,8 @@ import jakarta.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,16 +32,25 @@ public class UserController {
 		return "register";
 	}
 
+	// 💡 ここに @PostMapping("/register") を復活させます！
 	@PostMapping("/register")
-	// 📁 @ModelAttribute に ("form") を追加するだけ！
-	public String registerUser(@ModelAttribute("form") UserForm form, Model model) {
+	public String registerUser(
+			@Validated @ModelAttribute("form") UserForm form,
+			BindingResult bindingResult,
+			Model model) {
+
+		// 1. バリデーションエラーのチェック
+		if (bindingResult.hasErrors()) {
+			return "register";
+		}
+
 		try {
-			// 登録処理を実行
+			// 2. 実際の登録処理を実行
 			userService.register(form);
-			return "redirect:/login";// 成功したらログイン画面へ
+			return "redirect:/login";
 
 		} catch (IllegalArgumentException e) {
-			// これで自動的に "form" という名前で入力中の中身がHTMLに返るようになります
+			// 3. サービス層（DB）の例外キャッチ
 			model.addAttribute("registerError", e.getMessage());
 			return "register";
 		}
@@ -60,11 +71,19 @@ public class UserController {
 		// HTML側の `${user.name}` や `${user.email}` を読みに行きます
 		model.addAttribute("user", loginUser);
 
+		Map<String, Object> pointData = new HashMap<>();
+		pointData.put("name", "通常ポイント"); // HTMLの ${point.name} で表示される
+		model.addAttribute("point", pointData);
+
 		// 3. AIのダミーデータ（Map）
-		Map<String, Object> dummyAi = new HashMap<>();
-		dummyAi.put("level", 3);
-		//		dummyAi.put("exp", 7800);//total→ブロンズ
-		//		model.addAttribute("ai", dummyAi);
+		Map<String, Object> aiData = new HashMap<>();
+
+		// 🌟【ここを修正！】ダミーの「3」ではなく、ユーザーの rankId をレベルとしてセット
+		Integer level = loginUser.getRankId();
+		if (level == null) {
+			level = 1; // もしrankIdが設定されていなければ初期値として1にする（安全処理）
+		}
+		aiData.put("level", level);
 
 		// 🌟【ここを修正！】ユーザーの総購入金額をAIの経験値（exp）としてセットする
 		// ※ もし初期状態などでnullになる可能性がある場合は、0を代入する安全処理を入れると安心です
@@ -72,9 +91,9 @@ public class UserController {
 		if (exp == null) {
 			exp = 0; // 金額がまだ無い（null）なら0にする
 		}
-		dummyAi.put("exp", exp);
+		aiData.put("exp", exp);
 
-		model.addAttribute("ai", dummyAi);
+		model.addAttribute("ai", aiData);
 
 		// 4. 注文履歴のダミーデータ（必要であれば追加）
 		// 前回のList<Map>をここに置いておくと、注文履歴もエラーにならず表示されます！★★★★

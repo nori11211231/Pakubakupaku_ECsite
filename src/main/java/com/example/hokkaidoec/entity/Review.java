@@ -3,15 +3,18 @@ package com.example.hokkaidoec.entity;
 import java.time.LocalDateTime;
 
 public class Review {
-	public Review() {
-
-	}
 
 	private Integer id;
 	private Integer userId;
 	private Integer productId;
 	private Integer orderId;
 	private Integer rating;
+	private String comment;
+	private LocalDateTime createdAt;
+	private LocalDateTime updatedAt;
+	private Boolean isDeleted;
+
+	// --- Getter / Setter ---
 
 	public Integer getId() {
 		return id;
@@ -84,9 +87,4 @@ public class Review {
 	public void setIsDeleted(Boolean isDeleted) {
 		this.isDeleted = isDeleted;
 	}
-
-	private String comment;
-	private LocalDateTime createdAt;
-	private LocalDateTime updatedAt;
-	private Boolean isDeleted;
 }

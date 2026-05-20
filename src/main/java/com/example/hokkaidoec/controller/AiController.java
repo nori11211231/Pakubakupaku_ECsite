@@ -11,6 +11,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.hokkaidoec.entity.AiGrowth;
 import com.example.hokkaidoec.form.AiChatForm;
@@ -38,16 +40,71 @@ public class AiController {
 		return "ai";
 	}
 
+	/**
+	 * JavaScriptがOFFのとき用。
+	 * 通常はai.htmlのfetchで /ai/chat/reply を呼ぶ。
+	 */
 	@PostMapping("/ai/chat")
 	public String chat(AiChatForm aiChatForm, Model model, HttpSession session) {
 		AiGrowth aiGrowth = getAiGrowth(session);
 
-		String aiReply = aiService.createChatReply(aiChatForm.getUserMessage(), aiGrowth);
+		String aiReply = aiService.createChatReply(
+				aiGrowth,
+				aiChatForm.getUserMessage(),
+				"AIページ");
+
 		aiChatForm.setAiReply(aiReply);
 
 		addAiModel(model, session, aiChatForm, aiGrowth);
 
 		return "ai";
+	}
+
+	/**
+	 * AIページの「AIの返答」だけを更新するためのAPI。
+	 * HTMLではなくJSONを返す。
+	 */
+	@PostMapping("/ai/chat/reply")
+	@ResponseBody
+	public Map<String, String> chatReply(
+			@RequestParam(value = "userMessage", required = false) String userMessage,
+			HttpSession session) {
+
+		AiGrowth aiGrowth = getAiGrowth(session);
+
+		String aiReply = aiService.createChatReply(
+				aiGrowth,
+				userMessage,
+				"AIページ。ユーザーがAIコンシェルジュに自由質問をしている。");
+
+		return Map.of("reply", aiReply);
+	}
+
+	/**
+	 * 全画面共通AIウィジェット用API。
+	 * ページ遷移せず、ウィジェットの吹き出しだけLLMの返答に更新する。
+	 */
+	@PostMapping("/ai/widget/reply")
+	@ResponseBody
+	public Map<String, String> widgetReply(
+			@RequestParam(value = "userMessage", required = false) String userMessage,
+			@RequestParam(value = "pageContext", required = false) String pageContext,
+			HttpSession session) {
+
+		AiGrowth aiGrowth = getAiGrowth(session);
+
+		String context = "全画面共通AIウィジェット。";
+
+		if (pageContext != null && !pageContext.isBlank()) {
+			context += pageContext;
+		}
+
+		String aiReply = aiService.createChatReply(
+				aiGrowth,
+				userMessage,
+				context);
+
+		return Map.of("reply", aiReply);
 	}
 
 	private void addAiModel(Model model, HttpSession session, AiChatForm aiChatForm, AiGrowth aiGrowth) {
@@ -219,4 +276,5 @@ public class AiController {
 
 		return NumberFormat.getNumberInstance(Locale.JAPAN).format(number);
 	}
+
 }
