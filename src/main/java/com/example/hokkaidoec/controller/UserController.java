@@ -7,6 +7,8 @@ import jakarta.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,19 +33,44 @@ public class UserController {
 	}
 
 	@PostMapping("/register")
-	// 📁 @ModelAttribute に ("form") を追加するだけ！
-	public String registerUser(@ModelAttribute("form") UserForm form, Model model) {
+	// 💡 @Validated を追加し、Formのすぐ後ろに BindingResult を差し込みます！
+	public String registerUser(
+			@Validated @ModelAttribute("form") UserForm form,
+			BindingResult bindingResult,
+			Model model) {
+
+		// 💡 1. まず、画面のバリデーション（@NotBlankなど）のエラーがあるかチェック
+		if (bindingResult.hasErrors()) {
+			// エラーがあったら、tryの中（登録処理）に行かずに、すぐに入力画面に戻す
+			return "register";
+		}
+
 		try {
-			// 登録処理を実行
+			// 2. バリデーションが通ったら、実際の登録処理を実行
 			userService.register(form);
-			return "redirect:/login";// 成功したらログイン画面へ
+			return "redirect:/login"; // 成功したらログイン画面へ
 
 		} catch (IllegalArgumentException e) {
-			// これで自動的に "form" という名前で入力中の中身がHTMLに返るようになります
+			// 💡 3. 重複チェックなど、サービス層（DB）で起きた例外は今まで通りここでキャッチ
 			model.addAttribute("registerError", e.getMessage());
 			return "register";
 		}
 	}
+
+	//	@PostMapping("/register")
+	//	// 📁 @ModelAttribute に ("form") を追加するだけ！
+	//	public String registerUser( @ModelAttribute("form") UserForm form, Model model) {
+	//		try {
+	//			// 登録処理を実行
+	//			userService.register(form);
+	//			return "redirect:/login";// 成功したらログイン画面へ
+	//
+	//		} catch (IllegalArgumentException e) {
+	//			// これで自動的に "form" という名前で入力中の中身がHTMLに返るようになります
+	//			model.addAttribute("registerError", e.getMessage());
+	//			return "register";
+	//		}
+	//	}
 
 	@GetMapping("/mypage")
 	public String showMypage(Model model, HttpSession session) {
