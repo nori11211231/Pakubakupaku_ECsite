@@ -7,9 +7,10 @@
 
     <!-- findByUserId -->
     <!-- 戻り値の型（resultType）には、エンティティのフルパッケージ名を指定します -->
-    <select id="findByUserId" resultType="com.example.hokkaidoec.entity.User">
-        SELECT * FROM users WHERE email = #{email}
-    </select>
+   <!-- idがメソッド名と完全に一致している必要があります -->
+<select id="findByEmail" resultMap="UserResultMap">
+    SELECT * FROM users WHERE email = #{email}
+</select>
 
     <!-- insert -->
     <!-- 引数の型（parameterType）を指定します -->
