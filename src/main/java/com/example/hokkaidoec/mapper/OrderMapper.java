@@ -26,4 +26,8 @@ public interface OrderMapper {
 	//注文したやつを一件取得
 	Order findById(int orderId);
 
+	Integer findOrderIdByUserAndProduct(
+			@Param("userId") int userId,
+			@Param("productId") int productId);
+
 }

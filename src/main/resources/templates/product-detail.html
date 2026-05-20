@@ -5,8 +5,6 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <link rel="stylesheet" th:href="@{/css/productdetil.css}">
   <title>商品詳細 - 北海道EC</title>
-
-
 </head>
 
 <body>
@@ -16,13 +14,16 @@
 
     <main>
 
+      <!-- ========================= -->
+      <!-- 商品情報 -->
+      <!-- ========================= -->
       <div class="product-container">
 
         <!-- 左：商品画像 -->
         <div class="image-wrap">
           <img
             id="productImage"
-            th:src="${product.imageUrl != null} ? @{${product.imageUrl}} : @{/images/placeholder.png}"
+            th:src="${product.imageUrl != null} ? ${product.imageUrl} : '/images/placeholder.png'"
             th:alt="${product.productName}"
           />
         </div>
@@ -63,17 +64,103 @@
         </div>
       </div>
 
-      <!-- 下：レビュー欄 -->
+      <!-- ========================= -->
+      <!-- レビュー平均 -->
+      <!-- ========================= -->
+      <div class="review-summary">
+        <h2>レビュー</h2>
+
+        <p>
+          <strong>平均評価：</strong>
+          <span th:text="${averageRating}"></span> / 5
+          （<span th:text="${reviewCount}"></span> 件）
+        </p>
+
+        <div>
+          <span th:each="i : ${#numbers.sequence(1,5)}">
+            <span th:text="${i <= averageRating ? '★' : '☆'}"></span>
+          </span>
+        </div>
+      </div>
+
+      <hr>
+
+      <!-- ========================= -->
+      <!-- レビュー投稿フォーム -->
+      <!-- ========================= -->
+      <div th:if="${canReview}">
+        <h3>レビューを投稿する</h3>
+
+        <form th:action="@{'/products/' + ${product.id} + '/reviews'}" method="post">
+
+          <input type="hidden" name="orderId" th:value="${orderId}">
+
+          <label>評価（1〜5）</label>
+          <select name="rating" class="form-control w-25 mb-2">
+            <option th:each="i : ${#numbers.sequence(1,5)}"
+                    th:value="${i}"
+                    th:text="${i}">
+            </option>
+          </select>
+
+          <label>コメント</label>
+          <textarea name="comment" class="form-control mb-2" rows="3"></textarea>
+
+          <button type="submit" class="btn btn-primary">投稿する</button>
+        </form>
+      </div>
+
+      <div th:if="${!canReview}">
+        <p class="text-muted">※この商品を購入した方のみレビューを投稿できます。</p>
+      </div>
+
+      <hr>
+
+      <!-- ========================= -->
+      <!-- レビュー一覧 -->
+      <!-- ========================= -->
       <div class="review-section">
-        <h2>レビュー欄</h2>
-        <p>レビューを読み込み中...</p>
+        <h3>みんなのレビュー</h3>
+
+        <div th:if="${#lists.isEmpty(reviews)}">
+          <p>まだレビューはありません。</p>
+        </div>
+
+        <div th:each="review : ${reviews}" class="border p-3 mb-3 rounded">
+
+          <p>
+            <strong>
+              匿名ユーザー
+              <span th:text="${review.userId % 10000}"></span>
+            </strong>
+          </p>
+
+          <p>
+            <span th:each="i : ${#numbers.sequence(1,5)}">
+              <span th:text="${i <= review.rating ? '★' : '☆'}"></span>
+            </span>
+          </p>
+
+          <p th:text="${review.comment}"></p>
+
+          <small class="text-muted" th:text="${#temporals.format(review.createdAt, 'yyyy/MM/dd HH:mm')}"></small>
+        </div>
       </div>
 
     </main>
 
-  </div>
+  </div> <!-- container をここで閉じる（元の構造） -->
 
-  <!-- JS（Thymeleaf用インライン） -->
+  <footer th:replace="fragments/_footer :: footer"></footer>
+
+  <!-- cartItems があるときだけ表示 -->
+  <a th:if="${session.cartItems != null and #lists.size(session.cartItems) > 0}"
+     href="/order/confirm"
+     class="floating-checkout-btn">
+    注文を確認する
+  </a>
+
+  <!-- JS（数量変更・カート追加） -->
   <script th:inline="javascript">
     (function(){
       const qtyInput   = document.getElementById('qtyInput');
@@ -81,7 +168,6 @@
       const incBtn     = document.getElementById('increaseBtn');
       const addCartBtn = document.querySelector('.add-cart-btn');
 
-      // 数量増減ボタン
       decBtn.addEventListener('click', ()=> {
         qtyInput.value = Math.max(1, parseInt(qtyInput.value || 1, 10) - 1);
       });
@@ -89,24 +175,19 @@
         qtyInput.value = Math.max(1, parseInt(qtyInput.value || 1, 10) + 1);
       });
 
-      // キーボード入力制御（マイナス・e禁止）
       qtyInput.addEventListener('keydown', (e) => {
-        if (e.key === "-" || e.key === "e") {
-          e.preventDefault();
-        }
+        if (e.key === "-" || e.key === "e") e.preventDefault();
       });
 
-      // 入力値のバリデーション
       qtyInput.addEventListener('input', ()=> {
         let v = parseInt(qtyInput.value || 1, 10);
         if (isNaN(v) || v < 1) v = 1;
         qtyInput.value = v;
       });
 
-      // カート追加処理（非同期）
       addCartBtn.addEventListener('click', async ()=> {
         const qty = qtyInput.value;
-        const productId = /*[[${product.id}]]*/ 0; // Thymeleaf が数値を埋め込む
+        const productId = /*[[${product.id}]]*/ 0;
 
         const formData = new FormData();
         formData.append("productId", productId);
@@ -120,7 +201,7 @@
 
           if (response.ok) {
             showToast("カートに追加しました！");
-            qtyInput.value = 1; // 追加後は1に戻す
+            qtyInput.value = 1;
           } else {
             showToast("カート追加に失敗しました…", true);
           }
@@ -130,7 +211,6 @@
         }
       });
 
-      // トースト表示（画面上部中央）
       function showToast(message, isError = false) {
         const toast = document.createElement("div");
         toast.textContent = message;
@@ -162,15 +242,6 @@
 
     })();
   </script>
-
-  <footer th:replace="fragments/_footer :: footer"></footer>
-
-  <!-- cartItems があるときだけ表示 -->
-  <a th:if="${session.cartItems != null and #lists.size(session.cartItems) > 0}"
-     href="/order/confirm"
-     class="floating-checkout-btn">
-    注文を確認する
-  </a>
 
 </body>
 </html>
