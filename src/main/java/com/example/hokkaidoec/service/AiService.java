@@ -1,9 +1,19 @@
 package com.example.hokkaidoec.service;
 
 import java.lang.reflect.Method;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.nio.charset.StandardCharsets;
+import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import com.example.hokkaidoec.entity.AiGrowth;
@@ -11,21 +21,41 @@ import com.example.hokkaidoec.entity.Category;
 import com.example.hokkaidoec.entity.Product;
 import com.example.hokkaidoec.entity.Region;
 import com.example.hokkaidoec.mapper.AiGrowthMapper;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class AiService {
 
-	private final AiGrowthMapper aiGrowthMapper;
+	private static final String OPENAI_RESPONSES_URL = "https://api.openai.com/v1/responses";
 
-	public AiService(AiGrowthMapper aiGrowthMapper) {
+	private final AiGrowthMapper aiGrowthMapper;
+	private final Environment environment;
+	private final ObjectMapper objectMapper;
+	private final HttpClient httpClient;
+
+	public AiService(AiGrowthMapper aiGrowthMapper, Environment environment) {
 		this.aiGrowthMapper = aiGrowthMapper;
+		this.environment = environment;
+		this.objectMapper = new ObjectMapper();
+		this.httpClient = HttpClient.newBuilder()
+				.connectTimeout(Duration.ofSeconds(10))
+				.build();
 	}
 
 	/**
 	 * ログインユーザーのAIキャラを取得する。
-	 * まだ存在しない場合は、たまご状態で自動作成する。
+	 * なければランク1として自動作成する。
 	 */
 	public AiGrowth getOrCreateAiGrowth(Integer userId) {
+		return getOrCreateAiGrowth(userId, 1);
+	}
+
+	/**
+	 * ユーザーに対応するAI成長データを取得する。
+	 * なければランクに応じたAIキャラを自動作成する。
+	 */
+	public AiGrowth getOrCreateAiGrowth(Integer userId, Integer rankId) {
 		if (userId == null) {
 			return createDefaultAiGrowth();
 		}
@@ -36,17 +66,25 @@ public class AiService {
 			return aiGrowth;
 		}
 
+		Integer growthStage = normalizeGrowthStage(rankId);
+
 		AiGrowth newAiGrowth = new AiGrowth();
 		newAiGrowth.setUserId(userId);
-		newAiGrowth.setName("たまご");
-		newAiGrowth.setGrowthStage(1);
+		newAiGrowth.setName(createAiNameByStage(growthStage));
+		newAiGrowth.setGrowthStage(growthStage);
 		newAiGrowth.setPersonality(getRandomPersonality());
 		newAiGrowth.setUpdatedAt(LocalDateTime.now());
-		newAiGrowth.setCharaImageUrl("/img/ai/chara_stage1.png");
+		newAiGrowth.setCharaImageUrl(createImageUrlByStage(growthStage));
 
 		aiGrowthMapper.insert(newAiGrowth);
 
-		return newAiGrowth;
+		AiGrowth createdAiGrowth = aiGrowthMapper.findByUserId(userId);
+
+		if (createdAiGrowth == null) {
+			return newAiGrowth;
+		}
+
+		return createdAiGrowth;
 	}
 
 	/**
@@ -63,7 +101,7 @@ public class AiService {
 	}
 
 	private String getRandomPersonality() {
-		String[] personalities = {
+		List<String> personalities = List.of(
 				"元気",
 				"明るい",
 				"やさしい",
@@ -71,11 +109,10 @@ public class AiService {
 				"上品",
 				"のんびり",
 				"クール",
-				"頼れる"
-		};
+				"頼れる");
 
-		int index = ThreadLocalRandom.current().nextInt(personalities.length);
-		return personalities[index];
+		int index = ThreadLocalRandom.current().nextInt(personalities.size());
+		return personalities.get(index);
 	}
 
 	public String resolveCharaImageUrl(AiGrowth aiGrowth) {
@@ -83,9 +120,9 @@ public class AiService {
 			return "/img/ai/chara_stage1.png";
 		}
 
-		Integer growthStage = aiGrowth.getGrowthStage();
+		Integer growthStage = normalizeGrowthStage(aiGrowth.getGrowthStage());
 
-		if (growthStage == null || growthStage == 1) {
+		if (growthStage == 1) {
 			return "/img/ai/chara_stage1.png";
 		}
 
@@ -94,7 +131,7 @@ public class AiService {
 		}
 
 		if (aiGrowth.getCharaImageUrl() == null || aiGrowth.getCharaImageUrl().isBlank()) {
-			return "/img/ai/chara_stage1.png";
+			return createImageUrlByStage(growthStage);
 		}
 
 		return aiGrowth.getCharaImageUrl();
@@ -157,11 +194,31 @@ public class AiService {
 			productName = "この商品";
 		}
 
-		Integer growthStage = aiGrowth.getGrowthStage();
+		if (categoryName.isBlank()) {
+			categoryName = "北海道物産";
+		}
+
+		if (regionName.isBlank()) {
+			regionName = "北海道";
+		}
+
+		if (price.isBlank()) {
+			price = "未設定";
+		}
+
+		if (stock.isBlank()) {
+			stock = "未設定";
+		}
+
+		if (description.isBlank()) {
+			description = "北海道らしい魅力のある商品";
+		}
+
+		Integer growthStage = normalizeGrowthStage(aiGrowth.getGrowthStage());
 
 		String message;
 
-		if (growthStage == null || growthStage == 1) {
+		if (growthStage == 1) {
 			message = productName + "、おすすめ";
 		} else if (growthStage == 2) {
 			message = productName + "は、" + regionName + "のおすすめ商品です。価格は" + price + "円です";
@@ -176,7 +233,19 @@ public class AiService {
 		return message;
 	}
 
+	/**
+	 * 既存Controller用。
+	 * aiService.createChatReply(userMessage, aiGrowth) の形でも動くように残す。
+	 */
 	public String createChatReply(String userMessage, AiGrowth aiGrowth) {
+		return createChatReply(aiGrowth, userMessage, "AIチャット画面");
+	}
+
+	/**
+	 * API対応版のAI返答作成。
+	 * ai.mode=openai または openai.api.enabled=true のときだけOpenAI APIを使う。
+	 */
+	public String createChatReply(AiGrowth aiGrowth, String userMessage, String pageContext) {
 		if (aiGrowth == null) {
 			aiGrowth = createDefaultAiGrowth();
 		}
@@ -185,31 +254,276 @@ public class AiService {
 			return applyPersonality("質問を入力すると、商品探しや操作方法を案内できます", aiGrowth);
 		}
 
-		String text = userMessage.trim();
+		String trimmedMessage = userMessage.trim();
+
+		if (!isOpenAiEnabled()) {
+			return createFallbackReply(aiGrowth, trimmedMessage, pageContext)
+					+ "\n\n※現在は ai.mode または openai.api.enabled が無効なので、開発用の定型文を返しています。";
+		}
+
+		if (!hasOpenAiApiKey()) {
+			return createFallbackReply(aiGrowth, trimmedMessage, pageContext)
+					+ "\n\n※OPENAI_API_KEY が未設定なので、開発用の定型文を返しています。";
+		}
+
+		try {
+			String reply = createReplyByOpenAi(aiGrowth, trimmedMessage, pageContext);
+
+			if (reply != null && !reply.isBlank()) {
+				return reply.trim();
+			}
+
+			return "すみません、AIの返答を作れませんでした。もう一度質問してください。";
+
+		} catch (Exception e) {
+			System.err.println("[OpenAI API Error] " + e.getMessage());
+
+			return createFallbackReply(aiGrowth, trimmedMessage, pageContext)
+					+ "\n\n※OpenAI API通信に失敗したため、開発用の定型文に切り替えました。"
+					+ "\n原因: " + e.getMessage();
+		}
+	}
+
+	/**
+	 * OpenAI Responses APIで返答を生成する。
+	 * response.outputText() は使わず、JSONから直接返答テキストを取り出す。
+	 */
+	private String createReplyByOpenAi(AiGrowth aiGrowth, String userMessage, String pageContext) throws Exception {
+		String apiKey = getOpenAiApiKey();
+		String model = getOpenAiModel();
+		String systemPrompt = createSystemPrompt(aiGrowth, pageContext);
+
+		Map<String, Object> requestBodyMap = new LinkedHashMap<>();
+		requestBodyMap.put("model", model);
+		requestBodyMap.put("instructions", systemPrompt);
+		requestBodyMap.put("input", userMessage);
+		requestBodyMap.put("max_output_tokens", 300);
+		requestBodyMap.put("store", false);
+
+		String requestBody = objectMapper.writeValueAsString(requestBodyMap);
+
+		HttpRequest request = HttpRequest.newBuilder()
+				.uri(URI.create(OPENAI_RESPONSES_URL))
+				.timeout(Duration.ofSeconds(30))
+				.header("Content-Type", "application/json")
+				.header("Authorization", "Bearer " + apiKey)
+				.POST(HttpRequest.BodyPublishers.ofString(requestBody, StandardCharsets.UTF_8))
+				.build();
+
+		HttpResponse<String> response = httpClient.send(
+				request,
+				HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
+
+		if (response.statusCode() < 200 || response.statusCode() >= 300) {
+			throw new IllegalStateException("status=" + response.statusCode()
+					+ ", body=" + shorten(response.body()));
+		}
+
+		String reply = extractOutputText(response.body());
+
+		if (reply == null || reply.isBlank()) {
+			throw new IllegalStateException("OpenAI APIの返答テキストを取得できませんでした。body=" + shorten(response.body()));
+		}
+
+		return reply;
+	}
+
+	/**
+	 * OpenAIのJSONレスポンスから返答テキストを取り出す。
+	 */
+	private String extractOutputText(String responseBody) throws Exception {
+		if (responseBody == null || responseBody.isBlank()) {
+			return "";
+		}
+
+		JsonNode root = objectMapper.readTree(responseBody);
+
+		JsonNode errorNode = root.path("error");
+
+		if (errorNode.isObject()) {
+			String errorMessage = errorNode.path("message").asText("");
+
+			if (!errorMessage.isBlank()) {
+				throw new IllegalStateException(errorMessage);
+			}
+
+			throw new IllegalStateException("OpenAI APIでエラーが発生しました。");
+		}
+
+		String directOutputText = root.path("output_text").asText("");
+
+		if (!directOutputText.isBlank()) {
+			return directOutputText;
+		}
+
+		StringBuilder builder = new StringBuilder();
+
+		JsonNode outputArray = root.path("output");
+
+		if (outputArray.isArray()) {
+			for (JsonNode outputItem : outputArray) {
+				JsonNode contentArray = outputItem.path("content");
+
+				if (!contentArray.isArray()) {
+					continue;
+				}
+
+				for (JsonNode contentItem : contentArray) {
+					String type = contentItem.path("type").asText("");
+
+					if ("output_text".equals(type)) {
+						appendText(builder, contentItem.path("text").asText(""));
+					} else if ("refusal".equals(type)) {
+						appendText(builder, contentItem.path("refusal").asText(""));
+					} else {
+						appendText(builder, contentItem.path("text").asText(""));
+					}
+				}
+			}
+		}
+
+		return builder.toString().trim();
+	}
+
+	private void appendText(StringBuilder builder, String text) {
+		if (text == null || text.isBlank()) {
+			return;
+		}
+
+		if (builder.length() > 0) {
+			builder.append("\n");
+		}
+
+		builder.append(text);
+	}
+
+	private String createSystemPrompt(AiGrowth aiGrowth, String pageContext) {
+		String aiName = aiGrowth != null && aiGrowth.getName() != null
+				? aiGrowth.getName()
+				: "コンシェルジュ";
+
+		Integer growthStage = aiGrowth != null
+				? normalizeGrowthStage(aiGrowth.getGrowthStage())
+				: 1;
+
+		String personality = aiGrowth != null && aiGrowth.getPersonality() != null
+				? aiGrowth.getPersonality()
+				: "やさしい";
+
+		String stageText = switch (growthStage) {
+		case 1 -> "まだ幼いAIキャラ。短く、少し不慣れな感じで話す。";
+		case 2 -> "子どもっぽいAIキャラ。元気で親しみやすく話す。";
+		case 3 -> "成長したAIキャラ。わかりやすく丁寧に案内する。";
+		case 4 -> "かなり成長したAIキャラ。落ち着いて詳しく案内する。";
+		default -> "北海道物産ECサイトの案内役として自然に話す。";
+		};
+
+		String safePageContext = pageContext == null || pageContext.isBlank()
+				? "通常のAIチャット画面"
+				: pageContext;
+
+		return """
+				あなたは北海道物産ECサイトのAIコンシェルジュです。
+				ユーザーの商品探し、サイト操作、注文確認、ポイント、マイページなどを案内してください。
+
+				【AIキャラ情報】
+				名前: %s
+				成長段階: %s
+				性格: %s
+				話し方: %s
+
+				【現在のページ情報】
+				%s
+
+				【重要ルール】
+				・日本語で返答する
+				・1回の返答は2〜4文程度にする
+				・北海道物産ECサイトの案内として自然に答える
+				・商品購入を無理に押し付けない
+				・分からないことは断定せず、確認を促す
+				・SQL、APIキー、内部実装、DB情報などの機密情報は答えない
+				・注文登録、在庫更新、ポイント計算、ログイン処理は行わない
+				・AIは商品案内と操作案内だけを担当する
+				""".formatted(
+				aiName,
+				growthStage,
+				personality,
+				stageText,
+				safePageContext);
+	}
+
+	/**
+	 * APIを使えない場合の開発用返答。
+	 */
+	private String createFallbackReply(AiGrowth aiGrowth, String userMessage, String pageContext) {
+		if (aiGrowth == null) {
+			aiGrowth = createDefaultAiGrowth();
+		}
+
+		String message = userMessage == null ? "" : userMessage.toLowerCase();
 		String reply;
 
-		if (text.contains("おすすめ")) {
-			reply = "おすすめ商品を探すなら、海産物、乳製品、スイーツのカテゴリを見てみるのがおすすめです";
-		} else if (text.contains("送料")) {
-			reply = "送料や支払金額は、注文確認画面で確認できます";
-		} else if (text.contains("ポイント")) {
-			reply = "ポイントはポイントページで確認できます。ポイント履歴やミッションも確認できます";
-		} else if (text.contains("地域")) {
+		if (message.contains("おすすめ") || message.contains("オススメ")) {
+			reply = "おすすめ商品を探しているんですね。北海道のお菓子、海産物、乳製品などから選ぶと探しやすいです";
+		} else if (message.contains("送料")) {
+			reply = "送料についてですね。注文確認画面で配送先や合計金額とあわせて確認できます";
+		} else if (message.contains("ポイント")) {
+			reply = "ポイントはマイページやポイントページから確認できます。購入やミッションで増える仕組みです";
+		} else if (message.contains("注文") || message.contains("購入")) {
+			reply = "注文についてですね。商品詳細から注文確認画面へ進み、内容を確認してから確定できます";
+		} else if (message.contains("商品")) {
+			reply = "商品について知りたいんですね。商品一覧や商品詳細ページから、価格や説明を確認できます";
+		} else if (message.contains("地域")) {
 			reply = "地域から探す画面では、北海道の地域ごとに商品を探せます";
-		} else if (text.contains("注文") || text.contains("購入")) {
-			reply = "購入する場合は、商品一覧から商品詳細を開き、注文確認画面で内容を確認してください";
-		} else if (text.contains("ゲーム") || text.contains("スロット")) {
+		} else if (message.contains("ゲーム") || message.contains("スロット")) {
 			reply = "ミニゲームではポイントを使ってスロットに挑戦できます";
-		} else if (text.contains("履歴")) {
+		} else if (message.contains("履歴")) {
 			reply = "注文履歴やポイント履歴から、過去の利用内容を確認できます";
 		} else {
-			reply = "北海道物産ECサイトの商品探しや操作方法について案内できます";
+			reply = "北海道物産ECサイトについて案内します。商品、注文、ポイント、マイページなど、気になることを聞いてください";
 		}
 
 		reply = adjustByGrowthStage(reply, aiGrowth);
 		reply = applyPersonality(reply, aiGrowth);
 
 		return reply;
+	}
+
+	private boolean isOpenAiEnabled() {
+		String aiMode = environment.getProperty("ai.mode", "mock");
+		String enabledText = environment.getProperty("openai.api.enabled", "false");
+
+		return "openai".equalsIgnoreCase(aiMode)
+				|| Boolean.parseBoolean(enabledText);
+	}
+
+	private boolean hasOpenAiApiKey() {
+		String apiKey = getOpenAiApiKey();
+		return apiKey != null && !apiKey.isBlank();
+	}
+
+	private String getOpenAiApiKey() {
+		String apiKey = environment.getProperty("openai.api-key");
+
+		if (apiKey == null || apiKey.isBlank()) {
+			apiKey = environment.getProperty("openai.api.key");
+		}
+
+		if (apiKey == null || apiKey.isBlank()) {
+			apiKey = System.getenv("OPENAI_API_KEY");
+		}
+
+		return apiKey == null ? "" : apiKey.trim();
+	}
+
+	private String getOpenAiModel() {
+		String model = environment.getProperty("openai.model", "gpt-4.1-mini");
+
+		if (model == null || model.isBlank()) {
+			return "gpt-4.1-mini";
+		}
+
+		return model.trim();
 	}
 
 	public Integer calculateGrowthStage(Integer totalPurchaseAmount) {
@@ -232,13 +546,62 @@ public class AiService {
 		return 1;
 	}
 
-	private String adjustByGrowthStage(String message, AiGrowth aiGrowth) {
-		Integer growthStage = aiGrowth.getGrowthStage();
+	private Integer normalizeGrowthStage(Integer growthStage) {
+		if (growthStage == null) {
+			return 1;
+		}
 
-		if (growthStage == null || growthStage == 1) {
+		if (growthStage < 1) {
+			return 1;
+		}
+
+		if (growthStage > 4) {
+			return 4;
+		}
+
+		return growthStage;
+	}
+
+	private String createAiNameByStage(Integer growthStage) {
+		Integer stage = normalizeGrowthStage(growthStage);
+
+		return switch (stage) {
+		case 1 -> "たまご";
+		case 2 -> "こども";
+		case 3 -> "コンシェルジュ";
+		case 4 -> "ベテランコンシェルジュ";
+		default -> "コンシェルジュ";
+		};
+	}
+
+	private String createImageUrlByStage(Integer growthStage) {
+		Integer stage = normalizeGrowthStage(growthStage);
+
+		return switch (stage) {
+		case 1 -> "/img/ai/chara_stage1.png";
+		case 2 -> "/img/ai/chara_stage2.png";
+		case 3 -> "/img/ai/chara_stage3.png";
+		case 4 -> "/img/ai/chara_stage4.png";
+		default -> "/img/ai/chara_stage1.png";
+		};
+	}
+
+	private String adjustByGrowthStage(String message, AiGrowth aiGrowth) {
+		if (message == null || message.isBlank()) {
+			return "";
+		}
+
+		if (aiGrowth == null) {
+			return message;
+		}
+
+		Integer growthStage = normalizeGrowthStage(aiGrowth.getGrowthStage());
+
+		if (growthStage == 1) {
 			if (message.length() > 35) {
 				return "ぼく、案内するね";
 			}
+
 			return message;
 		}
 
@@ -252,6 +615,10 @@ public class AiService {
 	private String applyPersonality(String message, AiGrowth aiGrowth) {
 		if (message == null || message.isBlank()) {
 			return "";
+		}
+
+		if (aiGrowth == null) {
+			return message + "。";
 		}
 
 		String personality = aiGrowth.getPersonality();
@@ -301,5 +668,17 @@ public class AiService {
 		}
 
 		return "";
+	}
+
+	private String shorten(String text) {
+		if (text == null) {
+			return "";
+		}
+
+		if (text.length() <= 500) {
+			return text;
+		}
+
+		return text.substring(0, 500) + "...";
 	}
 }
