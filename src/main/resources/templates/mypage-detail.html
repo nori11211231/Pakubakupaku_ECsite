@@ -1,10 +1,382 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
+
+	<meta charset="UTF-8">
+
+	<title>北海道EC</title>
+
+	<link rel="stylesheet" th:href="@{/css/style.css}">
+
 </head>
+
 <body>
 
+	<div class="container">
+
+		<!-- HEADER -->
+
+		<header>
+
+			<!-- LOGO -->
+
+			<div class="brand">
+
+				<a th:href="@{/}">
+
+					<h1>
+
+						HOKKAIDO.
+
+					</h1>
+
+				</a>
+
+			</div>
+
+			<!-- SEARCH -->
+
+			<form th:action="@{/products}" method="get" class="searchbar">
+
+				<input type="text" name="keyword" placeholder="北海道の商品を探す">
+
+				<button type="submit">
+
+					検索
+
+				</button>
+
+			</form>
+
+			<!-- USER -->
+
+			<div class="user-area">
+
+				<div class="point-view">
+
+					<span>
+
+						POINT
+
+					</span>
+
+					<strong th:text="${loginUser != null ? loginUser.point : 0}">
+
+						0
+
+					</strong>
+
+				</div>
+
+				<!-- 未ログイン -->
+
+				<a th:if="${loginUser == null}" th:href="@{/login}" class="btn">
+
+					ログイン
+
+				</a>
+
+				<!-- ログイン済 -->
+
+				<a th:if="${loginUser != null}" th:href="@{/mypage}" class="btn">
+
+					マイページ
+
+				</a>
+
+			</div>
+
+		</header>
+
+		<!-- NAV -->
+
+		<nav class="nav-menu">
+
+			<a th:href="@{/products}">
+
+				商品一覧
+
+			</a>
+
+			<a th:href="@{/regions}">
+
+				地域から探す
+
+			</a>
+
+			<a th:href="@{/points}">
+
+				ポイント
+
+			</a>
+
+			<a th:href="@{/points/history}">
+
+				ポイント履歴
+
+			</a>
+
+			<a th:href="@{/game}">
+
+				ミニゲーム
+
+			</a>
+
+			<a th:href="@{/game/history}">
+
+				ゲーム履歴
+
+			</a>
+
+			<a th:href="@{/orders}">
+
+				注文履歴
+
+			</a>
+
+		</nav>
+
+		<!-- HERO -->
+
+		<section class="hero">
+
+			<!-- LEFT -->
+
+			<div class="main-visual">
+
+				<h2>
+
+					北海道の<br>
+					うまいを全国へ
+
+				</h2>
+
+				<p>
+
+					海鮮、乳製品、スイーツ、
+					北海道の魅力を届ける
+					プレミアムECサイト。
+
+				</p>
+
+				<div class="side-buttons">
+
+					<a th:href="@{/products}" class="btn btn-primary">
+
+						商品を見る
+
+					</a>
+
+					<a th:href="@{/game}" class="btn">
+
+						ミニゲーム
+
+					</a>
+
+				</div>
+
+			</div>
+
+			<!-- RIGHT -->
+
+			<div class="side-box">
+
+				<div class="login-box">
+
+					<h3>
+
+						ユーザー情報
+
+					</h3>
+
+					<div th:if="${loginUser == null}">
+
+						<p>
+
+							ログインすると
+							ポイントや注文履歴を
+							確認できます。
+
+						</p>
+
+						<div class="side-buttons">
+
+							<a th:href="@{/login}" class="btn btn-primary">
+
+								ログイン
+
+							</a>
+
+							<a th:href="@{/register}" class="btn">
+
+								新規登録
+
+							</a>
+
+						</div>
+
+					</div>
+
+					<div th:if="${loginUser != null}">
+
+						<p>
+
+							ようこそ、
+							<span th:text="${loginUser.name}">
+								ユーザー
+							</span>
+							さん
+
+						</p>
+
+						<div class="point-view">
+
+							<span>
+
+								CURRENT POINT
+
+							</span>
+
+							<strong th:text="${loginUser.point}">
+
+								0
+
+							</strong>
+
+						</div>
+
+					</div>
+
+				</div>
+
+			</div>
+
+		</section>
+
+		<!-- PRODUCT -->
+
+		<section class="products-area">
+
+			<div class="section-title">
+
+				<h2>
+
+					おすすめ商品
+
+				</h2>
+
+				<a th:href="@{/products}" class="btn">
+
+					商品一覧へ
+
+				</a>
+
+			</div>
+
+			<!-- GRID -->
+
+			<div class="product-grid">
+
+				<article class="card" th:each="p : ${recommendedProducts}">
+
+					<!-- IMAGE -->
+
+					<a th:href="@{|/products/${p.id}|}">
+
+						<img th:if="${p.imageUrl != null}" th:src="${p.imageUrl}" th:alt="${p.productName}">
+
+						<div th:if="${p.imageUrl == null}" class="no-image">
+
+							NO IMAGE
+
+						</div>
+
+					</a>
+
+					<!-- BODY -->
+
+					<div class="card-body">
+
+						<div class="card-title" th:text="${p.productName}">
+
+							商品名
+
+						</div>
+
+						<div class="card-desc" th:text="${p.description}">
+
+							商品説明
+
+						</div>
+
+						<!-- META -->
+
+						<div class="card-meta">
+
+							<div class="price" th:text="${p.price} + ' ¥'">
+
+								1200¥
+
+							</div>
+
+							<div>
+
+								在庫
+								<span th:text="${p.stock}">
+
+									10
+
+								</span>
+
+							</div>
+
+						</div>
+
+						<!-- ACTION -->
+
+						<div class="card-actions">
+
+							<a th:href="@{|/products/${p.id}|}" class="btn">
+
+								詳細
+
+							</a>
+
+							<form th:action="@{/order/add}" method="post">
+
+								<input type="hidden" name="productId" th:value="${p.id}">
+
+								<input type="hidden" name="quantity" value="1">
+
+								<button type="submit" class="btn btn-primary">
+
+									カート追加
+
+								</button>
+
+							</form>
+
+						</div>
+
+					</div>
+
+				</article>
+
+			</div>
+
+		</section>
+
+		<!-- FOOTER -->
+
+		<footer>
+
+			HOKKAIDO. © 2026
+
+		</footer>
+
+	</div>
+
 </body>
+
 </html>

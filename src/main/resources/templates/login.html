@@ -1,33 +1,144 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+
 <head>
-  <meta charset="UTF-8" />
-  <title>ログイン</title>
-  <link rel="stylesheet" th:href="@{/css/style.css}">
-  </head>
-  <body>
-  	<div th:replace="~{fragments/_header :: header}"></div>
 
-  <main>
-  <h1>ログイン</h1>
+	<meta charset="UTF-8">
 
-  <p th:if="${loginError}" style="color:red">[ログインエラーですよっ！]</p>
+	<title>ログイン | 北海道EC</title>
 
-  <form th:action="@{/login}" th:object="${form}" method="post">
-    <p>
-      メールアドレス：<input type="email" th:field="*{email}" />
-      <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
-    </p>
-    <p>
-      パスワード：<input type="password" th:field="*{password}" />
-      <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
-    </p>
-    <p><button type="submit">ログイン</button></p>
-  </form>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <p><a href="/register">▶ 新規会員登録はこちら</a></p>
-  </main>
+	<!-- CSS -->
 
-  <footer th:replace="fragments/_footer :: footer"></footer>
+	<link rel="stylesheet" th:href="@{/css/login.css}">
+
+	<!-- FONT -->
+
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+	<link
+		href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Noto+Serif+JP:wght@300;400;500;700&display=swap"
+		rel="stylesheet">
+
+</head>
+
+<body class="auth-body">
+
+	<!-- =========================
+         LOGIN AREA
+    ========================== -->
+
+	<main class="auth-container">
+
+		<div class="auth-card">
+
+			<!-- HEADER -->
+
+			<div class="auth-head">
+
+				<div class="auth-subtitle">
+
+					HOKKAIDO PREMIUM SELECT
+
+				</div>
+
+				<h1>
+
+					Login
+
+				</h1>
+
+				<p>
+
+					北海道ECへようこそ。<br>
+					ログインしてポイントや
+					注文履歴を確認できます。
+
+				</p>
+
+			</div>
+
+			<!-- ERROR -->
+
+			<div th:if="${loginError}" class="auth-error">
+
+				ログイン情報が正しくありません。
+
+			</div>
+
+			<!-- FORM -->
+
+			<form th:action="@{/login}" th:object="${form}" method="post" class="auth-form">
+
+				<!-- EMAIL -->
+
+				<div class="form-group">
+
+					<label>
+
+						メールアドレス
+
+					</label>
+
+					<input type="email" th:field="*{email}" placeholder="example@mail.com">
+
+					<span th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="field-error">
+					</span>
+
+				</div>
+
+				<!-- PASSWORD -->
+
+				<div class="form-group">
+
+					<label>
+
+						パスワード
+
+					</label>
+
+					<input type="password" th:field="*{password}" placeholder="••••••••">
+
+					<span th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="field-error">
+					</span>
+
+				</div>
+
+				<!-- BUTTON -->
+
+				<button type="submit" class="auth-button">
+
+					ログイン
+
+				</button>
+
+			</form>
+
+			<!-- FOOTER -->
+
+			<div class="auth-footer">
+
+				<span>
+
+					アカウントをお持ちでない方
+
+				</span>
+
+				<a href="/register">
+
+					新規会員登録
+
+				</a>
+
+			</div>
+
+		</div>
+
+	</main>
+
 </body>
+
 </html>

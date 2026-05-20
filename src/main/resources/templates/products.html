@@ -9,13 +9,243 @@
   <link rel="stylesheet" th:href="@{/css/products.css}">
 </head>
 
-<body>
-  <div class="container">
 
-    <!-- ヘッダー -->
-    <header th:replace="fragments/_header :: header"></header>
+	<body>
+	  <div class="container">
 
-    <!-- サイドバー開閉ボタン -->
+	    <!-- ヘッダー -->
+	    <header th:replace="fragments/_header :: header"></header>
+
+	    <!-- サイドバー開閉ボタン -->
+	    <button id="toggleSidebar" class="toggle-sidebar-btn">フィルター</button>
+
+	    <div class="layout" id="layout-root">
+
+	      <!-- サイドバー -->
+	      <aside class="sidebar" id="sidebar" aria-labelledby="filter-heading">
+	        <form th:action="@{/products}" method="get" id="filter-form" novalidate>
+	          <div class="filters">
+	            <h3 id="filter-heading">検索・絞り込み</h3>
+
+	            <h4>キーワード</h4>
+	            <input type="text" name="keyword" th:value="${keyword}" placeholder="例：鮭 いくら" />
+
+	            <h4>カテゴリー</h4>
+	            <select name="categoryId">
+	              <option value="" th:selected="${categoryId} == null">すべて</option>
+	              <option th:each="cat : ${categories}"
+	                      th:value="${cat.id}"
+	                      th:text="${cat.categoryName}"
+	                      th:selected="${cat.id} == ${categoryId}">
+	              </option>
+	            </select>
+
+	            <h4>地域</h4>
+	            <select name="regionId">
+	              <option value="" th:selected="${regionId} == null">すべて</option>
+	              <option th:each="reg : ${regions}"
+	                      th:value="${reg.id}"
+	                      th:text="${reg.regionName}"
+	                      th:selected="${reg.id} == ${regionId}">
+	              </option>
+	            </select>
+
+	            <h4>値段帯</h4>
+	            <div style="display:flex;gap:8px;">
+	              <input type="number" id="minPrice" name="minPrice" th:value="${minPrice}" placeholder="最小" />
+	              <input type="number" id="maxPrice" name="maxPrice" th:value="${maxPrice}" placeholder="最大" />
+	            </div>
+	            <div id="priceError" class="price-error">価格は 0 以上の数値で入力してください。</div>
+
+	            <h4>並べ替え</h4>
+	            <select name="sort">
+	              <option value="">おすすめ順</option>
+	              <option value="price_asc" th:selected="${sort} == 'price_asc'">価格が安い順</option>
+	              <option value="price_desc" th:selected="${sort} == 'price_desc'">価格が高い順</option>
+	            </select>
+
+	            <div class="filter-actions">
+	              <button type="submit" id="applyFilter" class="btn btn-primary">絞り込みを実行</button>
+	              <a th:href="@{/products}" class="btn btn-ghost">リセット</a>
+	            </div>
+	          </div>
+	        </form>
+	      </aside>
+
+	      <!-- メイン -->
+	      <main class="main">
+	        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+	          <h2 style="margin:0;">商品一覧</h2>
+	          <div style="font-size:14px;color:var(--muted);">
+	            <span th:text="${#lists.size(products)} + ' 件'"></span>
+	          </div>
+	        </div>
+
+	        <section class="product-grid">
+	          <article class="card" th:each="p : ${products}">
+	            <a th:href="@{|/products/${p.id}|}" style="text-decoration:none;color:inherit;">
+	              <img th:src="${p.imageUrl != null} ? @{${p.imageUrl}} : @{/images/placeholder.png}"
+	                   th:alt="${p.productName}" />
+	            </a>
+
+	            <div class="card-body">
+	              <div class="card-title" th:text="${p.productName}"></div>
+	              <div class="card-desc" th:text="${p.description}"></div>
+
+	              <div class="card-meta">
+	                <div class="price" th:text="${p.price} + ' 円'"></div>
+	                <div style="font-size:12px;color:#888;" th:text="'在庫: ' + ${p.stock}"></div>
+	              </div>
+
+	              <div class="card-actions">
+	                <a th:href="@{|/products/${p.id}|}" class="btn">詳細</a>
+
+					<form class="add-to-cart-form" th:action="@{/order/add}" method="post">
+					  <input type="hidden" name="productId" th:value="${p.id}" />
+					  <input type="hidden" name="quantity" value="1" />
+					  <button type="submit" class="btn btn-primary">カートに入れる</button>
+					</form>
+
+	              </div>
+	            </div>
+	          </article>
+	        </section>
+
+	        <nav class="pagination">
+	          <a th:if="${prevPage != null}" th:href="@{/products(page=${prevPage})}" class="btn">前へ</a>
+	          <span th:text="'ページ ' + ${currentPage} + ' / ' + ${totalPages}"></span>
+	          <a th:if="${nextPage != null}" th:href="@{/products(page=${nextPage})}" class="btn">次へ</a>
+	        </nav>
+
+	      </main>
+	    </div>
+	  </div>
+
+	  <!-- JS -->
+	  <script>
+	  document.addEventListener("DOMContentLoaded", () => {
+
+	    // 全ての「カートに入れる」フォームを取得
+	    const forms = document.querySelectorAll(".add-to-cart-form");
+
+	    forms.forEach(form => {
+	      form.addEventListener("submit", async (e) => {
+	        e.preventDefault(); // 画面遷移を止める
+
+	        const formData = new FormData(form);
+
+	        try {
+	          const response = await fetch(form.action, {
+	            method: "POST",
+	            body: formData
+	          });
+
+	          if (response.ok) {
+	            showToast("カートに追加しました！");
+	          } else {
+	            showToast("カート追加に失敗しました…", true);
+	          }
+
+	        } catch (error) {
+	          showToast("通信エラーが発生しました", true);
+	        }
+	      });
+	    });
+
+	    // トースト表示関数
+		function showToast(message, isError = false) {
+		  const toast = document.createElement("div");
+		  toast.textContent = message;
+		  toast.style.position = "fixed";
+		  toast.style.top = "20px";          // ← 上部に変更
+		  toast.style.left = "50%";          // ← 中央寄せ
+		  toast.style.transform = "translateX(-50%)"; // ← 完全中央
+		  toast.style.padding = "14px 22px";
+		  toast.style.borderRadius = "6px";
+		  toast.style.color = "#fff";
+		  toast.style.fontSize = "16px";
+		  toast.style.zIndex = "9999";
+		  toast.style.background = isError ? "#d9534f" : "#5cb85c";
+		  toast.style.boxShadow = "0 2px 6px rgba(0,0,0,0.2)";
+		  toast.style.opacity = "0";
+		  toast.style.transition = "opacity 0.3s ease";
+
+		  document.body.appendChild(toast);
+
+		  // フェードイン
+		  requestAnimationFrame(() => {
+		    toast.style.opacity = "1";
+		  });
+
+		  // フェードアウト
+		  setTimeout(() => {
+		    toast.style.opacity = "0";
+		    setTimeout(() => toast.remove(), 500);
+		  }, 1500);
+		}
+
+
+	  });
+	  </script>
+
+	  <script>
+	    (function(){
+	      const toggleBtn = document.getElementById('toggleSidebar');
+	      const sidebar = document.getElementById('sidebar');
+
+	      toggleBtn.addEventListener('click', () => {
+	        sidebar.classList.toggle('hidden');
+	      });
+
+	      const minInput = document.getElementById('minPrice');
+	      const maxInput = document.getElementById('maxPrice');
+	      const priceError = document.getElementById('priceError');
+	      const applyBtn = document.getElementById('applyFilter');
+
+	      function validatePrices() {
+	        let invalid = false;
+	        const minVal = minInput.value ? Number(minInput.value) : null;
+	        const maxVal = maxInput.value ? Number(maxInput.value) : null;
+
+	        if ((minVal !== null && minVal < 0) || (maxVal !== null && maxVal < 0)) {
+	          invalid = true;
+	        }
+
+	        if (!invalid && minVal !== null && maxVal !== null && minVal > maxVal) {
+	          priceError.textContent = '最小価格は最大価格以下で指定してください。';
+	          priceError.style.display = 'block';
+	          applyBtn.disabled = true;
+	          return false;
+	        }
+
+	        if (invalid) {
+	          priceError.textContent = '価格は 0 以上の数値で入力してください。';
+	          priceError.style.display = 'block';
+	          applyBtn.disabled = true;
+	          return false;
+	        }
+
+	        priceError.style.display = 'none';
+	        applyBtn.disabled = false;
+	        return true;
+	      }
+
+	      minInput.addEventListener('input', validatePrices);
+	      maxInput.addEventListener('input', validatePrices);
+	      validatePrices();
+	    })();
+	  </script>
+
+	  <footer th:replace="fragments/_footer :: footer"></footer>
+	  
+	  <!-- 固定「注文を確認する」ボタン -->
+	  <a th:if="${session.cartItems != null and #lists.size(session.cartItems) > 0}"
+	     href="/order/confirm"
+	     class="floating-checkout-btn">
+	    注文を確認する
+	  </a>
+	</body>
+	</html>タン -->
     <button id="toggleSidebar" class="toggle-sidebar-btn">フィルター</button>
 
     <div class="layout" id="layout-root">
