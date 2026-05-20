@@ -351,4 +351,47 @@
         text-align: center;
       }
     }
+	.product-ai-box {
+	  margin-top: 24px;
+	  padding: 18px;
+	  border-radius: 18px;
+	  background: #fff8ec;
+	  border: 1px solid #f1d2a4;
+	  box-shadow: 0 4px 14px rgba(120, 80, 40, 0.12);
+	}
+
+	.product-ai-head {
+	  display: flex;
+	  align-items: center;
+	  gap: 14px;
+	  margin-bottom: 12px;
+	}
+
+	.product-ai-image {
+	  width: 82px;
+	  height: 82px;
+	  object-fit: contain;
+	}
+
+	.product-ai-head h3 {
+	  margin: 0;
+	  font-size: 20px;
+	  color: #5b3415;
+	}
+
+	.product-ai-label {
+	  margin: 4px 0 0;
+	  font-size: 13px;
+	  color: #8a6a4b;
+	}
+
+	.product-ai-message {
+	  margin: 0;
+	  padding: 14px 16px;
+	  border-radius: 14px;
+	  background: #ffffff;
+	  color: #4a3424;
+	  line-height: 1.8;
+	  font-size: 15px;
+	}
 	

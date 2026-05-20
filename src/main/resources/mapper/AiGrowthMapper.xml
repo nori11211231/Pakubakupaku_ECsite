@@ -66,33 +66,36 @@
         UPDATE
             ai_growth
         SET
+            name = #{name},
             growth_stage = #{growthStage},
-            updated_at = CURRENT_TIMESTAMP
+            updated_at = CURRENT_TIMESTAMP,
+            chara_image_url = #{charaImageUrl}
         WHERE
             user_id = #{userId}
     </update>
+
     <select id="findAiStatusByUserId" resultType="java.util.HashMap">
-	SELECT
-		u.rank_id AS "rankId",
-		u.total_purchase_amount AS "totalPurchaseAmount",
-		r.rank_name AS "rankName",
-		next_rank.rank_name AS "nextRankName",
-		next_rank.min_amount AS "nextRankMinAmount"
-	FROM
-		users u
-		INNER JOIN ranks r
-			ON r.id = u.rank_id
-		LEFT JOIN ranks next_rank
-			ON next_rank.min_amount = (
-				SELECT
-					MIN(r2.min_amount)
-				FROM
-					ranks r2
-				WHERE
-					r2.min_amount > u.total_purchase_amount
-			)
-	WHERE
-		u.id = #{userId}
-</select>
+        SELECT
+            u.rank_id AS "rankId",
+            u.total_purchase_amount AS "totalPurchaseAmount",
+            r.rank_name AS "rankName",
+            next_rank.rank_name AS "nextRankName",
+            next_rank.min_amount AS "nextRankMinAmount"
+        FROM
+            users u
+            INNER JOIN ranks r
+                ON r.id = u.rank_id
+            LEFT JOIN ranks next_rank
+                ON next_rank.min_amount = (
+                    SELECT
+                        MIN(r2.min_amount)
+                    FROM
+                        ranks r2
+                    WHERE
+                        r2.min_amount > u.total_purchase_amount
+                )
+        WHERE
+            u.id = #{userId}
+    </select>
 
 </mapper>

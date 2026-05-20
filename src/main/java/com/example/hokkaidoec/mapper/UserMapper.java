@@ -28,4 +28,11 @@ public interface UserMapper {
 	/** ユーザのポイントを更新する */
 	@Update("UPDATE users SET point = #{point} WHERE id = #{id}")
 	void updatePoint(@Param("id") Integer id, @Param("point") Integer point);
+
+	Integer findRankIdByTotalPurchaseAmount(@Param("totalPurchaseAmount") Integer totalPurchaseAmount);
+
+	void updateTotalPurchaseAmountAndRank(
+			@Param("id") Integer id,
+			@Param("totalPurchaseAmount") Integer totalPurchaseAmount,
+			@Param("rankId") Integer rankId);
 }

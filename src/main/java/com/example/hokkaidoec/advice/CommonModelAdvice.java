@@ -1,6 +1,7 @@
 package com.example.hokkaidoec.advice;
 
 import java.lang.reflect.Method;
+import java.util.Map;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -45,13 +46,25 @@ public class CommonModelAdvice {
 			return aiService.createDefaultAiGrowth();
 		}
 
-		AiGrowth aiGrowth = aiGrowthMapper.findByUserId(userId);
+		Map<String, Object> aiStatus = aiGrowthMapper.findAiStatusByUserId(userId);
 
-		if (aiGrowth == null) {
-			return aiService.createDefaultAiGrowth();
+		Integer rankId = 1;
+
+		if (aiStatus != null) {
+			Object rankIdValue = aiStatus.get("rankId");
+
+			if (rankIdValue instanceof Number) {
+				rankId = ((Number) rankIdValue).intValue();
+			} else if (rankIdValue != null) {
+				try {
+					rankId = Integer.parseInt(rankIdValue.toString());
+				} catch (NumberFormatException e) {
+					rankId = 1;
+				}
+			}
 		}
 
-		return aiGrowth;
+		return aiService.getOrCreateAiGrowthByRank(userId, rankId);
 	}
 
 	private Integer getLoginUserId(HttpSession session) {
