@@ -127,6 +127,7 @@ public class ReviewController {
 
 		reviewService.addReview(review);
 
+		// ★★★ 商品詳細ページに戻す（ここが重要） ★★★
 		return "redirect:/products/" + productId + "#reviews";
 	}
 

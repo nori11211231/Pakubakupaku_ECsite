@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.example.hokkaidoec.entity.Category;
 import com.example.hokkaidoec.entity.Product;
 import com.example.hokkaidoec.entity.Region;
+import com.example.hokkaidoec.entity.Review;
 import com.example.hokkaidoec.entity.User;
 import com.example.hokkaidoec.mapper.CategoryMapper;
 import com.example.hokkaidoec.mapper.ProductsMapper;
@@ -72,6 +73,18 @@ public class ProductController {
 			orderId = orderService.getOrderIdIfPurchased(userId, productId);
 			canReview = (orderId != null);
 		}
+
+		// ★ レビュー一覧
+		List<Review> reviews = reviewService.getReviewsByProductId(productId);
+		model.addAttribute("reviews", reviews);
+
+		// ★ 平均評価
+		Double averageRating = reviewService.getAverageRating(productId);
+		model.addAttribute("averageRating", averageRating);
+
+		// ★ レビュー件数
+		int reviewCount = reviewService.getReviewCount(productId);
+		model.addAttribute("reviewCount", reviewCount);
 
 		model.addAttribute("canReview", canReview);
 		model.addAttribute("orderId", orderId);
