@@ -1,21 +1,36 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.example.hokkaidoec.mapper.UserMapper">
 
+    <!-- findByUserId -->
+    <!-- 戻り値の型（resultType）には、エンティティのフルパッケージ名を指定します -->
+    <select id="findByUserId" resultType="com.example.hokkaidoec.entity.User">
+        SELECT * FROM users WHERE email = #{email}
+    </select>
 
-  <select id="findAll" resultType="com.example.hokkaidoec.entity.User">
-    SELECT name, email,address,phone, password,point,totalPurchaseAmount,rankId
-    FROM users
-    ORDER BY id
-  </select>
+    <!-- insert -->
+    <!-- 引数の型（parameterType）を指定します -->
+    <insert id="insert" parameterType="com.example.hokkaidoec.entity.User">
+        INSERT INTO users (
+            name, email, address, phone, password, point, total_purchase_amount, rank_id
+        ) VALUES (
+            #{name}, #{email}, #{address}, #{phone}, #{password}, 0, 0, #{rankId}
+        )
+    </insert>
 
-  <select id="findById" resultType="com.example.hokkaidoec.entity.User">
-    SELECT name, email,address,phone, password,point,totalPurchaseAmount,rankId
-    FROM users
-    WHERE id = #{id}
-  </select>
+    <!-- update -->
+    <update id="update" parameterType="com.example.hokkaidoec.entity.User">
+        UPDATE users
+        SET 
+            name = #{name},
+            address = #{address},
+            phone = #{phone}
+        WHERE email = #{email}
+    </update>
+
+
 
 </mapper>
