@@ -3,14 +3,114 @@
 <body>
 
 <div th:fragment="aiWidget" class="ai-widget">
+
     <div class="ai-balloon">
-        <p th:text="${aiWidgetMessage}">北海道の商品探しを案内します</p>
+        <p id="aiWidgetBalloonText"
+           th:text="${aiWidgetMessage}">
+            北海道の商品探しを案内します
+        </p>
     </div>
 
     <a th:href="@{/ai}" class="ai-character">
         <img th:src="${aiCharaImageUrl}" alt="AIコンシェルジュ">
         <span th:text="${aiName}">コンシェルジュ</span>
     </a>
+
+    <form id="aiWidgetForm" class="ai-widget-form">
+        <input type="hidden"
+               th:if="${_csrf != null}"
+               th:name="${_csrf.parameterName}"
+               th:value="${_csrf.token}">
+
+        <input type="hidden"
+               id="aiWidgetPageContext"
+               name="pageContext">
+
+        <input type="text"
+               id="aiWidgetInput"
+               name="userMessage"
+               placeholder="AIに聞く">
+
+        <button type="submit" id="aiWidgetSendButton">送信</button>
+    </form>
+
+    <div class="ai-widget-link">
+        <a th:href="@{/ai}">AI相談画面へ</a>
+    </div>
+
+    <script th:inline="javascript">
+        const aiWidgetReplyUrl = /*[[@{/ai/widget/reply}]]*/ "/ai/widget/reply";
+
+        const aiWidgetForm = document.getElementById("aiWidgetForm");
+        const aiWidgetInput = document.getElementById("aiWidgetInput");
+        const aiWidgetBalloonText = document.getElementById("aiWidgetBalloonText");
+        const aiWidgetSendButton = document.getElementById("aiWidgetSendButton");
+        const aiWidgetPageContext = document.getElementById("aiWidgetPageContext");
+
+        if (aiWidgetForm) {
+            aiWidgetForm.addEventListener("submit", async function (event) {
+                event.preventDefault();
+
+                const message = aiWidgetInput.value.trim();
+
+                if (message.length === 0) {
+                    aiWidgetBalloonText.textContent = "質問を入力してください。";
+                    return;
+                }
+
+                aiWidgetBalloonText.textContent = "AIが考えています...";
+                aiWidgetSendButton.disabled = true;
+
+                try {
+                    aiWidgetPageContext.value =
+                        "現在のページURL: " + location.pathname +
+                        " / ページタイトル: " + document.title;
+
+                    const formData = new FormData(aiWidgetForm);
+                    const params = new URLSearchParams();
+
+                    for (const [key, value] of formData.entries()) {
+                        params.append(key, value);
+                    }
+
+                    const response = await fetch(aiWidgetReplyUrl, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
+                            "Accept": "application/json",
+                            "X-Requested-With": "XMLHttpRequest"
+                        },
+                        body: params
+                    });
+
+                    const contentType = response.headers.get("content-type") || "";
+
+                    if (!response.ok) {
+                        throw new Error("通信に失敗しました。status=" + response.status);
+                    }
+
+                    if (!contentType.includes("application/json")) {
+                        throw new Error("JSONではないレスポンスです。ログイン画面に飛ばされている可能性があります。");
+                    }
+
+                    const data = await response.json();
+
+                    aiWidgetBalloonText.textContent =
+                        data.reply || "AIの返答を取得できませんでした。";
+
+                    aiWidgetInput.value = "";
+
+                } catch (error) {
+                    console.error(error);
+                    aiWidgetBalloonText.textContent =
+                        "AIの返答を取得できませんでした。サーバーエラー、ログイン状態、API設定を確認してください。";
+                } finally {
+                    aiWidgetSendButton.disabled = false;
+                }
+            });
+        }
+    </script>
+
 </div>
 
 </body>
