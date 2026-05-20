@@ -31,6 +31,10 @@
             phone = #{phone}
         WHERE email = #{email}
     </update>
+    <resultMap id="UserResultMap" type="com.example.hokkaidoec.entity.User">
+        <id property="id" column="id"/>
+        <result property="email" column="email"/>
+    </resultMap>
 
 
 

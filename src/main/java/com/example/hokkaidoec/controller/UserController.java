@@ -61,10 +61,14 @@ public class UserController {
 		model.addAttribute("user", loginUser);
 
 		// 3. AIのダミーデータ（Map）
-		Map<String, Object> dummyAi = new HashMap<>();
-		dummyAi.put("level", 3);
-		//		dummyAi.put("exp", 7800);//total→ブロンズ
-		//		model.addAttribute("ai", dummyAi);
+		Map<String, Object> aiData = new HashMap<>();
+
+		// 🌟【ここを修正！】ダミーの「3」ではなく、ユーザーの rankId をレベルとしてセット
+		Integer level = loginUser.getRankId();
+		if (level == null) {
+			level = 1; // もしrankIdが設定されていなければ初期値として1にする（安全処理）
+		}
+		aiData.put("level", level);
 
 		// 🌟【ここを修正！】ユーザーの総購入金額をAIの経験値（exp）としてセットする
 		// ※ もし初期状態などでnullになる可能性がある場合は、0を代入する安全処理を入れると安心です
@@ -72,9 +76,9 @@ public class UserController {
 		if (exp == null) {
 			exp = 0; // 金額がまだ無い（null）なら0にする
 		}
-		dummyAi.put("exp", exp);
+		aiData.put("exp", exp);
 
-		model.addAttribute("ai", dummyAi);
+		model.addAttribute("ai", aiData);
 
 		// 4. 注文履歴のダミーデータ（必要であれば追加）
 		// 前回のList<Map>をここに置いておくと、注文履歴もエラーにならず表示されます！★★★★
