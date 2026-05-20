@@ -4,7 +4,27 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.example.hokkaidoec.mapper.UserMapper">
+<select id="findRankIdByTotalPurchaseAmount" resultType="java.lang.Integer">
+    SELECT
+        id
+    FROM
+        ranks
+    WHERE
+        min_amount &lt;= #{totalPurchaseAmount}
+    ORDER BY
+        min_amount DESC
+    LIMIT 1
+</select>
 
+<update id="updateTotalPurchaseAmountAndRank">
+    UPDATE
+        users
+    SET
+        total_purchase_amount = #{totalPurchaseAmount},
+        rank_id = #{rankId}
+    WHERE
+        id = #{id}
+</update>
 
 <!--  <select id="findAll" resultType="com.example.hokkaidoec.entity.User">-->
 <!--    SELECT name, email,address,phone, password,point,totalPurchaseAmount,rankId-->

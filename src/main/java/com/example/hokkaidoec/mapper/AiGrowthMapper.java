@@ -18,7 +18,9 @@ public interface AiGrowthMapper {
 
 	void updateGrowthStage(
 			@Param("userId") Integer userId,
-			@Param("growthStage") Integer growthStage);
+			@Param("growthStage") Integer growthStage,
+			@Param("name") String name,
+			@Param("charaImageUrl") String charaImageUrl);
 
 	Map<String, Object> findAiStatusByUserId(@Param("userId") Integer userId);
 }

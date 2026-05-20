@@ -51,6 +51,58 @@ public class AiService {
 		return getOrCreateAiGrowth(userId, 1);
 	}
 
+	public AiGrowth getOrCreateAiGrowthByRank(Integer userId, Integer rankId) {
+		if (userId == null) {
+			return createDefaultAiGrowth();
+		}
+
+		Integer growthStage = normalizeGrowthStage(rankId);
+
+		AiGrowth aiGrowth = aiGrowthMapper.findByUserId(userId);
+
+		if (aiGrowth == null) {
+			AiGrowth newAiGrowth = new AiGrowth();
+			newAiGrowth.setUserId(userId);
+			newAiGrowth.setName(createAiNameByStage(growthStage));
+			newAiGrowth.setGrowthStage(growthStage);
+			newAiGrowth.setPersonality(getRandomPersonality());
+			newAiGrowth.setUpdatedAt(LocalDateTime.now());
+			newAiGrowth.setCharaImageUrl(createImageUrlByStage(growthStage));
+
+			aiGrowthMapper.insert(newAiGrowth);
+
+			AiGrowth createdAiGrowth = aiGrowthMapper.findByUserId(userId);
+
+			if (createdAiGrowth == null) {
+				return newAiGrowth;
+			}
+
+			return createdAiGrowth;
+		}
+
+		Integer currentStage = normalizeGrowthStage(aiGrowth.getGrowthStage());
+		String correctImageUrl = createImageUrlByStage(growthStage);
+		String correctName = createAiNameByStage(growthStage);
+
+		if (!currentStage.equals(growthStage)
+				|| aiGrowth.getCharaImageUrl() == null
+				|| !aiGrowth.getCharaImageUrl().equals(correctImageUrl)) {
+
+			aiGrowthMapper.updateGrowthStage(
+					userId,
+					growthStage,
+					correctName,
+					correctImageUrl);
+
+			aiGrowth.setGrowthStage(growthStage);
+			aiGrowth.setName(correctName);
+			aiGrowth.setCharaImageUrl(correctImageUrl);
+			aiGrowth.setUpdatedAt(LocalDateTime.now());
+		}
+
+		return aiGrowth;
+	}
+
 	/**
 	 * ユーザーに対応するAI成長データを取得する。
 	 * なければランクに応じたAIキャラを自動作成する。

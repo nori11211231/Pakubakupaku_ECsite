@@ -3,14 +3,17 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
+
   <link rel="stylesheet" th:href="@{/css/productdetil.css}">
+  <link rel="stylesheet" th:href="@{/css/ai.css}">
+
   <title>商品詳細 - 北海道EC</title>
 </head>
 
 <body>
   <div class="container" id="product-page">
 
-    <header th:replace="fragments/_header :: header"></header>
+    <header th:replace="~{fragments/_header :: header}"></header>
 
     <main>
 
@@ -41,7 +44,9 @@
           <p class="desc">[[${product.description}]]</p>
 
           <div class="price-stock">
-            <div class="price">¥[[${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')}]]円</div>
+            <div class="price">
+              ¥[[${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')}]]円
+            </div>
             <div class="stock">在庫：[[${product.stock}]]</div>
           </div>
 
@@ -57,9 +62,30 @@
 
           <p class="note">※ 配送・支払いはカートで選択してください。</p>
 
-          <div class="ai-box">
-            <h3>AIコンシェルジュ</h3>
-            <p>おすすめ情報を読み込み中...</p>
+          <!-- ========================= -->
+          <!-- 商品詳細専用AIコメント -->
+          <!-- ========================= -->
+          <div class="ai-box product-ai-box">
+            <div class="product-ai-head">
+              <img
+                class="product-ai-image"
+                th:src="${aiCharaImageUrl}"
+                alt="AIコンシェルジュ"
+              >
+
+              <div>
+                <h3>
+                  <span th:text="${aiName}">AIコンシェルジュ</span>
+                </h3>
+                <p class="product-ai-label">この商品について案内します</p>
+              </div>
+            </div>
+
+            <p
+              class="product-ai-message"
+              th:text="${productAiMessage != null ? productAiMessage : 'この商品の特徴やおすすめポイントを案内します。'}">
+              この商品の特徴やおすすめポイントを案内します。
+            </p>
           </div>
         </div>
       </div>
@@ -143,15 +169,17 @@
 
           <p th:text="${review.comment}"></p>
 
-          <small class="text-muted" th:text="${#temporals.format(review.createdAt, 'yyyy/MM/dd HH:mm')}"></small>
+          <small class="text-muted"
+                 th:text="${#temporals.format(review.createdAt, 'yyyy/MM/dd HH:mm')}">
+          </small>
         </div>
       </div>
 
     </main>
 
-  </div> <!-- container をここで閉じる（元の構造） -->
+  </div>
 
-  <footer th:replace="fragments/_footer :: footer"></footer>
+  <footer th:replace="~{fragments/_footer :: footer}"></footer>
 
   <!-- cartItems があるときだけ表示 -->
   <a th:if="${session.cartItems != null and #lists.size(session.cartItems) > 0}"
@@ -159,6 +187,9 @@
      class="floating-checkout-btn">
     注文を確認する
   </a>
+
+  <!-- 全画面共通AIウィジェット -->
+  <div th:replace="~{fragments/ai-widget :: aiWidget}"></div>
 
   <!-- JS（数量変更・カート追加） -->
   <script th:inline="javascript">
@@ -171,6 +202,7 @@
       decBtn.addEventListener('click', ()=> {
         qtyInput.value = Math.max(1, parseInt(qtyInput.value || 1, 10) - 1);
       });
+
       incBtn.addEventListener('click', ()=> {
         qtyInput.value = Math.max(1, parseInt(qtyInput.value || 1, 10) + 1);
       });
