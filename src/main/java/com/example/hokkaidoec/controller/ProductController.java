@@ -17,6 +17,7 @@ import com.example.hokkaidoec.entity.User;
 import com.example.hokkaidoec.mapper.CategoryMapper;
 import com.example.hokkaidoec.mapper.ProductsMapper;
 import com.example.hokkaidoec.mapper.RegionMapper;
+import com.example.hokkaidoec.service.OrderService;
 import com.example.hokkaidoec.service.ReviewService;
 
 @Controller
@@ -26,16 +27,19 @@ public class ProductController {
 	private final RegionMapper regionMapper;
 	private final CategoryMapper categoryMapper;
 	private final ReviewService reviewService; // ★追加
+	private final OrderService orderService;
 
 	public ProductController(
 			ProductsMapper productMapper,
 			CategoryMapper categoryMapper,
 			RegionMapper regionMapper,
-			ReviewService reviewService) { // ★追加
+			ReviewService reviewService,
+			OrderService orderService) { // ★追加
 		this.productMapper = productMapper;
 		this.regionMapper = regionMapper;
 		this.categoryMapper = categoryMapper;
 		this.reviewService = reviewService; // ★追加
+		this.orderService = orderService;
 	}
 
 	@GetMapping("/products/{productId}")
@@ -59,16 +63,18 @@ public class ProductController {
 		model.addAttribute("product", product);
 		model.addAttribute("category", category);
 		model.addAttribute("region", region);
-
-		// ★★★ canReview を必ずセット（null 回避）★★★
 		Integer userId = (loginUser != null) ? loginUser.getId() : null;
 		boolean canReview = false;
+		Integer orderId = null;
 
 		if (userId != null) {
-			canReview = reviewService.canUserReview(userId, productId);
+			// 購入済みなら orderId が返る
+			orderId = orderService.getOrderIdIfPurchased(userId, productId);
+			canReview = (orderId != null);
 		}
 
 		model.addAttribute("canReview", canReview);
+		model.addAttribute("orderId", orderId);
 
 		return "product-detail";
 	}
