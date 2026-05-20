@@ -16,6 +16,7 @@ import com.example.hokkaidoec.entity.Category;
 import com.example.hokkaidoec.entity.Product;
 import com.example.hokkaidoec.entity.Region;
 import com.example.hokkaidoec.entity.Review;
+import com.example.hokkaidoec.entity.User;
 import com.example.hokkaidoec.service.CategoryService;
 import com.example.hokkaidoec.service.OrderService;
 import com.example.hokkaidoec.service.ProductService;
@@ -105,19 +106,18 @@ public class ReviewController {
 			@RequestParam("comment") String comment,
 			HttpSession session) {
 
-		Integer userId = (Integer) session.getAttribute("userId");
+		User loginUser = (User) session.getAttribute("loginUser");
+		Integer userId = (loginUser != null) ? loginUser.getId() : null;
 
 		if (userId == null) {
 			return "redirect:/login";
 		}
 
-		// 購入済みチェック
 		Integer purchasedOrderId = orderService.getOrderIdIfPurchased(userId, productId);
 		if (purchasedOrderId == null) {
 			return "redirect:/products/" + productId + "?error=not_purchased";
 		}
 
-		// レビュー作成
 		Review review = new Review();
 		review.setUserId(userId);
 		review.setProductId(productId);
@@ -129,4 +129,5 @@ public class ReviewController {
 
 		return "redirect:/products/" + productId + "#reviews";
 	}
+
 }
