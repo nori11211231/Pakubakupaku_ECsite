@@ -2,9 +2,29 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>注文履歴</title>
 </head>
 <body>
+
+<h2>注文履歴</h2>
+
+<table border="1">
+    <tr>
+        <th>注文ID</th>
+        <th>注文日</th>
+        <th>合計金額</th>
+        <th>詳細</th>
+    </tr>
+
+    <tr th:each="order : ${orderList}">
+        <td th:text="${order.id}"></td>
+        <td th:text="${order.orderDate}"></td>
+        <td th:text="${order.totalAmount} + '円'"></td>
+        <td>
+            <a th:href="@{'/orders/' + ${order.id}}">詳細を見る</a>
+        </td>
+    </tr>
+</table>
 
 </body>
 </html>

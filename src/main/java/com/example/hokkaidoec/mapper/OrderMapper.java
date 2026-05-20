@@ -1,6 +1,7 @@
 package com.example.hokkaidoec.mapper;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -18,4 +19,11 @@ public interface OrderMapper {
 
 	// ユーザーIDから注文履歴を取得する
 	List<Order> findByUserId(@Param("userId") Integer userId);
+
+	//注文詳細Mapは何かわからないから聞く
+	List<Map<String, Object>> findDetailsByOrderId(int orderId);
+
+	//注文したやつを一件取得
+	Order findById(int orderId);
+
 }
