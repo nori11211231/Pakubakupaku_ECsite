@@ -16,18 +16,24 @@ import com.example.hokkaidoec.entity.GamePlayHistory;
 import com.example.hokkaidoec.entity.User;
 import com.example.hokkaidoec.form.GameForm;
 import com.example.hokkaidoec.mapper.GamePlayHistoryMapper;
+import com.example.hokkaidoec.mapper.UserMapper;
 
 @Controller
 public class GameController {
 
 	private final GamePlayHistoryMapper gamePlayHistoryMapper;
 
+	private final UserMapper userMapper;
+
 	private final Random random = new Random();
 
 	public GameController(
-			GamePlayHistoryMapper gamePlayHistoryMapper) {
+			GamePlayHistoryMapper gamePlayHistoryMapper,
+			UserMapper userMapper) {
 
 		this.gamePlayHistoryMapper = gamePlayHistoryMapper;
+
+		this.userMapper = userMapper;
 	}
 
 	// ガチャ画面
@@ -36,11 +42,9 @@ public class GameController {
 			Model model,
 			HttpSession session) {
 
-		// セッション確認
 		User loginUser = (User) session.getAttribute(
 				"loginUser");
 
-		// 未ログイン
 		if (loginUser == null) {
 
 			return "redirect:/login";
@@ -50,7 +54,6 @@ public class GameController {
 				"gameForm",
 				new GameForm());
 
-		// 本物のポイント表示
 		model.addAttribute(
 				"currentPoint",
 				loginUser.getPoint());
@@ -69,11 +72,9 @@ public class GameController {
 			Model model,
 			HttpSession session) {
 
-		// セッション確認
 		User loginUser = (User) session.getAttribute(
 				"loginUser");
 
-		// 未ログイン
 		if (loginUser == null) {
 
 			return "redirect:/login";
@@ -135,6 +136,11 @@ public class GameController {
 				+ result.getPointChange();
 
 		loginUser.setPoint(
+				currentPoint);
+
+		// DB更新
+		userMapper.updatePoint(
+				userId,
 				currentPoint);
 
 		// session更新
@@ -220,11 +226,9 @@ public class GameController {
 			Model model,
 			HttpSession session) {
 
-		// セッション確認
 		User loginUser = (User) session.getAttribute(
 				"loginUser");
 
-		// 未ログイン
 		if (loginUser == null) {
 
 			return "redirect:/login";
@@ -337,6 +341,11 @@ public class GameController {
 		loginUser.setPoint(
 				currentPoint);
 
+		// DB更新
+		userMapper.updatePoint(
+				userId,
+				currentPoint);
+
 		// session更新
 		session.setAttribute(
 				"loginUser",
@@ -408,7 +417,6 @@ public class GameController {
 				"user",
 				loginUser);
 
-		// 最初の動画
 		if (!results.isEmpty()) {
 
 			model.addAttribute(
@@ -426,11 +434,9 @@ public class GameController {
 			Model model,
 			HttpSession session) {
 
-		// セッション確認
 		User loginUser = (User) session.getAttribute(
 				"loginUser");
 
-		// 未ログイン
 		if (loginUser == null) {
 
 			return "redirect:/login";

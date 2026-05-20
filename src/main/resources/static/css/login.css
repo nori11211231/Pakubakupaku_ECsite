@@ -1,0 +1,808 @@
+/* =========================================
+   REGISTER PAGE ONLY CSS
+   ファイル名: register.css
+========================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Noto+Serif+JP:wght@300;400;500;700&display=swap');
+
+/* =========================
+   RESET
+========================= */
+
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+/* =========================
+   BODY
+========================= */
+
+.auth-body {
+
+	min-height: 100vh;
+
+	background:
+		linear-gradient(180deg,
+			#f7f3ed 0%,
+			#f1ece4 100%);
+
+	font-family:
+		'Noto Serif JP',
+		serif;
+
+	color: #111;
+
+	overflow-x: hidden;
+}
+
+/* =========================
+   MAIN
+========================= */
+
+.auth-container {
+
+	width: 100%;
+
+	min-height: 100vh;
+
+	display: flex;
+
+	align-items: center;
+
+	justify-content: center;
+
+	padding: 80px 20px;
+}
+
+/* =========================
+   CARD
+========================= */
+
+.auth-card {
+
+	width: 100%;
+
+	max-width: 720px;
+
+	padding: 64px;
+
+	border-radius: 40px;
+
+	background:
+		rgba(255, 255, 255, 0.72);
+
+	border:
+		1px solid rgba(255, 255, 255, 0.8);
+
+	backdrop-filter: blur(16px);
+
+	box-shadow:
+		0 20px 60px rgba(0, 0, 0, 0.06);
+
+	position: relative;
+
+	overflow: hidden;
+}
+
+/* LIGHT */
+
+.auth-card::before {
+
+	content: "";
+
+	position: absolute;
+
+	top: -120px;
+	right: -120px;
+
+	width: 280px;
+	height: 280px;
+
+	background:
+		radial-gradient(circle,
+			rgba(255, 255, 255, 0.55),
+			transparent 70%);
+
+	pointer-events: none;
+}
+
+/* =========================
+   HEADER
+========================= */
+
+.auth-head {
+
+	position: relative;
+
+	z-index: 2;
+
+	margin-bottom: 42px;
+}
+
+/* SUBTITLE */
+
+.auth-subtitle {
+
+	font-size: 11px;
+
+	letter-spacing: 4px;
+
+	color: #8d857b;
+
+	margin-bottom: 18px;
+}
+
+/* TITLE */
+
+.auth-head h1 {
+
+	font-size: 56px;
+
+	line-height: 1;
+
+	font-weight: 600;
+
+	letter-spacing: -2px;
+
+	font-family:
+		'Cormorant Garamond',
+		serif;
+
+	margin-bottom: 20px;
+}
+
+/* DESCRIPTION */
+
+.auth-head p {
+
+	font-size: 14px;
+
+	line-height: 2;
+
+	color: #666;
+
+	max-width: 500px;
+}
+
+/* =========================
+   ERROR
+========================= */
+
+.auth-error {
+
+	padding: 16px 18px;
+
+	margin-bottom: 28px;
+
+	border-radius: 18px;
+
+	background:
+		rgba(255, 80, 80, 0.08);
+
+	border:
+		1px solid rgba(255, 80, 80, 0.12);
+
+	font-size: 13px;
+
+	color: #cc3a3a;
+}
+
+/* =========================
+   FORM
+========================= */
+
+.auth-form {
+
+	display: grid;
+
+	grid-template-columns:
+		1fr 1fr;
+
+	gap: 26px;
+}
+
+/* FULL WIDTH */
+
+.full-width {
+
+	grid-column:
+		1 / -1;
+}
+
+/* =========================
+   GROUP
+========================= */
+
+.form-group {
+
+	display: flex;
+
+	flex-direction: column;
+
+	gap: 12px;
+}
+
+/* LABEL */
+
+.form-group label {
+
+	font-size: 13px;
+
+	letter-spacing: 1px;
+
+	color: #555;
+}
+
+/* INPUT */
+
+.form-group input {
+
+	height: 60px;
+
+	padding: 0 20px;
+
+	border:
+		1px solid #ddd6cb;
+
+	border-radius: 20px;
+
+	background:
+		rgba(255, 255, 255, 0.82);
+
+	font-size: 15px;
+
+	font-family:
+		'Noto Serif JP',
+		serif;
+
+	outline: none;
+
+	transition: 0.25s;
+}
+
+/* ADDRESS */
+
+.form-group input.address {
+
+	height: 64px;
+}
+
+/* FOCUS */
+
+.form-group input:focus {
+
+	background: white;
+
+	border:
+		1px solid #c5ae8d;
+
+	box-shadow:
+		0 0 0 4px rgba(197, 174, 141, 0.08);
+}
+
+/* BUTTON */
+
+.auth-button {
+
+	grid-column:
+		1 / -1;
+
+	width: 100%;
+
+	height: 60px;
+
+	margin-top: 8px;
+
+	border: none;
+
+	border-radius: 22px;
+
+	background: #111;
+
+	color: white;
+
+	font-size: 15px;
+
+	font-family:
+		'Noto Serif JP',
+		serif;
+
+	cursor: pointer;
+
+	transition: 0.25s;
+}
+
+.auth-button:hover {
+
+	transform:
+		translateY(-2px);
+
+	box-shadow:
+		0 14px 30px rgba(0, 0, 0, 0.08);
+
+	opacity: 0.94;
+}
+
+/* =========================
+   ERROR TEXT
+========================= */
+
+.field-error {
+
+	font-size: 12px;
+
+	color: #cc3a3a;
+}
+
+/* =========================
+   FOOTER
+========================= */
+
+.auth-footer {
+
+	margin-top: 34px;
+
+	display: flex;
+
+	justify-content: space-between;
+
+	align-items: center;
+
+	font-size: 13px;
+
+	color: #777;
+}
+
+.auth-footer a {
+
+	text-decoration: none;
+
+	color: #111;
+
+	font-weight: 600;
+
+	transition: 0.25s;
+}
+
+.auth-footer a:hover {
+
+	op
+	/* =========================================
+	   REGISTER PAGE ONLY CSS
+	   ファイル名: register.css
+	========================================= */
+
+	@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Noto+Serif+JP:wght@300;400;500;700&display=swap');
+
+	/* =========================
+	   RESET
+	========================= */
+
+	* {
+		margin: 0;
+		padding: 0;
+		box-sizing: border-box;
+	}
+
+	/* =========================
+	   BODY
+	========================= */
+
+	.auth-body {
+
+		min-height: 100vh;
+
+		background:
+			linear-gradient(180deg,
+				#f7f3ed 0%,
+				#f1ece4 100%);
+
+		font-family:
+			'Noto Serif JP',
+			serif;
+
+		color: #111;
+
+		overflow-x: hidden;
+	}
+
+	/* =========================
+	   MAIN
+	========================= */
+
+	.auth-container {
+
+		width: 100%;
+
+		min-height: 100vh;
+
+		display: flex;
+
+		align-items: center;
+
+		justify-content: center;
+
+		padding: 80px 20px;
+	}
+
+	/* =========================
+	   CARD
+	========================= */
+
+	.auth-card {
+
+		width: 100%;
+
+		max-width: 720px;
+
+		padding: 64px;
+
+		border-radius: 40px;
+
+		background:
+			rgba(255, 255, 255, 0.72);
+
+		border:
+			1px solid rgba(255, 255, 255, 0.8);
+
+		backdrop-filter: blur(16px);
+
+		box-shadow:
+			0 20px 60px rgba(0, 0, 0, 0.06);
+
+		position: relative;
+
+		overflow: hidden;
+	}
+
+	/* LIGHT */
+
+	.auth-card::before {
+
+		content: "";
+
+		position: absolute;
+
+		top: -120px;
+		right: -120px;
+
+		width: 280px;
+		height: 280px;
+
+		background:
+			radial-gradient(circle,
+				rgba(255, 255, 255, 0.55),
+				transparent 70%);
+
+		pointer-events: none;
+	}
+
+	/* =========================
+	   HEADER
+	========================= */
+
+	.auth-head {
+
+		position: relative;
+
+		z-index: 2;
+
+		margin-bottom: 42px;
+	}
+
+	/* SUBTITLE */
+
+	.auth-subtitle {
+
+		font-size: 11px;
+
+		letter-spacing: 4px;
+
+		color: #8d857b;
+
+		margin-bottom: 18px;
+	}
+
+	/* TITLE */
+
+	.auth-head h1 {
+
+		font-size: 56px;
+
+		line-height: 1;
+
+		font-weight: 600;
+
+		letter-spacing: -2px;
+
+		font-family:
+			'Cormorant Garamond',
+			serif;
+
+		margin-bottom: 20px;
+	}
+
+	/* DESCRIPTION */
+
+	.auth-head p {
+
+		font-size: 14px;
+
+		line-height: 2;
+
+		color: #666;
+
+		max-width: 500px;
+	}
+
+	/* =========================
+	   ERROR
+	========================= */
+
+	.auth-error {
+
+		padding: 16px 18px;
+
+		margin-bottom: 28px;
+
+		border-radius: 18px;
+
+		background:
+			rgba(255, 80, 80, 0.08);
+
+		border:
+			1px solid rgba(255, 80, 80, 0.12);
+
+		font-size: 13px;
+
+		color: #cc3a3a;
+	}
+
+	/* =========================
+	   FORM
+	========================= */
+
+	.auth-form {
+
+		display: grid;
+
+		grid-template-columns:
+			1fr 1fr;
+
+		gap: 26px;
+	}
+
+	/* FULL WIDTH */
+
+	.full-width {
+
+		grid-column:
+			1 / -1;
+	}
+
+	/* =========================
+	   GROUP
+	========================= */
+
+	.form-group {
+
+		display: flex;
+
+		flex-direction: column;
+
+		gap: 12px;
+	}
+
+	/* LABEL */
+
+	.form-group label {
+
+		font-size: 13px;
+
+		letter-spacing: 1px;
+
+		color: #555;
+	}
+
+	/* INPUT */
+
+	.form-group input {
+
+		height: 60px;
+
+		padding: 0 20px;
+
+		border:
+			1px solid #ddd6cb;
+
+		border-radius: 20px;
+
+		background:
+			rgba(255, 255, 255, 0.82);
+
+		font-size: 15px;
+
+		font-family:
+			'Noto Serif JP',
+			serif;
+
+		outline: none;
+
+		transition: 0.25s;
+	}
+
+	/* ADDRESS */
+
+	.form-group input.address {
+
+		height: 64px;
+	}
+
+	/* FOCUS */
+
+	.form-group input:focus {
+
+		background: white;
+
+		border:
+			1px solid #c5ae8d;
+
+		box-shadow:
+			0 0 0 4px rgba(197, 174, 141, 0.08);
+	}
+
+	/* BUTTON */
+
+	.auth-button {
+
+		grid-column:
+			1 / -1;
+
+		width: 100%;
+
+		height: 60px;
+
+		margin-top: 8px;
+
+		border: none;
+
+		border-radius: 22px;
+
+		background: #111;
+
+		color: white;
+
+		font-size: 15px;
+
+		font-family:
+			'Noto Serif JP',
+			serif;
+
+		cursor: pointer;
+
+		transition: 0.25s;
+	}
+
+	.auth-button:hover {
+
+		transform:
+			translateY(-2px);
+
+		box-shadow:
+			0 14px 30px rgba(0, 0, 0, 0.08);
+
+		opacity: 0.94;
+	}
+
+	/* =========================
+	   ERROR TEXT
+	========================= */
+
+	.field-error {
+
+		font-size: 12px;
+
+		color: #cc3a3a;
+	}
+
+	/* =========================
+	   FOOTER
+	========================= */
+
+	.auth-footer {
+
+		margin-top: 34px;
+
+		display: flex;
+
+		justify-content: space-between;
+
+		align-items: center;
+
+		font-size: 13px;
+
+		color: #777;
+	}
+
+	.auth-footer a {
+
+		text-decoration: none;
+
+		color: #111;
+
+		font-weight: 600;
+
+		transition: 0.25s;
+	}
+
+	.auth-footer a:hover {
+
+		opacity: 0.7;
+	}
+
+	/* =========================
+	   MOBILE
+	========================= */
+
+	@media(max-width:768px) {
+
+		.auth-card {
+
+			padding: 40px 26px;
+		}
+
+		.auth-form {
+
+			grid-template-columns: 1fr;
+		}
+
+		.auth-head h1 {
+
+			font-size: 42px;
+		}
+
+		.auth-footer {
+
+			flex-direction: column;
+
+			gap: 12px;
+
+			align-items: flex-start;
+		}
+	}
+
+	acity: 0.7;
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media(max-width:768px) {
+
+	.auth-card {
+
+		padding: 40px 26px;
+	}
+
+	.auth-form {
+
+		grid-template-columns: 1fr;
+	}
+
+	.auth-head h1 {
+
+		font-size: 42px;
+	}
+
+	.auth-footer {
+
+		flex-direction: column;
+
+		gap: 12px;
+
+		align-items: flex-start;
+	}
+}
