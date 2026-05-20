@@ -143,7 +143,7 @@
 
 			</a>
 
-			<a th:href="@{/orders}">
+			<a th:href="@{/order/history}">
 
 				注文履歴
 
@@ -464,8 +464,10 @@
 			HOKKAIDO. © 2026
 
 		</footer>
+		
 
 	</div>
+	<div th:replace="~{fragments/ai-widget :: aiWidget}"></div>
 
 </body>
 

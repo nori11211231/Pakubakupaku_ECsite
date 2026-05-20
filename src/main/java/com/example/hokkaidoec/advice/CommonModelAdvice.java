@@ -5,6 +5,7 @@ import java.lang.reflect.Method;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
@@ -23,27 +24,18 @@ public class CommonModelAdvice {
 		this.aiService = aiService;
 	}
 
-	@ModelAttribute("aiGrowth")
-	public AiGrowth addAiGrowth(HttpSession session) {
-		return getAiGrowth(session);
-	}
-
-	@ModelAttribute("aiName")
-	public String addAiName(HttpSession session) {
-		return getAiGrowth(session).getName();
-	}
-
-	@ModelAttribute("aiCharaImageUrl")
-	public String addAiCharaImageUrl(HttpSession session) {
-		return aiService.resolveCharaImageUrl(getAiGrowth(session));
-	}
-
-	@ModelAttribute("aiWidgetMessage")
-	public String addAiWidgetMessage(HttpServletRequest request, HttpSession session) {
-		String currentPath = request.getRequestURI();
+	@ModelAttribute
+	public void addCommonAiModel(Model model, HttpServletRequest request, HttpSession session) {
 		AiGrowth aiGrowth = getAiGrowth(session);
 
-		return aiService.createPageMessage(currentPath, aiGrowth);
+		String currentPath = request.getRequestURI();
+		String aiWidgetMessage = aiService.createPageMessage(currentPath, aiGrowth);
+
+		model.addAttribute("aiGrowth", aiGrowth);
+		model.addAttribute("aiName", aiGrowth.getName());
+		model.addAttribute("aiPersonality", aiGrowth.getPersonality());
+		model.addAttribute("aiCharaImageUrl", aiService.resolveCharaImageUrl(aiGrowth));
+		model.addAttribute("aiWidgetMessage", aiWidgetMessage);
 	}
 
 	private AiGrowth getAiGrowth(HttpSession session) {
@@ -97,6 +89,7 @@ public class CommonModelAdvice {
 				if (id instanceof Number) {
 					return ((Number) id).intValue();
 				}
+
 			} catch (Exception e) {
 				return null;
 			}

@@ -193,7 +193,7 @@ INSERT INTO ai_growth
 VALUES
 (1, 1, 'ポチ', 1, '元気', '2026-05-01 10:20:00', '/img/ai/chara_stage1.webp'),
 (2, 2, 'タマ', 2, 'やさしい', '2026-05-02 11:35:00', '/img/ai/chara_stage2.webp'),
-(3, 3, 'Temu', 3, '知的', '2026-05-09 12:45:00', '/img/ai/chara_stage3.webp'),
+(3, 3, 'dog', 3, '知的', '2026-05-09 12:45:00', '/img/ai/chara_stage3.webp'),
 (4, 4, '佐々木', 4, '上品', '2026-05-10 16:00:00', '/img/ai/chara_stage4.webp'),
 (5, 5, '田中どんぐり', 1, 'のんびり', '2026-05-05 09:15:00', '/img/ai/chara_stage1.webp'),
 (6, 6, '佐藤ちゃん', 2, '明るい', '2026-05-06 13:05:00', '/img/ai/chara_stage2.webp'),
