@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import com.example.hokkaidoec.entity.Rank;
 import com.example.hokkaidoec.entity.User;
 import com.example.hokkaidoec.form.UserForm;
 import com.example.hokkaidoec.service.UserService;
@@ -71,8 +72,21 @@ public class UserController {
 		// HTML側の `${user.name}` や `${user.email}` を読みに行きます
 		model.addAttribute("user", loginUser);
 
+		String rankName = "通常ポイント";
+
+		// 🌟【修正】ログインユーザーがランクIDを持っているかチェック
+		if (loginUser.getRankId() != null) {
+			// userService（中身はRankMapper）を使って、DBから該当するランクの「実体（インスタンス）」を取得する
+			Rank currentRank = userService.findRankById(loginUser.getRankId());
+
+			// DBから無事にデータが取れたら、そのオブジェクトから名前を取り出す
+			if (currentRank != null) {
+				rankName = currentRank.getRankName(); // 💡 クラス名ではなく、取得した「currentRank」から呼び出します！
+			}
+		}
+
 		Map<String, Object> pointData = new HashMap<>();
-		pointData.put("name", "通常ポイント"); // HTMLの ${point.name} で表示される
+		pointData.put("name", rankName); // HTMLの ${point.name} で表示される
 		model.addAttribute("point", pointData);
 
 		// 3. AIのダミーデータ（Map）
@@ -99,5 +113,28 @@ public class UserController {
 		// 前回のList<Map>をここに置いておくと、注文履歴もエラーにならず表示されます！★★★★
 
 		return "mypage";
+	}
+
+	@GetMapping("/mypage/minigame-history")
+	public String showMinigameHistory(Model model, HttpSession session) {
+		// 1. セッションからログインユーザーを取得
+		User loginUser = (User) session.getAttribute("loginUser");
+
+		// セッションが空（未ログイン）ならログイン画面へリダイレクト
+		if (loginUser == null) {
+			return "redirect:/login";
+		}
+
+		// 2. 画面表示に必要なユーザー情報をModelにセット
+		model.addAttribute("user", loginUser);
+
+		// 3. 【タスク】ミニゲーム履歴のデータ取得
+		// 今はまだダミー、もしくはuserService経由でDBからリストを取得する処理をここに書きます
+		// 例: List<MinigameHistory> historyList = userService.getMinigameHistoryByUserId(loginUser.getId());
+		// model.addAttribute("historyList", historyList);
+
+		// 4. 表示するHTML（Thymeleafテンプレート）の名前を返す
+		// src/main/resources/templates/minigame-history.html を読み込みます
+		return "minigame-history";
 	}
 }
