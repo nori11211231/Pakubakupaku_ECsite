@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes; // ★追加：リダイレクト用クラス
 
 import com.example.hokkaidoec.entity.PointHistory;
 import com.example.hokkaidoec.entity.User;
@@ -50,6 +51,18 @@ public class PointController {
 		model.addAttribute("currentPoint", currentUser.getPoint());
 		model.addAttribute("pointHistoryList", latestHistory);
 
+		// ★追加：本日すでにミッションをクリアしているかどうかの判定
+		boolean isAdCleared = latestHistory.stream()
+				.anyMatch(h -> "広告視聴".equals(h.getReason())
+						&& h.getCreatedAt().toLocalDate().equals(java.time.LocalDate.now()));
+		boolean isShareCleared = latestHistory.stream()
+				.anyMatch(h -> "X共有".equals(h.getReason())
+						&& h.getCreatedAt().toLocalDate().equals(java.time.LocalDate.now()));
+
+		model.addAttribute("isAdCleared", isAdCleared);
+		model.addAttribute("isShareCleared", isShareCleared);
+		// ★ここまで追加
+
 		List<Map<String, Object>> missions = new ArrayList<>();
 
 		Map<String, Object> adMission = new HashMap<>();
@@ -75,7 +88,7 @@ public class PointController {
 	 * 広告を見るミッション
 	 */
 	@PostMapping("/points/mission/ad")
-	public String completeAdMission(HttpSession session) {
+	public String completeAdMission(HttpSession session, RedirectAttributes redirectAttributes) { // ★追加：引数にRedirectAttributes
 
 		User loginUser = (User) session.getAttribute("loginUser");
 
@@ -88,6 +101,9 @@ public class PointController {
 		User updatedUser = userMapper.findById(loginUser.getId());
 		session.setAttribute("loginUser", updatedUser);
 
+		// ★追加：リダイレクト後に1回だけ有効な演出フラグを渡す
+		redirectAttributes.addFlashAttribute("showPointEffect", true);
+
 		return "redirect:/points";
 	}
 
@@ -95,7 +111,7 @@ public class PointController {
 	 * Xで共有するミッション
 	 */
 	@PostMapping("/points/mission/share")
-	public String completeShareMission(HttpSession session) {
+	public String completeShareMission(HttpSession session, RedirectAttributes redirectAttributes) { // ★追加：引数にRedirectAttributes
 
 		User loginUser = (User) session.getAttribute("loginUser");
 
@@ -107,6 +123,9 @@ public class PointController {
 
 		User updatedUser = userMapper.findById(loginUser.getId());
 		session.setAttribute("loginUser", updatedUser);
+
+		// ★追加：リダイレクト後に1回だけ有効な演出フラグを渡す
+		redirectAttributes.addFlashAttribute("showPointEffect", true);
 
 		return "redirect:/points";
 	}

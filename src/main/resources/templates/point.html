@@ -52,6 +52,7 @@
 
 					<div class="card-body">
 
+						<!-- ★変更：広告ミッションボタンの判定化 -->
 						<div class="d-flex justify-content-between align-items-center border-bottom py-3">
 							<div>
 								<p class="mb-0 fw-bold">広告を見る</p>
@@ -59,12 +60,16 @@
 							</div>
 
 							<form th:action="@{/points/mission/ad}" method="post">
-								<button type="submit" class="btn btn-outline-primary btn-sm">
+								<button type="submit" class="btn btn-sm" 
+										th:classappend="${isAdCleared} ? 'btn-secondary' : 'btn-outline-primary'"
+										th:disabled="${isAdCleared}"
+										th:text="${isAdCleared} ? '挑戦済み' : 'GET'">
 									GET
 								</button>
 							</form>
 						</div>
 
+						<!-- ★変更：X共有ミッションボタンの判定化 -->
 						<div class="d-flex justify-content-between align-items-center border-bottom py-3">
 							<div>
 								<p class="mb-0 fw-bold">Xで共有する</p>
@@ -72,7 +77,10 @@
 							</div>
 
 							<form th:action="@{/points/mission/share}" method="post">
-								<button type="submit" class="btn btn-outline-primary btn-sm">
+								<button type="submit" class="btn btn-sm" 
+										th:classappend="${isShareCleared} ? 'btn-secondary' : 'btn-outline-primary'"
+										th:disabled="${isShareCleared}"
+										th:text="${isShareCleared} ? '挑戦済み' : '挑戦'">
 									挑戦
 								</button>
 							</form>
@@ -125,7 +133,50 @@
 			</div>
 		</div>
 
+		<!-- ★追加：ミッション達成直後のリロード時のみ表示される演出用HTML -->
+		<div th:if="${showPointEffect}" id="pure-css-overlay">
+			<div class="pure-css-text">ポイント獲得！！</div>
+		</div>
+
 	</main>
+
+	<!-- ★追加：演出用のCSS（JavaScriptなしで自動消滅させるアニメーション設定） -->
+	<style>
+	/* 全画面を覆う黒い背景レイヤー */
+	#pure-css-overlay {
+		position: fixed;
+		top: 0; left: 0;
+		width: 100vw; height: 100vh;
+		background: rgba(0, 0, 0, 0.7);
+		display: flex; justify-content: center; align-items: center;
+		z-index: 9999;
+		/* 3秒かけてアニメーション（再生後は最後の状態を維持） */
+		animation: fadeOutOverlay 3.0s forwards;
+	}
+
+	/* 中央の大きな「ポイント獲得」の文字 */
+	.pure-css-text {
+		color: #fffb00;
+		font-size: 4rem;
+		font-weight: bold;
+		text-shadow: 0 0 20px #ff6600;
+		/* 文字が飛び出してくるようなアニメーション */
+		animation: zoomInText 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+	}
+
+	/* 背景が自動的にフワッと消え、後ろのボタンを触れるようにする設定 */
+	@keyframes fadeOutOverlay {
+		0% { opacity: 1; pointer-events: auto; }
+		80% { opacity: 1; pointer-events: auto; }   /* 2.4秒間はしっかり表示 */
+		100% { opacity: 0; pointer-events: none; } /* 残り0.6秒で消滅、クリックも透過 */
+	}
+
+	/* 文字のズームアニメーション設定 */
+	@keyframes zoomInText {
+		0% { transform: scale(0.3); }
+		100% { transform: scale(1.0); }
+	}
+	</style>
 
 	<div th:replace="~{fragments/_footer :: footer}"></div>
 
