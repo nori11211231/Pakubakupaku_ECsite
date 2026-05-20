@@ -114,4 +114,27 @@ public class UserController {
 
 		return "mypage";
 	}
+
+	@GetMapping("/mypage/minigame-history")
+	public String showMinigameHistory(Model model, HttpSession session) {
+		// 1. セッションからログインユーザーを取得
+		User loginUser = (User) session.getAttribute("loginUser");
+
+		// セッションが空（未ログイン）ならログイン画面へリダイレクト
+		if (loginUser == null) {
+			return "redirect:/login";
+		}
+
+		// 2. 画面表示に必要なユーザー情報をModelにセット
+		model.addAttribute("user", loginUser);
+
+		// 3. 【タスク】ミニゲーム履歴のデータ取得
+		// 今はまだダミー、もしくはuserService経由でDBからリストを取得する処理をここに書きます
+		// 例: List<MinigameHistory> historyList = userService.getMinigameHistoryByUserId(loginUser.getId());
+		// model.addAttribute("historyList", historyList);
+
+		// 4. 表示するHTML（Thymeleafテンプレート）の名前を返す
+		// src/main/resources/templates/minigame-history.html を読み込みます
+		return "minigame-history";
+	}
 }
