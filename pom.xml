@@ -93,6 +93,16 @@
         <artifactId>spring-boot-starter-validation-test</artifactId>
         <scope>test</scope>
     </dependency>
+    <dependency>
+  <groupId>org.springframework.security</groupId>
+  <artifactId>spring-security-crypto</artifactId>
+</dependency>	
+<!-- OpenAI API -->
+<dependency>
+    <groupId>com.openai</groupId>
+    <artifactId>openai-java</artifactId>
+    <version>4.36.0</version>
+</dependency>
 </dependencies>
 
 	<build>

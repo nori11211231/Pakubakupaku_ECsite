@@ -1,0 +1,1121 @@
+@charset "UTF-8";@charset "UTF-8";
+
+/* 基本変数 */
+:root{
+  --bg:#f5f5f5;
+  --card:#ffffff;
+  --muted:#555;
+  --accent:#ffb74d;
+  --shadow: 0 4px 16px rgba(0,0,0,0.06);
+  --radius:12px;
+  --container-max:1100px;
+}
+
+/*----ここから---*/
+.site-header {
+	background-color: #ffffff;
+	border-bottom: 2px solid #ccc;
+	padding: 15px 0;
+	font-family: "Noto Sans JP", sans-serif;
+}
+
+.header-inner {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	max-width: 1200px;
+	margin: 0 auto;
+	padding: 0 20px;
+}
+
+.header-logo a {
+	font-weight: bold;
+	font-size: 20px;
+	color: #003366;
+	text-decoration: none;
+}
+
+.header-search {
+	display: flex;
+	align-items: center;
+}
+
+.header-search input {
+	width: 220px;
+	padding: 6px 10px;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	font-size: 14px;
+}
+
+.header-search button {
+	margin-left: 8px;
+	background-color: #e0f0ff;
+	color: #003366;
+	border: 1px solid #003366;
+	border-radius: 4px;
+	padding: 6px 12px;
+	cursor: pointer;
+	font-weight: bold;
+}
+
+.header-search button:hover {
+	background-color: #cce0ff;
+}
+
+.header-nav a {
+	margin: 0 10px;
+	color: #c00000;
+	text-decoration: none;
+	font-size: 14px;
+}
+
+.header-nav a:hover {
+	text-decoration: underline;
+}
+
+.point-badge {
+	background-color: #ffeb99;
+	color: #000;
+	border-radius: 4px;
+	padding: 6px 10px;
+	font-weight: bold;
+	text-decoration: none;
+}
+
+.header-auth a {
+	margin-left: 10px;
+	color: #003366;
+	text-decoration: none;
+	font-size: 14px;
+}
+
+.header-auth a:hover {
+	text-decoration: underline;
+}
+
+.site-footer {
+	background-color: #f8f8f8;
+	border-top: 2px solid #ccc;
+	padding: 20px 0;
+	font-family: "Noto Sans JP", sans-serif;
+}
+
+.footer-inner {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	max-width: 1200px;
+	margin: 0 auto;
+	padding: 0 20px;
+}
+
+.footer-logo {
+	font-weight: bold;
+	color: #003366;
+	font-size: 18px;
+}
+
+.footer-nav a {
+	margin: 0 10px;
+	color: #c00000;
+	text-decoration: none;
+	font-size: 14px;
+}
+
+.footer-nav a:hover {
+	text-decoration: underline;
+}
+
+.footer-copy {
+	text-align: right;
+	font-size: 12px;
+	color: #666;
+}
+
+/*-----ここまで----*/
+
+/* ページ全体 */
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  padding:0;
+  font-family: system-ui, -apple-system, "Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif;
+  color:#222;
+  background:var(--bg);
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+}
+
+/* コンテナ */
+.map-wrap{
+  max-width:var(--container-max);
+  margin:24px auto;
+  padding:0 16px 32px;
+  background:var(--card);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+}
+
+/* 見出し */
+h2{ margin:16px 0 4px; }
+p.desc{ margin:0 0 16px; color:var(--muted); }
+
+/* SVG コンテナ
+   ここで背景画像を指定します。
+   画像は static/images/hokkaido.png に置いてください。
+*/
+.svg-container{
+  position:relative;
+  width:100%;
+  height:auto;
+  border-radius:8px;
+  overflow:hidden;
+  background-image: url('/img/hokkaido.png');
+  background-size: cover;          /* 枠に自然にフィット（トリミング） */
+  background-position: center;
+  background-repeat: no-repeat;
+  padding: 24px;                   /* SVG の周囲に余白を作る（任意） */
+}
+
+/* SVG 自体は透明背景で上に重なる */
+svg{
+  width:100%;
+  height:auto;
+  display:block;
+  background: transparent;
+}
+
+/* 地域パスの見た目 */
+.region-shape{
+/*  cursor:pointer;*/
+  stroke:#ffffff;
+  stroke-width:2;
+  transition: fill 0.15s ease, transform 0.15s ease;
+  mix-blend-mode: multiply; /* 背景画像と馴染ませる（任意） */
+}
+
+/* ホバー・フォーカス時の強調 */
+.region-shape:hover,
+.region-shape:focus{
+  fill: var(--accent) !important;
+  transform: translateY(-2px);
+  outline: none;
+}
+
+/* ラベル */
+.region-label{
+  font-size:20px;
+  fill:#ffffff;
+  text-shadow:0 0 4px rgba(0,0,0,0.6);
+  pointer-events:none;
+}
+
+/* ツールチップ */
+#tooltip{
+  position:absolute;
+  pointer-events:none;
+  background:rgba(0,0,0,0.85);
+  color:#fff;
+  padding:6px 8px;
+  border-radius:6px;
+  font-size:13px;
+  transform:translate(-50%, -120%);
+  white-space:nowrap;
+  display:none;
+  z-index:50;
+}
+/* プレートとアイコンのスタイル */
+.region-btn { cursor: pointer; outline: none; }
+.region-btn .plate {
+  fill: rgb(128, 128, 255);
+  stroke: rgb(128, 128, 255);
+  stroke-width: 1;
+  filter: drop-shadow(0 4px 10px rgb(128, 128, 255));
+}
+.region-btn .cup {
+  fill: rgb(128, 128, 255); /* カップの色 */
+  transform-origin: center;
+}
+/*文字の色*/
+.region-btn .region-text {
+  font-family: "Noto Sans JP", system-ui, -apple-system, "Hiragino Kaku Gothic ProN", sans-serif;
+  font-size: 12px;
+  fill: rgb(255, 255, 255);
+  pointer-events: none;
+}
+
+/* ホバー / フォーカス時の強調 */
+.region-btn:hover .plate,
+.region-btn:focus .plate {
+  fill: rgb(128, 128, 255);
+  stroke: rgb(128, 128, 255);
+  transform: translateY(-4px);
+}
+.region-btn:hover .cup,
+.region-btn:focus .cup {
+  transform: translateY(-2px) scale(1.02);
+}
+.region-btn:focus { outline: 3px solid rgb(128, 128, 255); }
+
+/* クリック領域を広げたい場合は rect の width/height を調整してください */
+
+
+
+
+/* レスポンシブ調整 */
+@media (max-width:900px){
+  .map-wrap{ margin:12px; padding:0 12px 24px; }
+  .svg-container{ padding:16px; }
+  .region-label{ font-size:16px; }
+}
+
+/* =========================================
+   HOKKAIDO EC
+   PREMIUM WHITE EDITORIAL UI
+========================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Noto+Serif+JP:wght@300;400;500;700&display=swap');
+
+:root {
+
+	--bg: #f5f1ea;
+
+	--card: #ffffff;
+
+	--text: #111111;
+
+	--soft: #6b6b6b;
+
+	--line: #e8e2d9;
+
+	--accent: #111111;
+
+	--shadow:
+		0 10px 40px rgba(0, 0, 0, 0.05);
+
+	--radius: 28px;
+}
+
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+html {
+	scroll-behavior: smooth;
+}
+
+body {
+
+	background:
+		linear-gradient(180deg,
+			#f7f3ed 0%,
+			#f2eee7 100%);
+
+	color: var(--text);
+
+	font-family:
+		'Noto Serif JP',
+		serif;
+
+	overflow-x: hidden;
+
+	line-height: 1.7;
+}
+
+/* =========================
+   CONTAINER
+========================= */
+
+.container {
+
+	width: 100%;
+
+	max-width: 1600px;
+
+	margin: auto;
+
+	padding: 28px 40px 80px;
+}
+
+/* =========================
+   HEADER
+========================= */
+
+header {
+
+	display: flex;
+
+	align-items: center;
+
+	justify-content: space-between;
+
+	gap: 30px;
+
+	margin-bottom: 34px;
+}
+
+/* BRAND */
+
+.brand {
+
+	display: flex;
+
+	align-items: center;
+
+	gap: 18px;
+}
+
+.brand a {
+
+	text-decoration: none;
+
+	color: inherit;
+}
+
+.brand h1 {
+
+	font-size: 42px;
+
+	font-weight: 600;
+
+	letter-spacing: -1px;
+
+	font-family:
+		'Cormorant Garamond',
+		serif;
+}
+
+/* SEARCH */
+
+.searchbar {
+
+	display: flex;
+
+	align-items: center;
+
+	gap: 10px;
+}
+
+.searchbar input[type="text"] {
+
+	width: 300px;
+
+	height: 48px;
+
+	padding: 0 16px;
+
+	border:
+		1px solid var(--line);
+
+	border-radius: 16px;
+
+	background:
+		rgba(255, 255, 255, 0.7);
+
+	font-size: 14px;
+
+	font-family:
+		'Noto Serif JP',
+		serif;
+
+	outline: none;
+
+	transition: 0.25s;
+}
+
+.searchbar input[type="text"]:focus {
+
+	border:
+		1px solid #b8a48a;
+
+	background: white;
+}
+
+.searchbar button {
+
+	height: 48px;
+
+	padding: 0 18px;
+
+	border: none;
+
+	border-radius: 16px;
+
+	background: #111;
+
+	color: white;
+
+	font-size: 13px;
+
+	font-family:
+		'Noto Serif JP',
+		serif;
+
+	cursor: pointer;
+
+	transition: 0.25s;
+}
+
+.searchbar button:hover {
+
+	opacity: 0.88;
+}
+
+/* USER */
+
+.user-area {
+
+	display: flex;
+
+	align-items: center;
+
+	gap: 14px;
+
+	font-size: 13px;
+
+	color: var(--soft);
+}
+
+/* BUTTON */
+
+.btn {
+
+	display: inline-flex;
+
+	align-items: center;
+
+	justify-content: center;
+
+	padding: 10px 16px;
+
+	border-radius: 16px;
+
+	border:
+		1px solid var(--line);
+
+	background: white;
+
+	color: #111;
+
+	text-decoration: none;
+
+	font-size: 13px;
+
+	font-family:
+		'Noto Serif JP',
+		serif;
+
+	cursor: pointer;
+
+	transition: 0.25s;
+}
+
+.btn:hover {
+
+	transform:
+		translateY(-2px);
+
+	box-shadow:
+		0 10px 20px rgba(0, 0, 0, 0.04);
+}
+
+.btn-primary {
+
+	background: #111;
+
+	color: white;
+
+	border: none;
+}
+
+/* =========================
+   NAV
+========================= */
+
+.nav-menu {
+
+	display: flex;
+
+	gap: 12px;
+
+	flex-wrap: wrap;
+
+	margin-bottom: 34px;
+}
+
+.nav-menu a {
+
+	text-decoration: none;
+
+	color: #111;
+
+	background:
+		rgba(255, 255, 255, 0.6);
+
+	border:
+		1px solid rgba(0, 0, 0, 0.05);
+
+	padding: 10px 16px;
+
+	border-radius: 16px;
+
+	font-size: 13px;
+
+	font-family:
+		'Noto Serif JP',
+		serif;
+
+	transition: 0.25s;
+}
+
+.nav-menu a:hover {
+
+	background: white;
+
+	transform:
+		translateY(-2px);
+}
+
+/* =========================
+   HERO
+========================= */
+
+.hero {
+
+	display: grid;
+
+	grid-template-columns:
+		2fr 1fr;
+
+	gap: 26px;
+
+	margin-bottom: 70px;
+}
+
+/* LEFT */
+
+.main-visual {
+
+	position: relative;
+
+	overflow: hidden;
+
+	border-radius: 36px;
+
+	padding: 90px;
+
+	min-height: 520px;
+
+	display: flex;
+
+	flex-direction: column;
+
+	justify-content: center;
+
+	background:
+		linear-gradient(135deg,
+			rgba(255, 255, 255, 0.74),
+			rgba(255, 255, 255, 0.46)),
+		url('/images/hero-bg.jpg');
+
+	background-size: cover;
+
+	background-position: center;
+
+	border:
+		1px solid rgba(255, 255, 255, 0.75);
+
+	box-shadow:
+		0 20px 60px rgba(0, 0, 0, 0.06);
+
+	backdrop-filter: blur(14px);
+}
+
+.main-visual::before {
+
+	content: "";
+
+	position: absolute;
+
+	inset: 0;
+
+	background:
+		linear-gradient(180deg,
+			rgba(255, 255, 255, 0.12),
+			rgba(255, 255, 255, 0));
+
+	pointer-events: none;
+}
+
+.main-visual h2 {
+
+	position: relative;
+
+	z-index: 2;
+
+	font-size: 88px;
+
+	line-height: 0.98;
+
+	letter-spacing: -4px;
+
+	font-weight: 600;
+
+	font-family:
+		'Cormorant Garamond',
+		'Noto Serif JP',
+		serif;
+
+	max-width: 760px;
+
+	margin-bottom: 26px;
+
+	color: #111;
+}
+
+.main-visual p {
+
+	position: relative;
+
+	z-index: 2;
+
+	font-size: 16px;
+
+	line-height: 2;
+
+	max-width: 520px;
+
+	color: #5f5f5f;
+}
+
+/* RIGHT */
+
+.side-box {
+
+	display: flex;
+
+	flex-direction: column;
+
+	gap: 20px;
+}
+
+.login-box,
+.link-box {
+
+	background:
+		rgba(255, 255, 255, 0.72);
+
+	border:
+		1px solid rgba(255, 255, 255, 0.7);
+
+	border-radius: 32px;
+
+	padding: 30px;
+
+	box-shadow:
+		0 10px 40px rgba(0, 0, 0, 0.05);
+
+	backdrop-filter: blur(14px);
+}
+
+.login-box h3,
+.link-box h3 {
+
+	font-size: 24px;
+
+	font-weight: 600;
+
+	margin-bottom: 18px;
+
+	font-family:
+		'Cormorant Garamond',
+		'Noto Serif JP',
+		serif;
+}
+
+.login-box p,
+.link-box p {
+
+	font-size: 14px;
+
+	line-height: 1.9;
+
+	color: #666;
+
+	margin-bottom: 18px;
+}
+
+.side-buttons {
+
+	display: flex;
+
+	gap: 10px;
+
+	flex-wrap: wrap;
+}
+
+/* =========================
+   SECTION TITLE
+========================= */
+
+.section-title {
+
+	display: flex;
+
+	align-items: center;
+
+	justify-content: space-between;
+
+	margin-bottom: 28px;
+}
+
+.section-title h2 {
+
+	font-size: 54px;
+
+	font-weight: 600;
+
+	font-family:
+		'Cormorant Garamond',
+		'Noto Serif JP',
+		serif;
+}
+
+/* =========================
+   PRODUCT GRID
+========================= */
+
+.product-grid {
+
+	display: grid;
+
+	grid-template-columns:
+		repeat(auto-fill, minmax(280px, 1fr));
+
+	gap: 24px;
+}
+
+/* CARD */
+
+.card {
+
+	background:
+		rgba(255, 255, 255, 0.75);
+
+	border:
+		1px solid rgba(255, 255, 255, 0.75);
+
+	border-radius: 32px;
+
+	overflow: hidden;
+
+	box-shadow:
+		0 10px 40px rgba(0, 0, 0, 0.05);
+
+	backdrop-filter: blur(12px);
+
+	transition: 0.3s;
+}
+
+.card:hover {
+
+	transform:
+		translateY(-6px);
+
+	box-shadow:
+		0 18px 50px rgba(0, 0, 0, 0.08);
+}
+
+/* IMAGE */
+
+.card img {
+
+	width: 100%;
+
+	height: 260px;
+
+	object-fit: cover;
+
+	display: block;
+}
+
+.no-image {
+
+	width: 100%;
+
+	height: 260px;
+
+	background: #ece7df;
+
+	display: flex;
+
+	align-items: center;
+
+	justify-content: center;
+
+	font-size: 13px;
+
+	color: #888;
+}
+
+/* BODY */
+
+.card-body {
+
+	padding: 24px;
+
+	display: flex;
+
+	flex-direction: column;
+
+	gap: 14px;
+
+	min-height: 220px;
+}
+
+.card-title {
+
+	font-size: 24px;
+
+	font-weight: 600;
+
+	line-height: 1.4;
+
+	font-family:
+		'Cormorant Garamond',
+		'Noto Serif JP',
+		serif;
+}
+
+.card-desc {
+
+	font-size: 14px;
+
+	line-height: 1.9;
+
+	color: #666;
+
+	flex: 1;
+}
+
+/* META */
+
+.card-meta {
+
+	display: flex;
+
+	align-items: center;
+
+	justify-content: space-between;
+
+	font-size: 13px;
+
+	color: #777;
+}
+
+.price {
+
+	font-size: 28px;
+
+	font-weight: 700;
+
+	color: #111;
+}
+
+/* ACTION */
+
+.card-actions {
+
+	display: flex;
+
+	gap: 10px;
+
+	margin-top: 10px;
+}
+
+.card-actions form {
+	margin: 0;
+}
+
+/* =========================
+   FOOTER
+========================= */
+
+footer {
+
+	margin-top: 90px;
+
+	padding-top: 30px;
+
+	border-top:
+		1px solid rgba(0, 0, 0, 0.08);
+
+	text-align: center;
+
+	font-size: 13px;
+
+	color: #777;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media(max-width:1100px) {
+
+	.hero {
+
+		grid-template-columns: 1fr;
+	}
+
+	.main-visual {
+
+		min-height: 420px;
+
+		padding: 60px;
+	}
+
+	.main-visual h2 {
+
+		font-size: 56px;
+	}
+}
+
+@media(max-width:768px) {
+
+	.container {
+
+		padding: 20px;
+	}
+
+	header {
+
+		flex-direction: column;
+
+		align-items: flex-start;
+	}
+
+	.searchbar {
+
+		width: 100%;
+	}
+
+	.searchbar input[type="text"] {
+
+		width: 100%;
+	}
+
+	.main-visual {
+
+		padding: 42px;
+	}
+
+	.main-visual h2 {
+
+		font-size: 42px;
+	}
+
+	.section-title h2 {
+
+		font-size: 38px;
+	}
+
+	.product-grid {
+
+		grid-template-columns: 1fr;
+	}
+}
+.ai-widget {
+    position: fixed;
+    right: 24px;
+    bottom: 24px;
+    z-index: 9999;
+    width: 280px;
+    text-align: center;
+}
+
+.ai-balloon {
+    background: #ffffff;
+    border: 2px solid #d9e8f5;
+    border-radius: 16px;
+    padding: 10px 14px;
+    margin-bottom: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+    font-size: 14px;
+    color: #333;
+    text-align: left;
+}
+
+.ai-balloon p {
+    margin: 0;
+    white-space: pre-line;
+}
+
+.ai-character {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+}
+
+.ai-character img {
+    width: 96px;
+    height: 96px;
+    object-fit: contain;
+}
+
+.ai-widget-form {
+    display: flex;
+    gap: 6px;
+    margin-top: 8px;
+    background: #ffffff;
+    padding: 8px;
+    border-radius: 999px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.16);
+}
+
+.ai-widget-form input[type="text"] {
+    flex: 1;
+    min-width: 0;
+    border: 1px solid #cbd5e1;
+    border-radius: 999px;
+    padding: 8px 10px;
+    font-size: 13px;
+}
+
+.ai-widget-form button {
+    border: none;
+    border-radius: 999px;
+    padding: 8px 12px;
+    background: #2563eb;
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.ai-widget-form button:disabled {
+    background: #94a3b8;
+    cursor: not-allowed;
+}
+
+.ai-widget-link {
+    margin-top: 6px;
+    font-size: 12px;
+}
+
+.ai-widget-link a {
+    color: #2563eb;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.ai-widget-link a:hover {
+    text-decoration: underline;
+}

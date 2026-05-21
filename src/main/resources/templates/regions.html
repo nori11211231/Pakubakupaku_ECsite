@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>北海道 地図から地域を選択</title>
+
+  <!-- 外部 CSS を読み込む -->
+  <link rel="stylesheet" th:href="@{/css/style_merged.css}">
+</head>
+<body>
+  <header th:replace="fragments/_header :: header"></header>
+
+  <div class="map-wrap">
+    <h2>地図から地域を選択</h2>
+    <p class="desc">地域をクリックすると、その地域の商品一覧ページ（並べ替え適用済み）に移動します。</p>
+
+    <!-- 背景画像北海道 -->
+    <div class="svg-container" id="svgContainer" role="region" aria-label="北海道の地域別マップ">
+      <!-- 簡略化した北海道 SVG（viewBox は 1000x1000 固定） -->
+      <svg id="hokkaidoSvg" viewBox="0 0 1000 1000" role="img" aria-label="北海道の地域別マップ">
+        <defs>
+          <linearGradient id="bgGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#006064"/>
+            <stop offset="100%" stop-color="#00897b"/>
+          </linearGradient>
+        </defs>
+
+       
+		<!-- 宗谷 -->
+		<g class="region-btn" data-region-id="10" data-region-name="宗谷" tabindex="0" role="button" transform="translate(443.2376708984375,203.3904266357422)" data-translate="443.2376708984375,203.3904266357422">
+				  <rect class="plate" x="-60" y="-36" width="120" height="40" rx="14" ry="14"></rect>
+				  <!-- カップアイコン（シンプル） -->
+				  <path class="cup" d="M-18,6 h36 a8,8 0 0 0 8,-8 v-2 a12,8 0 0 0 -12,-8 h-28 v18 z"></path>
+				  <path class="steam" d="M-6,-8 q4,-6 0,-10 M6,-8 q4,-6 0,-10" stroke-linecap="round" stroke-width="2" fill="none"></path>
+				  <text class="region-text" x="0" y="-10" text-anchor="middle" style="cursor: move;">宗谷</text>
+				</g>
+		<!-- 留萌 -->
+		<g class="region-btn" data-region-id="9" data-region-name="留萌" tabindex="0" role="button" transform="translate(371.2835693359375,330.98915100097656)" data-translate="371.2835693359375,330.98915100097656">
+				  <rect class="plate" x="-60" y="-36" width="120" height="40" rx="14" ry="14"></rect>
+				  <path class="cup" d="M-18,6 h36 a8,8 0 0 0 8,-8 v-2 a12,8 0 0 0 -12,-8 h-28 v18 z"></path>
+				  <path class="steam" d="M-6,-8 q4,-6 0,-10 M6,-8 q4,-6 0,-10" stroke-linecap="round" stroke-width="2" fill="none"></path>
+				  <text class="region-text" x="0" y="-10" text-anchor="middle" style="cursor: move;">留萌</text>
+				</g>
+
+		<!-- オホーツク -->
+		<g class="region-btn" data-region-id="11" data-region-name="オホーツク" tabindex="0" role="button" transform="translate(660.0596923828125,377.039794921875)" data-translate="660.0596923828125,377.039794921875">
+				  <rect class="plate" x="-60" y="-36" width="120" height="40" rx="14" ry="14"></rect>
+				  <path class="cup" d="M-18,6 h36 a8,8 0 0 0 8,-8 v-2 a12,8 0 0 0 -12,-8 h-28 v18 z"></path>
+				  <path class="steam" d="M-6,-8 q4,-6 0,-10 M6,-8 q4,-6 0,-10" stroke-linecap="round" stroke-width="2" fill="none"></path>
+				  <text class="region-text" x="0" y="-10" text-anchor="middle" style="cursor: move;">オホーツク</text>
+				</g>
+
+		<!-- 上川 -->
+		<g class="region-btn" data-region-id="8" data-region-name="上川" tabindex="0" role="button" transform="translate(497.9227600097656,371.28338623046875)" data-translate="497.9227600097656,371.28338623046875">
+				  <rect class="plate" x="-60" y="-36" width="120" height="40" rx="14" ry="14"></rect>
+				  <path class="cup" d="M-18,6 h36 a8,8 0 0 0 8,-8 v-2 a12,8 0 0 0 -12,-8 h-28 v18 z"></path>
+				  <path class="steam" d="M-6,-8 q4,-6 0,-10 M6,-8 q4,-6 0,-10" stroke-linecap="round" stroke-width="2" fill="none"></path>
+				  <text class="region-text" x="0" y="-10" text-anchor="middle" style="cursor: move;">上川</text>
+				</g>
+		<!-- 空知 -->
+		<g class="region-btn" data-region-id="1" data-region-name="空知" tabindex="0" role="button" transform="translate(467.2224426269531,461.46612548828125)" data-translate="467.2224426269531,461.46612548828125">
+				  <rect class="plate" x="-60" y="-36" width="120" height="40" rx="14" ry="14"></rect>
+				  <path class="cup" d="M-18,6 h36 a8,8 0 0 0 8,-8 v-2 a12,8 0 0 0 -12,-8 h-28 v18 z"></path>
+				  <path class="steam" d="M-6,-8 q4,-6 0,-10 M6,-8 q4,-6 0,-10" stroke-linecap="round" stroke-width="2" fill="none"></path>
+				  <text class="region-text" x="0" y="-10" text-anchor="middle" style="cursor: move;">空知</text>
+				</g>
+
+		<!-- 石狩 -->
+		<g class="region-btn" data-region-id="2" data-region-name="石狩" tabindex="0" role="button" transform="translate(358.8113555908203,537.2578125)" data-translate="358.8113555908203,537.2578125" >
+				  <rect class="plate" x="-60" y="-36" width="120" height="40" rx="14" ry="14"></rect>
+				  <path class="cup" d="M-18,6 h36 a8,8 0 0 0 8,-8 v-2 a12,8 0 0 0 -12,-8 h-28 v18 z"></path>
+				  <path class="steam" d="M-6,-8 q4,-6 0,-10 M6,-8 q4,-6 0,-10" stroke-linecap="round" stroke-width="2" fill="none"></path>
+				  <text class="region-text" x="0" y="-10" text-anchor="middle" style="cursor: move;">石狩</text>
+				</g>
+
+		<!-- 後志 -->
+		<g class="region-btn" data-region-id="3" data-region-name="後志" tabindex="0" role="button" transform="translate(226.41571044921875,559.3237915039062)" data-translate="226.41571044921875,559.3237915039062" >
+				  <rect class="plate" x="-60" y="-36" width="120" height="40" rx="14" ry="14"></rect>
+				  <path class="cup" d="M-18,6 h36 a8,8 0 0 0 8,-8 v-2 a12,8 0 0 0 -12,-8 h-28 v18 z"></path>
+				  <path class="steam" d="M-6,-8 q4,-6 0,-10 M6,-8 q4,-6 0,-10" stroke-linecap="round" stroke-width="2" fill="none"></path>
+				  <text class="region-text" x="0" y="-10" text-anchor="middle" style="cursor: move;">後志</text>
+				</g>
+
+		<!-- 胆振 -->
+		<g class="region-btn" data-region-id="4" data-region-name="胆振" tabindex="0" role="button" transform="translate(347.2986145019531,660.0596618652344)" data-translate="347.2986145019531,660.0596618652344" >
+				  <rect class="plate" x="-60" y="-36" width="120" height="40" rx="14" ry="14"></rect>
+				  <path class="cup" d="M-18,6 h36 a8,8 0 0 0 8,-8 v-2 a12,8 0 0 0 -12,-8 h-28 v18 z"></path>
+				  <path class="steam" d="M-6,-8 q4,-6 0,-10 M6,-8 q4,-6 0,-10" stroke-linecap="round" stroke-width="2" fill="none"></path>
+				  <text class="region-text" x="0" y="-10" text-anchor="middle" style="cursor: move;">胆振</text>
+				</g>
+
+		<!-- 日高 -->
+		<g class="region-btn" data-region-id="5" data-region-name="日高" tabindex="0" role="button" transform="translate(515.1919250488281,673.4910888671875)" data-translate="515.1919250488281,673.4910888671875" >
+				  <rect class="plate" x="-60" y="-36" width="120" height="40" rx="14" ry="14"></rect>
+				  <path class="cup" d="M-18,6 h36 a8,8 0 0 0 8,-8 v-2 a12,8 0 0 0 -12,-8 h-28 v18 z"></path>
+				  <path class="steam" d="M-6,-8 q4,-6 0,-10 M6,-8 q4,-6 0,-10" stroke-linecap="round" stroke-width="2" fill="none"></path>
+				  <text class="region-text" x="0" y="-10" text-anchor="middle" style="cursor: move;">日高</text>
+				</g>
+
+		<!-- 渡島 -->
+		<g class="region-btn" data-region-id="6" data-region-name="渡島" tabindex="0" role="button" transform="translate(231.2129364013672,764.6330413818359)" data-translate="231.2129364013672,764.6330413818359" style="cursor: move;">
+				  <rect class="plate" x="-60" y="-36" width="120" height="40" rx="14" ry="14"></rect>
+				  <path class="cup" d="M-18,6 h36 a8,8 0 0 0 8,-8 v-2 a12,8 0 0 0 -12,-8 h-28 v18 z"></path>
+				  <path class="steam" d="M-6,-8 q4,-6 0,-10 M6,-8 q4,-6 0,-10" stroke-linecap="round" stroke-width="2" fill="none"></path>
+				  <text class="region-text" x="0" y="-10" text-anchor="middle" style="cursor: move;">渡島</text>
+				</g>
+
+		<!-- 檜山 -->
+		<g class="region-btn" data-region-id="7" data-region-name="檜山" tabindex="0" role="button" transform="translate(160,680)">
+				  <rect class="plate" x="-60" y="-36" width="120" height="40" rx="14" ry="14"></rect>
+				  <path class="cup" d="M-18,6 h36 a8,8 0 0 0 8,-8 v-2 a12,8 0 0 0 -12,-8 h-28 v18 z"></path>
+				  <path class="steam" d="M-6,-8 q4,-6 0,-10 M6,-8 q4,-6 0,-10" stroke-linecap="round" stroke-width="2" fill="none"></path>
+				  <text class="region-text" x="0" y="-10" text-anchor="middle" style="cursor: move;">檜山</text>
+				</g>
+
+		<!-- 十勝 -->
+		<g class="region-btn" data-region-id="12" data-region-name="十勝" tabindex="0" role="button" transform="translate(581.3895263671875,543.9735107421875)" data-translate="581.3895263671875,543.9735107421875" >
+				  <rect class="plate" x="-60" y="-36" width="120" height="40" rx="14" ry="14"></rect>
+				  <path class="cup" d="M-18,6 h36 a8,8 0 0 0 8,-8 v-2 a12,8 0 0 0 -12,-8 h-28 v18 z"></path>
+				  <path class="steam" d="M-6,-8 q4,-6 0,-10 M6,-8 q4,-6 0,-10" stroke-linecap="round" stroke-width="2" fill="none"></path>
+				  <text class="region-text" x="0" y="-10" text-anchor="middle" style="cursor: move;">十勝</text>
+				</g>
+
+		<!-- 釧路 -->
+		<g class="region-btn" data-region-id="13" data-region-name="釧路" tabindex="0" role="button" transform="translate(725.2978515625,584.2679138183594)" data-translate="725.2978515625,584.2679138183594">
+				  <rect class="plate" x="-60" y="-36" width="120" height="40" rx="14" ry="14"></rect>
+				  <path class="cup" d="M-18,6 h36 a8,8 0 0 0 8,-8 v-2 a12,8 0 0 0 -12,-8 h-28 v18 z"></path>
+				  <path class="steam" d="M-6,-8 q4,-6 0,-10 M6,-8 q4,-6 0,-10" stroke-linecap="round" stroke-width="2" fill="none"></path>
+				  <text class="region-text" x="0" y="-10" text-anchor="middle" style="cursor: move;">釧路</text>
+				</g>
+
+		<!-- 根室 -->
+		<g class="region-btn" data-region-id="14" data-region-name="根室" tabindex="0" role="button" transform="translate(826.9930419921875,484.4912414550781)" data-translate="826.9930419921875,484.4912414550781">
+				  <rect class="plate" x="-60" y="-36" width="120" height="40" rx="14" ry="14"></rect>
+				  <path class="cup" d="M-18,6 h36 a8,8 0 0 0 8,-8 v-2 a12,8 0 0 0 -12,-8 h-28 v18 z"></path>
+				  <path class="steam" d="M-6,-8 q4,-6 0,-10 M6,-8 q4,-6 0,-10" stroke-linecap="round" stroke-width="2" fill="none"></path>
+				  <text class="region-text" x="0" y="-10" text-anchor="middle" style="cursor: move;">根室</text>
+				</g>
+
+      </svg>
+
+      <div id="tooltip" role="status" aria-live="polite"></div>
+    </div>
+  </div>
+
+
+
+  <script th:inline="javascript">
+  /*<![CDATA[*/
+  const svg = document.getElementById('hokkaidoSvg');
+  const tooltip = document.getElementById('tooltip');
+  const container = document.getElementById('svgContainer');
+
+  /* 地域ごとのデフォルトソート（下のコードと同じ） */
+  const defaultSortByRegion = {
+    1: 'id', 2: 'price_desc', 3: 'id', 4: 'id', 5: 'id', 6: 'id', 7: 'id',
+    8: 'id', 9: 'id', 10: 'id', 11: 'id', 12: 'id', 13: 'id', 14: 'id'
+  };
+
+  /* 下のコードと同じ遷移処理（本質部分） */
+  function goToRegion(regionId) {
+    const sort = defaultSortByRegion[regionId] || 'id';
+    window.location.href = `/products?regionId=${encodeURIComponent(regionId)}&sort=${encodeURIComponent(sort)}`;
+  }
+
+  /* カフェボタン版に合わせて .region-btn を対象にする */
+  svg.addEventListener('click', (e) => {
+    const target = e.target.closest('.region-btn');
+    if (!target) return;
+    const regionId = parseInt(target.getAttribute('data-region-id'), 10);
+    if (!regionId) return;
+    goToRegion(regionId);
+  });
+
+  /* ツールチップ（必要なら残す） */
+  svg.addEventListener('mousemove', (e) => {
+    const target = e.target.closest('.region-btn');
+    if (!target) {
+      hideTooltip();
+      return;
+    }
+    const name = target.getAttribute('data-region-name');
+    showTooltip(name, e);
+  });
+
+  svg.addEventListener('mouseleave', hideTooltip);
+
+  /* キーボード操作も .region-btn に変更 */
+  svg.querySelectorAll('.region-btn').forEach(btn => {
+    btn.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        const regionId = parseInt(btn.getAttribute('data-region-id'), 10);
+        if (regionId) goToRegion(regionId);
+      }
+    });
+  });
+
+  </script>
+
+
+  <footer th:replace="fragments/_footer :: footer"></footer>
+</body>
+</html>

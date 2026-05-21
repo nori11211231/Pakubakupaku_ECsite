@@ -1,10 +1,253 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+
 <head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
+
+	<meta charset="UTF-8">
+
+	<title>新規登録 | 北海道EC</title>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<!-- CSS -->
+
+	<link rel="stylesheet" th:href="@{/css/style_merged.css}">
+
+	<!-- FONT -->
+
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+	<link
+		href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Noto+Serif+JP:wght@300;400;500;700&display=swap"
+		rel="stylesheet">
+
+	<!-- 郵便番号検索 -->
+
+	<script src="https://yubinbango.github.io/yubinbango/yubinbango.js" charset="UTF-8" defer>
+	</script>
+
 </head>
-<body>
+
+<body class="auth-body">
+	<div th:replace="~{fragments/_header :: header}"></div>
+
+	<!-- =========================
+         REGISTER AREA
+    ========================== -->
+
+	<main class="auth-container">
+
+		<div class="auth-card">
+
+			<!-- HEADER -->
+
+			<div class="auth-head">
+
+				<div class="auth-subtitle">
+
+					HOKKAIDO PREMIUM SELECT
+
+				</div>
+
+				<h1>
+
+					新規登録
+
+				</h1>
+
+				<p>
+
+					北海道ECへようこそ。<br>
+					アカウントを作成して、
+					ポイントや注文機能をご利用いただけます。
+
+				</p>
+
+			</div>
+
+			<!-- REGISTER ERROR -->
+
+			<div th:if="${registerError}" class="auth-error">
+
+				[[${registerError}]]
+
+			</div>
+
+			<!-- FORM -->
+
+			<form th:action="@{/register}" th:object="${form}" method="post" class="auth-form h-adr">
+
+				<!-- 郵便番号検索用 -->
+
+				<span class="p-country-name" style="display:none;">
+
+					Japan
+
+				</span>
+
+				<!-- NAME -->
+
+				<div class="form-group">
+
+					<label>
+
+						お名前
+
+					</label>
+
+					<input type="text" th:field="*{name}" placeholder="山田 太郎">
+
+					<span th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="field-error">
+					</span>
+
+				</div>
+
+				<!-- EMAIL -->
+
+				<div class="form-group">
+
+					<label>
+
+						メールアドレス
+
+					</label>
+
+					<input type="email" th:field="*{email}" placeholder="example@mail.com">
+
+					<span th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="field-error">
+					</span>
+
+				</div>
+
+				<!-- EMAIL CONFIRM -->
+
+				<div class="form-group">
+
+					<label>
+
+						メールアドレス（確認用）
+
+					</label>
+
+					<input type="email" th:field="*{emailConfirm}" placeholder="example@mail.com">
+
+					<span th:if="${#fields.hasErrors('emailConfirm')}" th:errors="*{emailConfirm}" class="field-error">
+					</span>
+
+				</div>
+
+				<!-- PASSWORD -->
+
+				<div class="form-group">
+
+					<label>
+
+						パスワード
+
+					</label>
+
+					<input type="password" th:field="*{password}" placeholder="••••••••">
+
+					<span th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="field-error">
+					</span>
+
+				</div>
+
+				<!-- ZIPCODE -->
+
+				<div class="form-group">
+
+					<label>
+
+						郵便番号
+
+					</label>
+
+					<input type="text" th:field="*{zipcode}" class="p-postal-code" placeholder="060-0001">
+
+					<span th:if="${#fields.hasErrors('zipcode')}" th:errors="*{zipcode}" class="field-error">
+					</span>
+
+				</div>
+
+				<!-- PHONE -->
+
+				<div class="form-group">
+
+					<label>
+
+						電話番号
+
+					</label>
+
+					<input type="text" th:field="*{phone}" placeholder="011-XXXX-XXXX">
+
+					<span th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}" class="field-error">
+					</span>
+
+				</div>
+
+				<!-- ADDRESS -->
+
+				<div class="form-group full-width">
+
+					<label>
+
+						住所
+
+					</label>
+
+					<input type="text" th:field="*{address}" class="p-region p-locality p-street-address address"
+						placeholder="北海道札幌市...">
+
+					<span th:if="${#fields.hasErrors('address')}" th:errors="*{address}" class="field-error">
+					</span>
+
+				</div>
+
+				<!-- EMAIL MATCH ERROR -->
+
+				<div th:if="${#fields.hasErrors('emailConfirmed')}" class="auth-error full-width">
+
+					<span th:errors="*{emailConfirmed}">
+					</span>
+
+				</div>
+
+				<!-- BUTTON -->
+
+				<button type="submit" class="auth-button">
+
+					アカウント作成
+
+				</button>
+
+			</form>
+
+			<!-- FOOTER -->
+
+			<div class="auth-footer">
+
+				<span>
+
+					すでにアカウントをお持ちの方
+
+				</span>
+
+				<a href="/login">
+
+					ログインはこちら
+
+				</a>
+
+			</div>
+
+		</div>
+
+	</main>
 
 </body>
+
 </html>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<!-- 共通CSS：ヘッダー・フッター・AIウィジェット用 -->
+	   <link rel="stylesheet" th:href="@{/css/style.css}">
+
+	   <!-- 商品一覧ページ専用CSS -->
+	   <link rel="stylesheet" th:href="@{/css/style_merged.css}">
+<title>Insert title here</title>
+</head>
+<body>
+	<!-- ヘッダー -->
+	<header th:replace="~{fragments/_header :: header}"></header>
+	
+	<h2>注文確認</h2>
+
+	<table>
+	    <tr>
+	        <th>商品名</th>
+	        <th>数量</th>
+	        <th>価格</th>
+	        <th>小計</th>
+	        <th>操作</th>
+	    </tr>
+
+	    <tr th:each="item : ${cartItems}">
+	        <td th:text="${item.productName}"></td>
+
+	        <!-- 数量変更フォーム -->
+	        <td style="text-align: center;">
+	            <form th:action="@{/order/updateQuantity}" method="post">
+	                <input type="hidden" name="productId" th:value="${item.productId}" />
+	                <input type="number" name="quantity"
+	                       th:value="${item.quantity}"
+	                       min="1" max="99"
+	                       style="width: 60px;" />
+	                <button type="submit">変更</button>
+	            </form>
+	        </td>
+
+	        <td th:text="${item.price}"></td>
+	        <td th:text="${item.itemSubtotal}"></td>
+
+	        <!-- 削除ボタン -->
+	        <td>
+	            <form th:action="@{/order/remove}" method="post">
+	                <input type="hidden" name="productId" th:value="${item.productId}" />
+	                <button type="submit">削除</button>
+	            </form>
+	        </td>
+	    </tr>
+	</table>
+
+
+	<p>合計金額：<span th:text="${totalAmount}"></span>円</p>
+
+
+
+	<!-- エラーメッセージ表示 -->
+	<p th:if="${errorMessage}" th:text="${errorMessage}" style="color:red; font-weight:bold;"></p>
+	<p th:if="${error}" th:text="${error}" style="color:red; font-weight:bold;"></p>
+
+	
+	<!-- カートが空の場合 -->
+	<p th:if="${#lists.isEmpty(cartItems)}" style="color:red; font-weight:bold;">
+	    商品がありません
+	</p>
+
+	<!-- カートが空なら注文ボタンを非表示 -->
+	<form action="/order/complete" method="post" th:if="${!#lists.isEmpty(cartItems)}">
+	    <label>配送先住所：</label>
+	    <input type="text" name="shippingAddress" required>
+
+	    <label>使用ポイント：</label>
+	    <input type="number" name="usedPoint" min="0" th:max="${userPoint}">
+
+	    <button type="submit">注文確定</button>
+	</form>
+
+
+
+	</body>
+</html>

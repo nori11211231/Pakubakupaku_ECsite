@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	
+<body>
+
+<footer th:fragment="footer" class="site-footer">
+
+    <div class="footer-inner">
+
+        <div class="footer-logo">
+            北海道物産ECサイト
+        </div>
+
+        <nav class="footer-nav">
+            <a th:href="@{/top}">トップ</a>
+            <a th:href="@{/products}">商品一覧</a>
+            <a th:href="@{/regions}">地域から探す</a>
+            <a th:href="@{/points}">ポイント</a>
+            <a th:href="@{/game}">ミニゲーム</a>
+            <a th:href="@{/ai}">AIコンシェルジュ</a>
+            <a th:href="@{/mypage}">マイページ</a>
+        </nav>
+
+        <p class="footer-copy">
+            &copy; 2026 北海道物産ECサイト
+        </p>
+
+    </div>
+	<div th:replace="~{fragments/ai-widget :: aiWidget}"></div>
+</footer>
+
+</body>
+</html>

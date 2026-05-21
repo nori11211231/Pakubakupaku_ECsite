@@ -1,10 +1,70 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
+	<meta charset="UTF-8">
+	<title>会員情報 | 北海道EC</title>
+	<link rel="stylesheet" th:href="@{/css/style_merged.css}">
 </head>
 <body>
+	<div class="container">
+		<!-- HEADER -->
+		<div th:replace="~{fragments/_header :: header}"></div>
 
+
+		<!-- MAIN CONTENT: 会員情報表示エリア -->
+		<section class="profile-area" style="padding: 40px 20px; background: #fff; margin-top: 20px; border-radius: 8px;">
+			<div class="section-title" style="margin-bottom: 30px; border-bottom: 2px solid #f0f0f0; padding-bottom: 10px;">
+				<h2 style="font-size: 24px; color: #333;">会員情報・プロフィール</h2>
+			</div>
+
+			<!-- 情報表示テーブル -->
+			<table class="profile-table" style="width: 100%; border-collapse: collapse; font-size: 16px;">
+				<tr style="border-bottom: 1px solid #eee;">
+					<th style="text-align: left; padding: 15px; width: 200px; background: #f9f9f9; color: #555;">お名前</th>
+					<!-- 【変更】loginUser.name に変更 -->
+					<td style="padding: 15px; color: #333;" th:text="${loginUser?.name}">山田 太郎</td>
+				</tr>
+				<tr style="border-bottom: 1px solid #eee;">
+					<th style="text-align: left; padding: 15px; background: #f9f9f9; color: #555;">メールアドレス</th>
+					<!-- 【変更】loginUser.email に変更 -->
+					<td style="padding: 15px; color: #333;" th:text="${loginUser?.email}">sample@example.com</td>
+				</tr>
+				<tr style="border-bottom: 1px solid #eee;">
+					<th style="text-align: left; padding: 15px; background: #f9f9f9; color: #555;">ご住所</th>
+					<!-- 【変更】loginUser.address に変更 -->
+					<td style="padding: 15px; color: #333;" th:text="${loginUser?.address}">北海道札幌市...</td>
+				</tr>
+				<tr style="border-bottom: 1px solid #eee;">
+					<th style="text-align: left; padding: 15px; background: #f9f9f9; color: #555;">電話番号</th>
+					<!-- 【変更】loginUser.phone に変更 -->
+					<td style="padding: 15px; color: #333;" th:text="${loginUser?.phone}">090-1234-5678</td>
+				</tr>
+				<tr style="border-bottom: 1px solid #eee;">
+					<th style="text-align: left; padding: 15px; background: #f9f9f9; color: #555;">現在の会員ランク</th>
+					<td style="padding: 15px; color: #333; font-weight: bold;" th:text="${rankName}">ゴールド会員</td>
+				</tr>
+				<tr style="border-bottom: 1px solid #eee;">
+					<th style="text-align: left; padding: 15px; background: #f9f9f9; color: #555;">所持ポイント</th>
+					<!-- 【変更】loginUser.point に変更 -->
+					<td style="padding: 15px; color: #e67e22; font-weight: bold;"><span th:text="${loginUser?.point} ?: 0">0</span> pt</td>
+				</tr>
+				<tr style="border-bottom: 1px solid #eee;">
+					<th style="text-align: left; padding: 15px; background: #f9f9f9; color: #555;">総購入金額</th>
+					<!-- 【変更】loginUser.totalPurchaseAmount に変更 -->
+					<td style="padding: 15px; color: #333;" th:text="${loginUser?.totalPurchaseAmount != null ? loginUser.totalPurchaseAmount + ' 円' : '0 円'}">0 円</td>
+				</tr>
+			</table>
+
+			<!-- ボタンエリア -->
+			<div style="margin-top: 30px; text-align: center;">
+				<a th:href="@{/mypage}" class="btn btn-primary" style="padding: 10px 30px;">マイページトップへ戻る</a>
+			</div>
+		</section>
+
+		<!-- FOOTER -->
+		<footer>
+			HOKKAIDO. © 2026
+		</footer>
+	</div>
 </body>
 </html>

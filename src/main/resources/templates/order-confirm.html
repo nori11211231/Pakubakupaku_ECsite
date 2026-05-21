@@ -1,10 +1,361 @@
 <!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-</head>
-<body>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
 
+<head>
+	<meta charset="UTF-8">
+	<title>注文確認 | 北海道EC</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" th:href="@{/css/style_merged.css}">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Noto+Serif+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+	<style>
+		.order-page {
+			padding-top: 42px;
+			padding-bottom: 80px;
+		}
+
+		.order-hero {
+			text-align: center;
+			margin: 36px auto 34px;
+		}
+
+		.order-label,
+		.complete-sub,
+		.hero-label {
+			letter-spacing: .18em;
+			font-size: 13px;
+			font-weight: 700;
+			color: #9a6b2f;
+			margin-bottom: 12px;
+		}
+
+		.order-hero h1,
+		.order-hero h2 {
+			font-size: clamp(30px, 4vw, 48px);
+			margin: 0 0 12px;
+		}
+
+		.order-hero p {
+			line-height: 1.9;
+			color: #6f665c;
+			margin: 0;
+		}
+
+		.order-card,
+		.order-panel,
+		.complete-card {
+			background: rgba(255, 255, 255, .92);
+			border: 1px solid rgba(120, 92, 58, .16);
+			border-radius: 28px;
+			box-shadow: 0 18px 45px rgba(80, 60, 30, .10);
+			padding: clamp(22px, 4vw, 44px);
+		}
+
+		.order-card + .order-card,
+		.order-panel + .order-panel {
+			margin-top: 24px;
+		}
+
+		.order-section-title {
+			font-size: 22px;
+			margin: 0 0 20px;
+		}
+
+		.order-table,
+		.history-table {
+			width: 100%;
+			border-collapse: collapse;
+			overflow: hidden;
+		}
+
+		.order-table th,
+		.order-table td,
+		.history-table th,
+		.history-table td {
+			padding: 16px 14px;
+			border-bottom: 1px solid rgba(120, 92, 58, .14);
+			vertical-align: middle;
+		}
+
+		.order-table th,
+		.history-table th {
+			font-size: 13px;
+			letter-spacing: .08em;
+			color: #7b5a31;
+			background: rgba(180, 132, 58, .08);
+			white-space: nowrap;
+		}
+
+		.order-table td,
+		.history-table td {
+			color: #3d352d;
+		}
+
+		.price-cell,
+		.text-right {
+			text-align: right;
+			font-weight: 700;
+		}
+
+		.text-center {
+			text-align: center;
+		}
+
+		.order-form-inline {
+			display: inline-flex;
+			align-items: center;
+			gap: 8px;
+		}
+
+		.order-input,
+		.order-qty-input {
+			border: 1px solid rgba(120, 92, 58, .25);
+			border-radius: 999px;
+			padding: 10px 14px;
+			background: #fff;
+			font-family: inherit;
+		}
+
+		.order-qty-input {
+			width: 76px;
+			text-align: center;
+		}
+
+		.order-form-grid {
+			display: grid;
+			grid-template-columns: 1.2fr .8fr;
+			gap: 18px;
+			margin-top: 22px;
+		}
+
+		.form-field {
+			display: flex;
+			flex-direction: column;
+			gap: 8px;
+		}
+
+		.form-field label {
+			font-weight: 700;
+			color: #5e4b35;
+		}
+
+		.summary-box {
+			margin-top: 26px;
+			margin-left: auto;
+			max-width: 460px;
+			background: rgba(180, 132, 58, .07);
+			border-radius: 22px;
+			padding: 20px;
+		}
+
+		.summary-row,
+		.detail-row {
+			display: flex;
+			justify-content: space-between;
+			gap: 18px;
+			padding: 10px 0;
+			border-bottom: 1px solid rgba(120, 92, 58, .12);
+		}
+
+		.summary-row:last-child,
+		.detail-row:last-child {
+			border-bottom: 0;
+		}
+
+		.summary-row strong,
+		.detail-row strong {
+			color: #5e4b35;
+		}
+
+		.total-row {
+			font-size: 20px;
+			font-weight: 700;
+		}
+
+		.order-alert {
+			margin: 18px 0;
+			padding: 14px 18px;
+			border-radius: 16px;
+			background: rgba(190, 54, 54, .08);
+			color: #b53131;
+			font-weight: 700;
+		}
+
+		.order-actions,
+		.complete-buttons {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			gap: 14px;
+			flex-wrap: wrap;
+			margin-top: 28px;
+		}
+
+		.btn-small {
+			padding: 8px 14px;
+			font-size: 13px;
+		}
+
+		.btn-danger {
+			background: #fff;
+			color: #b53131;
+			border: 1px solid rgba(181, 49, 49, .28);
+		}
+
+		.detail-grid {
+			display: grid;
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+			gap: 12px 28px;
+		}
+
+		.order-product-img {
+			width: 86px;
+			height: 66px;
+			object-fit: cover;
+			border-radius: 14px;
+			box-shadow: 0 8px 18px rgba(80, 60, 30, .12);
+		}
+
+		.complete-wrapper {
+			max-width: 760px;
+			margin: 36px auto;
+			text-align: center;
+		}
+
+		.complete-icon {
+			width: 72px;
+			height: 72px;
+			border-radius: 50%;
+			display: grid;
+			place-items: center;
+			margin: 0 auto 20px;
+			background: rgba(154, 107, 47, .12);
+			color: #9a6b2f;
+			font-size: 34px;
+			font-weight: 700;
+		}
+
+		.complete-message {
+			line-height: 1.9;
+			color: #6f665c;
+		}
+
+		.empty-history {
+			text-align: center;
+			padding: 44px 20px;
+		}
+
+		@media (max-width: 760px) {
+			.order-form-grid,
+			.detail-grid {
+				grid-template-columns: 1fr;
+			}
+
+			.order-table,
+			.history-table {
+				display: block;
+				overflow-x: auto;
+				white-space: nowrap;
+			}
+		}
+	</style>
+</head>
+
+<body>
+	<div th:replace="~{fragments/_header :: header}"></div>
+
+	<main class="container order-page">
+		<section class="order-hero">
+			<div class="order-label">ORDER CONFIRM</div>
+			<h1>注文確認</h1>
+			<p>ご注文内容、配送先、使用ポイントを確認してください。</p>
+		</section>
+
+		<section class="order-card">
+			<h2 class="order-section-title">注文商品</h2>
+
+			<div th:if="${errorMessage}" class="order-alert" th:text="${errorMessage}"></div>
+			<div th:if="${error}" class="order-alert" th:text="${error}"></div>
+			<div th:if="${message}" class="order-alert" th:text="${message}"></div>
+
+			<div th:if="${#lists.isEmpty(cartItems)}" class="empty-history">
+				<h3>カートに商品がありません</h3>
+				<p>商品一覧から北海道の名産品を選んでください。</p>
+				<a th:href="@{/products}" class="btn btn-primary">商品を見る</a>
+			</div>
+
+			<div th:if="${!#lists.isEmpty(cartItems)}">
+				<table class="order-table">
+					<thead>
+						<tr>
+							<th>商品名</th>
+							<th class="text-center">数量</th>
+							<th class="text-right">単価</th>
+							<th class="text-right">小計</th>
+							<th class="text-center">操作</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="item : ${cartItems}">
+							<td th:text="${item.productName}">北海道商品</td>
+							<td class="text-center">
+								<form class="order-form-inline" th:action="@{/order/updateQuantity}" method="post">
+									<input type="hidden" name="productId" th:value="${item.productId}">
+									<input class="order-qty-input" type="number" name="quantity" th:value="${item.quantity}" min="1" max="99">
+									<button type="submit" class="btn btn-small">変更</button>
+								</form>
+							</td>
+							<td class="text-right" th:text="${#numbers.formatInteger(item.price, 0, 'COMMA')} + ' 円'">1,000 円</td>
+							<td class="text-right" th:text="${#numbers.formatInteger(item.itemSubtotal, 0, 'COMMA')} + ' 円'">1,000 円</td>
+							<td class="text-center">
+								<form th:action="@{/order/remove}" method="post">
+									<input type="hidden" name="productId" th:value="${item.productId}">
+									<button type="submit" class="btn btn-small btn-danger">削除</button>
+								</form>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+
+				<div class="summary-box">
+					<div class="summary-row">
+						<strong>商品合計</strong>
+						<span th:text="${#numbers.formatInteger(totalAmount, 0, 'COMMA')} + ' 円'">0 円</span>
+					</div>
+					<div class="summary-row">
+						<strong>保有ポイント</strong>
+						<span th:text="${#numbers.formatInteger(userPoint, 0, 'COMMA')} + ' pt'">0 pt</span>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<section class="order-card" th:if="${!#lists.isEmpty(cartItems)}">
+			<h2 class="order-section-title">配送・ポイント入力</h2>
+
+			<form th:action="@{/order/complete}" method="post">
+				<div class="order-form-grid">
+					<div class="form-field">
+						<label for="shippingAddress">配送先住所</label>
+						<input id="shippingAddress" class="order-input" type="text" name="shippingAddress" placeholder="例：北海道札幌市〇〇区..." required>
+					</div>
+
+					<div class="form-field">
+						<label for="usedPoint">使用ポイント</label>
+						<input id="usedPoint" class="order-input" type="number" name="usedPoint" min="0" th:max="${userPoint}" value="0">
+					</div>
+				</div>
+
+				<div class="order-actions">
+					<a th:href="@{/products}" class="btn">買い物を続ける</a>
+					<button type="submit" class="btn btn-primary">注文を確定する</button>
+				</div>
+			</form>
+		</section>
+	</main>
+
+	<div th:replace="~{fragments/ai-widget :: aiWidget}"></div>
 </body>
+
 </html>

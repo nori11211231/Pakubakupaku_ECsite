@@ -4,5 +4,12 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
  
 <mapper namespace="com.example.hokkaidoec.mapper.CategoryMapper">
- 
+ <select id="findById" resultType="com.example.hokkaidoec.entity.Category">
+  SELECT * FROM categories WHERE id = #{id}
+</select>
+  <select id="findAll" resultType="com.example.hokkaidoec.entity.Category">
+    SELECT id, category_name
+    FROM categories
+    ORDER BY id
+ </select>
 </mapper>

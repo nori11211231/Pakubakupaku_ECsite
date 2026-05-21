@@ -1,0 +1,397 @@
+    @charset "UTF-8";
+
+    /* 色・共通設定 */
+    :root {
+      --accent:#ff7a00;
+      --muted:#666;
+      --bg:#f8f8f8;
+      --card:#fff;
+      --max-width:1100px;
+    }
+
+    /* --- ページ全体のレイアウト（重要） --- */
+    html, body {
+      height: 100%;
+      margin: 0;
+    }
+
+    body {
+      font-family:"Noto Sans JP",system-ui,-apple-system,"Segoe UI",Roboto,Arial;
+      background:var(--bg);
+      color:#222;
+      display: flex;
+      flex-direction: column;    /* 縦方向に並べる（これでフッターが下に来る） */
+      min-height: 100vh;
+      align-items: stretch;
+      margin: 0;
+      padding: 0;
+    }
+/*--------------------------------*/
+	.floating-checkout-btn {
+	   position: fixed;
+	   bottom: 20px;
+	   right: 20px;
+	   background-color: #ff7f50;
+	   color: #fff;
+	   padding: 16px 28px;
+	   border-radius: 50px;
+	   font-size: 18px;
+	   font-weight: bold;
+	   text-align: center;
+	   text-decoration: none;
+	   box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+	   z-index: 9999;
+	   transition: transform 0.2s ease, opacity 0.2s ease;
+	 }
+
+	 .floating-checkout-btn:hover {
+	   transform: scale(1.05);
+	   opacity: 0.9;
+	 }
+/*	 ---------------注文のやつ--------------*/
+
+
+#decreaseBtn,
+#increaseBtn {
+  font-size: 14px;   /* ← 文字サイズ（小さくしたいならここ） */
+  width: 28px;       /* ← ボタンの横幅 */
+  height: 28px;      /* ← ボタンの高さ */
+  padding: 0;        /* ← 内側の余白 */
+  line-height: 28px; /* ← 文字を中央に揃える */
+}
+
+/*----------プラスマイナスのボタンの大きさ変更------------------*/
+
+/* Chrome, Edge, Safari のスピンボタンを消す */
+#qtyInput::-webkit-inner-spin-button,
+#qtyInput::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox のスピンボタンを消す */
+#qtyInput {
+  -moz-appearance: textfield;
+}
+
+
+
+    /* 中央のカードコンテナ（ページのメイン領域） */
+    .container {
+      width:100%;
+      max-width:var(--max-width);
+      background:var(--card);
+      box-shadow:0 2px 8px rgba(0,0,0,0.06);
+      border-radius:8px;
+      padding:24px;
+      box-sizing:border-box;
+      margin: 24px auto;
+      flex: 0 0 auto;
+    }
+
+    /* main を伸ばしてフッターを下に押し出す */
+    main {
+      flex: 1 0 auto;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    /* ===== ヘッダー ===== */
+    .site-header {
+      background-color: #ffffff;
+      border-bottom: 2px solid #ccc;
+      padding: 15px 0;
+      font-family: "Noto Sans JP", sans-serif;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .header-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+      box-sizing: border-box;
+    }
+
+    .header-logo a {
+      font-weight: bold;
+      font-size: 20px;
+      color: #003366;
+      text-decoration: none;
+    }
+
+    .header-search {
+      display: flex;
+      align-items: center;
+    }
+
+    .header-search input {
+      width: 220px;
+      padding: 6px 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+
+    .header-search button {
+      margin-left: 8px;
+      background-color: #e0f0ff;
+      color: #003366;
+      border: 1px solid #003366;
+      border-radius: 4px;
+      padding: 6px 12px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .header-search button:hover {
+      background-color: #cce0ff;
+    }
+
+    .header-nav a {
+      margin: 0 10px;
+      color: #c00000;
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    .header-nav a:hover {
+      text-decoration: underline;
+    }
+
+    .point-badge {
+      background-color: #ffeb99;
+      color: #000;
+      border-radius: 4px;
+      padding: 6px 10px;
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    .header-auth a {
+      margin-left: 10px;
+      color: #003366;
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    .header-auth a:hover {
+      text-decoration: underline;
+    }
+
+    /* ===== フッター ===== */
+    .site-footer {
+      width: 100%;
+      background-color: #f8f8f8;
+      border-top: 2px solid #ccc;
+      padding: 20px 0;
+      box-sizing: border-box;
+      margin-top: 24px;
+    }
+
+    .footer-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+      box-sizing: border-box;
+    }
+
+    .footer-logo {
+      font-weight: bold;
+      color: #003366;
+      font-size: 18px;
+    }
+
+    .footer-nav a {
+      margin: 0 10px;
+      color: #c00000;
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    .footer-nav a:hover {
+      text-decoration: underline;
+    }
+
+    .footer-copy {
+      text-align: right;
+      font-size: 12px;
+      color: #666;
+    }
+
+    /* ===== 商品ページ固有 ===== */
+    .product-container {
+      display:flex;
+      gap:32px;
+      margin-bottom:40px;
+    }
+
+    .image-wrap {
+      width:45%;
+      aspect-ratio:4 / 3;
+      overflow:hidden;
+      border-radius:10px;
+      background:#f5f5f5;
+    }
+
+    #productImage {
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+    }
+
+    .product-info {
+      width:55%;
+    }
+
+    .title {
+      font-size:28px;
+      font-weight:800;
+      margin-bottom:10px;
+    }
+
+    .meta {
+      color:#666;
+      margin-bottom:12px;
+    }
+
+    .desc {
+      margin-bottom:20px;
+      line-height:1.6;
+    }
+
+    .price-stock {
+      display:flex;
+      gap:20px;
+      margin-bottom:20px;
+    }
+
+    .price {
+      font-size:24px;
+      font-weight:700;
+      color:#d9534f;
+    }
+
+    .stock {
+      font-size:16px;
+      color:#333;
+    }
+
+    .purchase {
+      display:flex;
+      align-items:center;
+      gap:16px;
+      margin-bottom:12px;
+    }
+
+    .qty button {
+      width:32px;
+      height:32px;
+    }
+
+    .qty input {
+      width:50px;
+      text-align:center;
+    }
+
+    .add-cart-btn {
+      background:orange;
+      padding:10px 20px;
+      border-radius:6px;
+      border:none;
+      font-weight:700;
+      cursor:pointer;
+    }
+
+    .note {
+      font-size:12px;
+      color:#777;
+      margin-bottom:20px;
+    }
+
+    .ai-box {
+      padding:12px;
+      background:#fafafa;
+      border-radius:8px;
+      border:1px solid #eee;
+    }
+
+    .review-section {
+      padding:20px;
+      background:#fafafa;
+      border-radius:10px;
+      border:1px solid #eee;
+    }
+
+    /* スマホ対応 */
+    @media (max-width:980px) {
+      .product-container {
+        flex-direction:column;
+      }
+      .image-wrap,
+      .product-info {
+        width:100%;
+      }
+
+      .footer-inner, .header-inner {
+        padding-left: 12px;
+        padding-right: 12px;
+      }
+
+      .footer-inner {
+        flex-direction: column;
+        gap: 12px;
+        text-align: center;
+      }
+    }
+	.product-ai-box {
+	  margin-top: 24px;
+	  padding: 18px;
+	  border-radius: 18px;
+	  background: #fff8ec;
+	  border: 1px solid #f1d2a4;
+	  box-shadow: 0 4px 14px rgba(120, 80, 40, 0.12);
+	}
+
+	.product-ai-head {
+	  display: flex;
+	  align-items: center;
+	  gap: 14px;
+	  margin-bottom: 12px;
+	}
+
+	.product-ai-image {
+	  width: 82px;
+	  height: 82px;
+	  object-fit: contain;
+	}
+
+	.product-ai-head h3 {
+	  margin: 0;
+	  font-size: 20px;
+	  color: #5b3415;
+	}
+
+	.product-ai-label {
+	  margin: 4px 0 0;
+	  font-size: 13px;
+	  color: #8a6a4b;
+	}
+
+	.product-ai-message {
+	  margin: 0;
+	  padding: 14px 16px;
+	  border-radius: 14px;
+	  background: #ffffff;
+	  color: #4a3424;
+	  line-height: 1.8;
+	  font-size: 15px;
+	}
+	

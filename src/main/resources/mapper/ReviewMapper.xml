@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.hokkaidoec.mapper.ReviewMapper">
+
+    <resultMap id="ReviewResultMap" type="com.example.hokkaidoec.entity.Review">
+        <id property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="productId" column="product_id"/>
+        <result property="orderId" column="order_id"/>
+        <result property="rating" column="rating"/>
+        <result property="comment" column="comment"/>
+        <result property="createdAt" column="created_at"/>
+    </resultMap>
+
+    <select id="findByProductId" resultMap="ReviewResultMap">
+        SELECT * FROM reviews
+        WHERE product_id = #{productId}
+        ORDER BY created_at DESC
+    </select>
+
+    <select id="getAverageRating" resultType="double">
+        SELECT COALESCE(AVG(rating), 0)
+        FROM reviews
+        WHERE product_id = #{productId}
+    </select>
+
+    <select id="getReviewCount" resultType="int">
+        SELECT COUNT(*)
+        FROM reviews
+        WHERE product_id = #{productId}
+    </select>
+
+    <!-- 購入済みチェック -->
+    <select id="countPurchased" resultType="int">
+        SELECT COUNT(*)
+        FROM order_items oi
+        JOIN orders o ON oi.order_id = o.id
+        WHERE o.user_id = #{userId}
+        AND oi.product_id = #{productId}
+    </select>
+
+    <insert id="insertReview">
+        INSERT INTO reviews (user_id, product_id, order_id, rating, comment, created_at)
+        VALUES (#{userId}, #{productId}, #{orderId}, #{rating}, #{comment}, NOW())
+    </insert>
+
+</mapper>

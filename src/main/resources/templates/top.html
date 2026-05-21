@@ -1,10 +1,474 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+
 <head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
+
+	<meta charset="UTF-8">
+
+	<title>北海道EC</title>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link rel="stylesheet" th:href="@{/css/style_merged.css}">
+
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+	<link
+		href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Noto+Serif+JP:wght@300;400;500;700&display=swap"
+		rel="stylesheet">
+
 </head>
+
 <body>
 
+	<div class="container">
+
+		<!-- =========================
+         HEADER
+    ========================== -->
+
+		<header>
+
+			<!-- LOGO -->
+
+			<div class="brand">
+
+				<a th:href="@{/}">
+
+					<h1>
+
+						HOKKAIDO.
+
+					</h1>
+
+				</a>
+
+			</div>
+
+			<!-- SEARCH -->
+
+			<form th:action="@{/products}" method="get" class="searchbar">
+
+				<input type="text" name="keyword" placeholder="北海道の商品を探す">
+
+				<button type="submit">
+
+					検索
+
+				</button>
+
+			</form>
+
+			<!-- USER -->
+
+			<div class="user-area">
+
+				<div class="point-view">
+
+					<span>
+
+						POINT
+
+					</span>
+
+					<strong th:text="${loginUser != null ? loginUser.point : 0}">
+
+						0
+
+					</strong>
+
+				</div>
+
+				<!-- 未ログイン -->
+
+				<a th:if="${loginUser == null}" th:href="@{/login}" class="btn">
+
+					ログイン
+
+				</a>
+
+				<!-- ログイン済 -->
+
+				<a th:if="${loginUser != null}" th:href="@{/mypage}" class="btn">
+
+					マイページ
+
+				</a>
+
+			</div>
+
+		</header>
+
+		<!-- =========================
+         NAV
+    ========================== -->
+
+		<nav class="nav-menu">
+
+			<a th:href="@{/products}">
+
+				商品一覧
+
+			</a>
+
+			<a th:href="@{/regions}">
+
+				地域から探す
+
+			</a>
+
+			<a th:href="@{/points}">
+
+				ポイント
+
+			</a>
+
+			<a th:href="@{/points/history}">
+
+				ポイント履歴
+
+			</a>
+
+			<a th:href="@{/game}">
+
+				ミニゲーム
+
+			</a>
+
+			<a th:href="@{/game/history}">
+
+				ゲーム履歴
+
+			</a>
+
+			<a th:href="@{/order/history}">
+
+				注文履歴
+
+			</a>
+
+			<a th:href="@{/ai}">
+
+				AIコンシェルジュ
+
+			</a>
+
+		</nav>
+
+		<!-- =========================
+         HERO
+    ========================== -->
+
+		<section class="hero">
+
+			<!-- LEFT -->
+
+			<div class="main-visual">
+
+				<div class="hero-label">
+
+					HOKKAIDO PREMIUM SELECT
+
+				</div>
+
+				<h2>
+
+					北海道の<br>
+					うまいを<br>
+					全国へ
+
+				</h2>
+
+				<p>
+
+					海鮮、乳製品、農産物、スイーツなど、
+					北海道の魅力ある商品を
+					美しく届けるECサイト。
+
+				</p>
+
+				<div class="hero-buttons">
+
+					<a th:href="@{/products}" class="btn btn-primary">
+
+						商品を見る
+
+					</a>
+
+					<a th:href="@{/game}" class="btn">
+
+						ミニゲーム
+
+					</a>
+
+				</div>
+
+			</div>
+
+			<!-- RIGHT -->
+
+			<div class="side-box">
+
+				<!-- USER -->
+
+				<div class="login-box">
+
+					<h3>
+
+						ユーザー情報
+
+					</h3>
+
+					<!-- 未ログイン -->
+
+					<div th:if="${loginUser == null}">
+
+						<p>
+
+							ログインすると
+							ポイントや注文履歴を
+							確認できます。
+
+						</p>
+
+						<div class="side-buttons">
+
+							<a th:href="@{/login}" class="btn btn-primary">
+
+								ログイン
+
+							</a>
+
+							<a th:href="@{/register}" class="btn">
+
+								新規登録
+
+							</a>
+
+						</div>
+
+					</div>
+
+					<!-- ログイン済 -->
+
+					<div th:if="${loginUser != null}">
+
+						<p>
+
+							ようこそ、
+							<span th:text="${loginUser.name}">
+								ユーザー
+							</span>
+							さん
+
+						</p>
+
+						<div class="point-view">
+
+							<span>
+
+								CURRENT POINT
+
+							</span>
+
+							<strong th:text="${userPoints}">
+
+								0
+
+							</strong>
+
+						</div>
+
+					</div>
+
+				</div>
+
+				<!-- GAME -->
+
+				<div class="link-box">
+
+					<h3>
+
+						楽しむ
+
+					</h3>
+
+					<p>
+
+						ミニゲームで
+						ポイントを獲得できます。
+
+					</p>
+
+					<div class="side-buttons">
+
+						<a th:href="@{/game}" class="btn btn-primary">
+
+							ミニゲーム
+
+						</a>
+
+						<a th:href="@{/points}" class="btn">
+
+							ポイント確認
+
+						</a>
+
+					</div>
+
+				</div>
+
+			</div>
+
+		</section>
+
+		<!-- =========================
+         PRODUCTS
+    ========================== -->
+
+		<section class="products-area">
+
+			<div class="section-title">
+
+				<div>
+
+					<div class="hero-label">
+
+						RECOMMEND
+
+					</div>
+
+					<h2>
+
+						おすすめ商品
+
+					</h2>
+
+				</div>
+
+				<a th:href="@{/products}" class="btn">
+
+					商品一覧へ
+
+				</a>
+
+			</div>
+
+			<!-- GRID -->
+
+			<div class="product-grid">
+
+				<article class="card" th:each="p : ${recommendedProducts}">
+
+					<!-- IMAGE -->
+
+					<a th:href="@{|/products/${p.id}|}">
+
+						<img th:if="${p.imageUrl != null}" th:src="${p.imageUrl}" th:alt="${p.productName}">
+
+						<div th:if="${p.imageUrl == null}" class="no-image">
+
+							NO IMAGE
+
+						</div>
+
+					</a>
+
+					<!-- BODY -->
+
+					<div class="card-body">
+
+						<div class="card-tag">
+
+							HOKKAIDO
+
+						</div>
+
+						<div class="card-title" th:text="${p.productName}">
+
+							商品名
+
+						</div>
+
+						<div class="card-desc" th:text="${p.description}">
+
+							商品説明
+
+						</div>
+
+						<!-- META -->
+
+						<div class="card-meta">
+
+							<div class="price" th:text="${p.price} + ' ¥'">
+
+								1200¥
+
+							</div>
+
+							<div>
+
+								在庫
+								<span th:text="${p.stock}">
+
+									10
+
+								</span>
+
+							</div>
+
+						</div>
+
+						<!-- BUTTON -->
+
+						<div class="card-actions">
+
+							<a th:href="@{|/products/${p.id}|}" class="btn">
+
+								詳細
+
+							</a>
+
+							<form th:action="@{/order/add}" method="post">
+
+								<input type="hidden" name="productId" th:value="${p.id}">
+
+								<input type="hidden" name="quantity" value="1">
+
+								<button type="submit" class="btn btn-primary">
+
+									カート追加
+
+								</button>
+
+							</form>
+
+						</div>
+
+					</div>
+
+				</article>
+
+			</div>
+
+		</section>
+
+		<!-- =========================
+         FOOTER
+    ========================== -->
+
+		<footer>
+
+			HOKKAIDO. © 2026
+
+		</footer>
+		
+
+	</div>
+	<div th:replace="~{fragments/ai-widget :: aiWidget}"></div>
+
 </body>
+
 </html>

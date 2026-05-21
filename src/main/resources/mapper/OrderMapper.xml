@@ -1,8 +1,87 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
- 
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
 <mapper namespace="com.example.hokkaidoec.mapper.OrderMapper">
- 
+
+    <resultMap id="OrderResultMap" type="com.example.hokkaidoec.entity.Order">
+        <id property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="totalAmount" column="total_amount"/>
+        <result property="usedPoint" column="used_point"/>
+        <result property="earnedPoint" column="earned_point"/>
+        <result property="orderStatus" column="order_status"/>
+        <result property="orderDate" column="order_date"/>
+        <result property="shippingAddress" column="shipping_address"/>
+        
+    </resultMap>
+
+    <insert id="insert"
+        parameterType="com.example.hokkaidoec.entity.Order"
+        useGeneratedKeys="true"
+        keyProperty="id">
+    INSERT INTO orders (
+        user_id,
+        total_amount,
+        used_point,
+        earned_point,
+        order_status,
+        order_date,
+        shipping_address
+    )
+    VALUES (
+        #{userId},
+        #{totalAmount},
+        #{usedPoint},
+        #{earnedPoint},
+        #{orderStatus},
+        #{orderDate},
+        #{shippingAddress}
+    )
+</insert>
+
+
+<select id="findOrderIdByUserAndProduct" resultType="int">
+        SELECT oi.order_id
+        FROM order_items oi
+        JOIN orders o ON oi.order_id = o.id
+        WHERE o.user_id = #{userId}
+        AND oi.product_id = #{productId}
+        LIMIT 1
+    </select>
+
+    <select id="findById" parameterType="int" resultMap="OrderResultMap">
+        SELECT
+            id,
+            user_id,
+            total_amount,
+            used_point,
+            earned_point,
+            order_status,
+            order_date
+        FROM
+            orders
+        WHERE
+            id = #{id}
+    </select>
+
+    <select id="findByUserId" parameterType="int" resultMap="OrderResultMap">
+        SELECT
+            id,
+            user_id,
+            total_amount,
+            used_point,
+            earned_point,
+            order_status,
+            order_date
+        FROM
+            orders
+        WHERE
+            user_id = #{userId}
+        ORDER BY
+            order_date DESC
+    </select>
+
+
 </mapper>

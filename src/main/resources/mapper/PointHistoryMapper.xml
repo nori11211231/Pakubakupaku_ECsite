@@ -1,8 +1,60 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE mapper
-        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
- 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.hokkaidoec.mapper.PointHistoryMapper">
- 
+
+    <insert id="insert" parameterType="com.example.hokkaidoec.entity.PointHistory" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO point_history (
+            user_id,
+            point_change,
+            reason,
+            created_at
+        ) VALUES (
+            #{userId},
+            #{pointChange},
+            #{reason},
+            CURRENT_TIMESTAMP
+        )
+    </insert>
+
+    <select id="findByUserEmail" resultType="com.example.hokkaidoec.entity.PointHistory">
+        SELECT 
+            ph.id,
+            ph.user_id AS userId,
+            ph.point_change AS pointChange,
+            ph.reason,
+            ph.created_at AS createdAt
+        FROM point_history ph
+        INNER JOIN users u ON ph.user_id = u.id
+        WHERE u.email = #{userEmail}
+        ORDER BY ph.created_at DESC
+    </select>
+
+    <select id="findRecentByUserEmail" resultType="com.example.hokkaidoec.entity.PointHistory">
+        SELECT 
+            ph.id,
+            ph.user_id AS userId,
+            ph.point_change AS pointChange,
+            ph.reason,
+            ph.created_at AS createdAt
+        FROM point_history ph
+        INNER JOIN users u ON ph.user_id = u.id
+        WHERE u.email = #{userEmail}
+        ORDER BY ph.created_at DESC
+        LIMIT #{limit}
+    </select>
+
+    <select id="findLatestByUserEmail" resultType="com.example.hokkaidoec.entity.PointHistory">
+        SELECT 
+            ph.id,
+            ph.user_id AS userId,
+            ph.point_change AS pointChange,
+            ph.reason,
+            ph.created_at AS createdAt
+        FROM point_history ph
+        INNER JOIN users u ON ph.user_id = u.id
+        WHERE u.email = #{userEmail}
+        ORDER BY ph.created_at DESC
+        LIMIT 5
+    </select>
+
 </mapper>

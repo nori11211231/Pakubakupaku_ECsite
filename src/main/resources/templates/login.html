@@ -1,10 +1,144 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+
 <head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
+
+	<meta charset="UTF-8">
+
+	<title>ログイン | 北海道EC</title>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<!-- CSS -->
+
+	<link rel="stylesheet" th:href="@{/css/style_merged.css}">
+
+	<!-- FONT -->
+
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+	<link
+		href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Noto+Serif+JP:wght@300;400;500;700&display=swap"
+		rel="stylesheet">
+
 </head>
-<body>
+
+<body class="auth-body">
+
+	<!-- =========================
+         LOGIN AREA
+    ========================== -->
+
+	<main class="auth-container">
+
+		<div class="auth-card">
+
+			<!-- HEADER -->
+
+			<div class="auth-head">
+
+				<div class="auth-subtitle">
+
+					HOKKAIDO PREMIUM SELECT
+
+				</div>
+
+				<h1>
+
+					Login
+
+				</h1>
+
+				<p>
+
+					北海道ECへようこそ。<br>
+					ログインしてポイントや
+					注文履歴を確認できます。
+
+				</p>
+
+			</div>
+
+			<!-- ERROR -->
+
+			<div th:if="${loginError}" class="auth-error">
+
+				ログイン情報が正しくありません。
+
+			</div>
+
+			<!-- FORM -->
+
+			<form th:action="@{/login}" th:object="${form}" method="post" class="auth-form">
+
+				<!-- EMAIL -->
+
+				<div class="form-group">
+
+					<label>
+
+						メールアドレス
+
+					</label>
+
+					<input type="email" th:field="*{email}" placeholder="example@mail.com">
+
+					<span th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="field-error">
+					</span>
+
+				</div>
+
+				<!-- PASSWORD -->
+
+				<div class="form-group">
+
+					<label>
+
+						パスワード
+
+					</label>
+
+					<input type="password" th:field="*{password}" placeholder="••••••••">
+
+					<span th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="field-error">
+					</span>
+
+				</div>
+
+				<!-- BUTTON -->
+
+				<button type="submit" class="auth-button">
+
+					ログイン
+
+				</button>
+
+			</form>
+
+			<!-- FOOTER -->
+
+			<div class="auth-footer">
+
+				<span>
+
+					アカウントをお持ちでない方
+
+				</span>
+
+				<a href="/register">
+
+					新規会員登録
+
+				</a>
+
+			</div>
+
+		</div>
+
+	</main>
 
 </body>
+
 </html>

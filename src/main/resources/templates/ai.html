@@ -1,10 +1,169 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
+    <meta charset="UTF-8">
+    <title>AIコンシェルジュ</title>
+    <link rel="stylesheet" th:href="@{/css//style_merged.css}">
 </head>
 <body>
+<div th:replace="~{fragments/_header :: header}"></div>
 
+<main class="ai-page">
+    <section class="ai-chat-card">
+        <h1>AIコンシェルジュ</h1>
+
+        <div class="ai-profile">
+            <img th:src="${aiCharaImageUrl}" alt="AIコンシェルジュ">
+            <div>
+                <h2 th:text="${aiName}">コンシェルジュ</h2>
+                <p>北海道物産ECサイトの商品探しや操作方法を案内します。</p>
+            </div>
+        </div>
+
+        <div class="ai-status-box">
+            <p>レベル：<strong th:text="${aiLevel}">-</strong></p>
+            <p>ランク：<span th:text="${aiRankName}">ゲスト</span></p>
+            <p>性格：<span th:text="${aiGrowth.personality}">やさしい</span></p>
+            <p>経験値：<span th:text="${aiExpText}">0</span></p>
+            <p th:text="${nextRankMessage}">ログインすると経験値と次のランクが表示されます。</p>
+        </div>
+
+        <section class="ai-character-change-box">
+            <h2>キャラ変更</h2>
+
+            <div th:if="${canChangeAiCharacter}">
+                <p class="ai-character-change-message">
+                    ゴールドランク以上のため、14の振興局キャラから選択できます。
+                </p>
+
+                <form th:action="@{/ai/character/change}" method="post" class="ai-character-change-form">
+                    <input type="hidden"
+                           th:if="${_csrf != null}"
+                           th:name="${_csrf.parameterName}"
+                           th:value="${_csrf.token}">
+
+                    <div class="ai-region-character-grid">
+                        <label class="ai-region-character-card"
+                               th:each="character : ${aiRegionCharacters}"
+                               th:classappend="${currentAiCharacterKey == character.key} ? ' selected' : ''">
+
+                            <input type="radio"
+                                   name="charaKey"
+                                   th:value="${character.key}"
+                                   th:checked="${currentAiCharacterKey == character.key}">
+
+                            <img th:src="${character.imageUrl}" th:alt="${character.name}">
+                            <span th:text="${character.name}">空知コンシェルジュ</span>
+                        </label>
+                    </div>
+
+                    <button type="submit" class="ai-character-change-button">
+                        このキャラに変更する
+                    </button>
+                </form>
+            </div>
+
+            <div th:unless="${canChangeAiCharacter}">
+                <p class="ai-character-locked-message">
+                    ゴールドランク以上になると、14の振興局キャラから好きなキャラを選べます。
+                </p>
+            </div>
+        </section>
+
+        <form id="aiChatForm"
+              class="ai-chat-form"
+              th:action="@{/ai/chat}"
+              th:object="${aiChatForm}"
+              method="post">
+
+            <input type="hidden"
+                   th:if="${_csrf != null}"
+                   th:name="${_csrf.parameterName}"
+                   th:value="${_csrf.token}">
+
+            <label for="userMessage">質問内容</label>
+
+            <textarea id="userMessage"
+                      th:field="*{userMessage}"
+                      rows="4"
+                      placeholder="例：おすすめの商品を教えて"></textarea>
+
+            <button type="submit" id="aiSendButton">AIに聞く</button>
+        </form>
+
+        <section class="ai-reply-box">
+            <h2>AIの返答</h2>
+            <p id="aiReplyText"
+               class="ai-reply-text"
+               th:text="${#strings.isEmpty(aiChatForm.aiReply) ? '質問を送るとここにAIの返答が表示されます。' : aiChatForm.aiReply}">
+                質問を送るとここにAIの返答が表示されます。
+            </p>
+        </section>
+    </section>
+</main>
+
+<div th:replace="~{fragments/_footer :: footer}"></div>
+
+<script th:inline="javascript">
+    const aiChatReplyUrl = /*[[@{/ai/chat/reply}]]*/ "/ai/chat/reply";
+
+    const aiChatForm = document.getElementById("aiChatForm");
+    const userMessage = document.getElementById("userMessage");
+    const aiReplyText = document.getElementById("aiReplyText");
+    const aiSendButton = document.getElementById("aiSendButton");
+
+    aiChatForm.addEventListener("submit", async function (event) {
+        event.preventDefault();
+
+        const message = userMessage.value.trim();
+
+        if (message.length === 0) {
+            aiReplyText.textContent = "質問を入力してください。";
+            return;
+        }
+
+        aiReplyText.textContent = "AIが返答を作成中です...";
+        aiSendButton.disabled = true;
+
+        try {
+            const formData = new FormData(aiChatForm);
+            const params = new URLSearchParams();
+
+            for (const [key, value] of formData.entries()) {
+                params.append(key, value);
+            }
+
+            const response = await fetch(aiChatReplyUrl, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
+                    "Accept": "application/json",
+                    "X-Requested-With": "XMLHttpRequest"
+                },
+                body: params
+            });
+
+            const contentType = response.headers.get("content-type") || "";
+
+            if (!response.ok) {
+                throw new Error("通信に失敗しました。status=" + response.status);
+            }
+
+            if (!contentType.includes("application/json")) {
+                throw new Error("JSONではないレスポンスが返りました。ログイン画面に飛ばされている可能性があります。");
+            }
+
+            const data = await response.json();
+            aiReplyText.textContent = data.reply || "AIの返答を取得できませんでした。";
+
+        } catch (error) {
+            console.error(error);
+            aiReplyText.textContent =
+                "AIの返答を取得できませんでした。ログイン状態、APIキー、application.properties、サーバーエラーを確認してください。";
+        } finally {
+            aiSendButton.disabled = false;
+        }
+    });
+</script>
 </body>
 </html>
