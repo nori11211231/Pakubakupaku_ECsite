@@ -1,382 +1,89 @@
 <!DOCTYPE html>
-<html>
-
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-
 	<meta charset="UTF-8">
-
-	<title>北海道EC</title>
-
+	<title>会員情報 | 北海道EC</title>
 	<link rel="stylesheet" th:href="@{/css/style.css}">
-
 </head>
-
 <body>
-
 	<div class="container">
-
-		<!-- HEADER -->
-
+		<!-- HEADER (既存のヘッダーと同じ) -->
 		<header>
-
-			<!-- LOGO -->
-
 			<div class="brand">
-
-				<a th:href="@{/}">
-
-					<h1>
-
-						HOKKAIDO.
-
-					</h1>
-
-				</a>
-
+				<a th:href="@{/}"><h1>HOKKAIDO.</h1></a>
 			</div>
-
-			<!-- SEARCH -->
-
 			<form th:action="@{/products}" method="get" class="searchbar">
-
 				<input type="text" name="keyword" placeholder="北海道の商品を探す">
-
-				<button type="submit">
-
-					検索
-
-				</button>
-
+				<button type="submit">検索</button>
 			</form>
-
-			<!-- USER -->
-
 			<div class="user-area">
-
 				<div class="point-view">
-
-					<span>
-
-						POINT
-
-					</span>
-
-					<strong th:text="${loginUser != null ? loginUser.point : 0}">
-
-						0
-
-					</strong>
-
+					<span>POINT</span>
+					<strong th:text="${user.point}">0</strong>
 				</div>
-
-				<!-- 未ログイン -->
-
-				<a th:if="${loginUser == null}" th:href="@{/login}" class="btn">
-
-					ログイン
-
-				</a>
-
-				<!-- ログイン済 -->
-
-				<a th:if="${loginUser != null}" th:href="@{/mypage}" class="btn">
-
-					マイページ
-
-				</a>
-
+				<a th:href="@{/mypage}" class="btn">マイページ</a>
 			</div>
-
 		</header>
 
-		<!-- NAV -->
-
+		<!-- NAV (既存のメニューと同じ) -->
 		<nav class="nav-menu">
-
-			<a th:href="@{/products}">
-
-				商品一覧
-
-			</a>
-
-			<a th:href="@{/regions}">
-
-				地域から探す
-
-			</a>
-
-			<a th:href="@{/points}">
-
-				ポイント
-
-			</a>
-
-			<a th:href="@{/points/history}">
-
-				ポイント履歴
-
-			</a>
-
-			<a th:href="@{/game}">
-
-				ミニゲーム
-
-			</a>
-
-			<a th:href="@{/game/history}">
-
-				ゲーム履歴
-
-			</a>
-
-			<a th:href="@{/orders}">
-
-				注文履歴
-
-			</a>
-
+			<a th:href="@{/products}">商品一覧</a>
+			<a th:href="@{/regions}">地域から探す</a>
+			<a th:href="@{/points}">ポイント</a>
+			<a th:href="@{/points/history}">ポイント履歴</a>
+			<a th:href="@{/game}">ミニゲーム</a>
+			<a th:href="@{/game/history}">ゲーム履歴</a>
+			<a th:href="@{/orders}">注文履歴</a>
 		</nav>
 
-		<!-- HERO -->
-
-		<section class="hero">
-
-			<!-- LEFT -->
-
-			<div class="main-visual">
-
-				<h2>
-
-					北海道の<br>
-					うまいを全国へ
-
-				</h2>
-
-				<p>
-
-					海鮮、乳製品、スイーツ、
-					北海道の魅力を届ける
-					プレミアムECサイト。
-
-				</p>
-
-				<div class="side-buttons">
-
-					<a th:href="@{/products}" class="btn btn-primary">
-
-						商品を見る
-
-					</a>
-
-					<a th:href="@{/game}" class="btn">
-
-						ミニゲーム
-
-					</a>
-
-				</div>
-
+		<!-- MAIN CONTENT: 会員情報表示エリア -->
+		<section class="profile-area" style="padding: 40px 20px; background: #fff; margin-top: 20px; border-radius: 8px;">
+			<div class="section-title" style="margin-bottom: 30px; border-bottom: 2px solid #f0f0f0; padding-bottom: 10px;">
+				<h2 style="font-size: 24px; color: #333;">会員情報・プロフィール</h2>
 			</div>
 
-			<!-- RIGHT -->
+			<!-- 情報表示テーブル -->
+			<table class="profile-table" style="width: 100%; border-collapse: collapse; font-size: 16px;">
+				<tr style="border-bottom: 1px solid #eee;">
+					<th style="text-align: left; padding: 15px; width: 200px; background: #f9f9f9; color: #555;">お名前</th>
+					<td style="padding: 15px; color: #333;" th:text="${user.name}">山田 太郎</td>
+				</tr>
+				<tr style="border-bottom: 1px solid #eee;">
+					<th style="text-align: left; padding: 15px; background: #f9f9f9; color: #555;">メールアドレス</th>
+					<td style="padding: 15px; color: #333;" th:text="${user.email}">sample@example.com</td>
+				</tr>
+				<tr style="border-bottom: 1px solid #eee;">
+					<th style="text-align: left; padding: 15px; background: #f9f9f9; color: #555;">ご住所</th>
+					<td style="padding: 15px; color: #333;" th:text="${user.address}">北海道札幌市...</td>
+				</tr>
+				<tr style="border-bottom: 1px solid #eee;">
+					<th style="text-align: left; padding: 15px; background: #f9f9f9; color: #555;">電話番号</th>
+					<td style="padding: 15px; color: #333;" th:text="${user.phone}">090-1234-5678</td>
+				</tr>
+				<tr style="border-bottom: 1px solid #eee;">
+					<th style="text-align: left; padding: 15px; background: #f9f9f9; color: #555;">現在の会員ランク</th>
+					<td style="padding: 15px; color: #333; font-weight: bold;" th:text="${rankName}">ゴールド会員</td>
+				</tr>
+				<tr style="border-bottom: 1px solid #eee;">
+					<th style="text-align: left; padding: 15px; background: #f9f9f9; color: #555;">所持ポイント</th>
+					<td style="padding: 15px; color: #e67e22; font-weight: bold;"><span th:text="${user.point}">0</span> pt</td>
+				</tr>
+				<tr style="border-bottom: 1px solid #eee;">
+					<th style="text-align: left; padding: 15px; background: #f9f9f9; color: #555;">総購入金額</th>
+					<td style="padding: 15px; color: #333;" th:text="${user.totalPurchaseAmount != null ? user.totalPurchaseAmount + ' 円' : '0 円'}">0 円</td>
+				</tr>
+			</table>
 
-			<div class="side-box">
-
-				<div class="login-box">
-
-					<h3>
-
-						ユーザー情報
-
-					</h3>
-
-					<div th:if="${loginUser == null}">
-
-						<p>
-
-							ログインすると
-							ポイントや注文履歴を
-							確認できます。
-
-						</p>
-
-						<div class="side-buttons">
-
-							<a th:href="@{/login}" class="btn btn-primary">
-
-								ログイン
-
-							</a>
-
-							<a th:href="@{/register}" class="btn">
-
-								新規登録
-
-							</a>
-
-						</div>
-
-					</div>
-
-					<div th:if="${loginUser != null}">
-
-						<p>
-
-							ようこそ、
-							<span th:text="${loginUser.name}">
-								ユーザー
-							</span>
-							さん
-
-						</p>
-
-						<div class="point-view">
-
-							<span>
-
-								CURRENT POINT
-
-							</span>
-
-							<strong th:text="${loginUser.point}">
-
-								0
-
-							</strong>
-
-						</div>
-
-					</div>
-
-				</div>
-
+			<!-- ボタンエリア -->
+			<div style="margin-top: 30px; text-align: center;">
+				<a th:href="@{/mypage}" class="btn btn-primary" style="padding: 10px 30px;">マイページトップへ戻る</a>
 			</div>
-
-		</section>
-
-		<!-- PRODUCT -->
-
-		<section class="products-area">
-
-			<div class="section-title">
-
-				<h2>
-
-					おすすめ商品
-
-				</h2>
-
-				<a th:href="@{/products}" class="btn">
-
-					商品一覧へ
-
-				</a>
-
-			</div>
-
-			<!-- GRID -->
-
-			<div class="product-grid">
-
-				<article class="card" th:each="p : ${recommendedProducts}">
-
-					<!-- IMAGE -->
-
-					<a th:href="@{|/products/${p.id}|}">
-
-						<img th:if="${p.imageUrl != null}" th:src="${p.imageUrl}" th:alt="${p.productName}">
-
-						<div th:if="${p.imageUrl == null}" class="no-image">
-
-							NO IMAGE
-
-						</div>
-
-					</a>
-
-					<!-- BODY -->
-
-					<div class="card-body">
-
-						<div class="card-title" th:text="${p.productName}">
-
-							商品名
-
-						</div>
-
-						<div class="card-desc" th:text="${p.description}">
-
-							商品説明
-
-						</div>
-
-						<!-- META -->
-
-						<div class="card-meta">
-
-							<div class="price" th:text="${p.price} + ' ¥'">
-
-								1200¥
-
-							</div>
-
-							<div>
-
-								在庫
-								<span th:text="${p.stock}">
-
-									10
-
-								</span>
-
-							</div>
-
-						</div>
-
-						<!-- ACTION -->
-
-						<div class="card-actions">
-
-							<a th:href="@{|/products/${p.id}|}" class="btn">
-
-								詳細
-
-							</a>
-
-							<form th:action="@{/order/add}" method="post">
-
-								<input type="hidden" name="productId" th:value="${p.id}">
-
-								<input type="hidden" name="quantity" value="1">
-
-								<button type="submit" class="btn btn-primary">
-
-									カート追加
-
-								</button>
-
-							</form>
-
-						</div>
-
-					</div>
-
-				</article>
-
-			</div>
-
 		</section>
 
 		<!-- FOOTER -->
-
 		<footer>
-
 			HOKKAIDO. © 2026
-
 		</footer>
-
 	</div>
-
 </body>
-
 </html>
