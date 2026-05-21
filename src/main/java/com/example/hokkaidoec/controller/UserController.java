@@ -143,13 +143,32 @@ public class UserController {
 	}
 
 	@GetMapping("/mypage/profile")
-	public String showProfile(HttpSession session) {
+	public String showProfile(Model model, HttpSession session) { // 💡 引数に Model を追加します
+		// 1. セッションからログインユーザーを取得
+		User loginUser = (User) session.getAttribute("loginUser");
+
 		// 未ログインチェック（セッションがなければログイン画面へ）
-		if (session.getAttribute("loginUser") == null) {
+		if (loginUser == null) {
 			return "redirect:/login";
 		}
 
-		// 🌟 すでに存在する「/mypage」のURLにそのまま転送する
+		// 2. 【最重要】HTMLが求めている「loginUser」という名前でModelに登録！
+		// これで、HTML側の ${loginUser.name} や ${loginUser.address} にデータが届きます
+		model.addAttribute("loginUser", loginUser);
+
+		// 3. ランク名の取得処理（/mypage の処理をそのまま活用）
+		String rankName = "通常ポイント";
+		if (loginUser.getRankId() != null) {
+			Rank currentRank = userService.findRankById(loginUser.getRankId());
+			if (currentRank != null) {
+				rankName = currentRank.getRankName();
+			}
+		}
+		// HTML側の ${rankName} に渡す
+		model.addAttribute("rankName", rankName);
+
+		// 4. マイページ詳細画面（会員情報ページ）を呼び出す
 		return "mypage-detail";
 	}
+
 }
