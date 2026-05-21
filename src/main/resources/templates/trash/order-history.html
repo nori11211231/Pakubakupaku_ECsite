@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+	<meta charset="UTF-8">
+
+	<title>注文履歴 | 北海道EC</title>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link rel="stylesheet" th:href="@{/css/style_merged.css}">
+
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+	<link
+		href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Noto+Serif+JP:wght@300;400;500;700&display=swap"
+		rel="stylesheet">
+
+</head>
+
+<body>
+	<div th:replace="~{fragments/_header :: header}"></div>
+
+	<div class="container">
+
+		<!-- =========================
+         HEADER
+    ========================== -->
+
+		<header>
+
+			<div class="brand">
+
+				<a th:href="@{/top}">
+
+					<h1>
+
+						HOKKAIDO.
+
+					</h1>
+
+				</a>
+
+			</div>
+
+			<div class="user-area">
+
+				<a href="/top" class="btn">
+
+					トップへ戻る
+
+				</a>
+
+			</div>
+
+		</header>
+
+		<!-- =========================
+         PAGE TITLE
+    ========================== -->
+
+		<section class="history-hero">
+
+			<div class="hero-label">
+
+				ORDER HISTORY
+
+			</div>
+
+			<h2>
+
+				注文履歴
+
+			</h2>
+
+			<p>
+
+				過去に注文した商品を
+				確認できます。
+
+			</p>
+
+		</section>
+
+		<!-- =========================
+         HISTORY TABLE
+    ========================== -->
+
+		<section class="history-wrapper">
+
+			<table class="history-table">
+
+				<thead>
+
+					<tr>
+
+						<th>
+
+							注文ID
+
+						</th>
+
+						<th>
+
+							注文日
+
+						</th>
+
+						<th>
+
+							合計金額
+
+						</th>
+
+						<th>
+
+							詳細
+
+						</th>
+
+					</tr>
+
+				</thead>
+
+				<tbody>
+
+					<tr th:each="order : ${orderList}">
+
+						<!-- ORDER ID -->
+
+						<td th:text="${order.id}">
+
+							1
+
+						</td>
+
+						<!-- DATE -->
+
+						<td th:text="${order.orderDate}">
+
+							2026-05-20
+
+						</td>
+
+						<!-- PRICE -->
+
+						<td class="price-cell" th:text="${order.totalAmount} + ' 円'">
+
+							5000円
+
+						</td>
+
+						<!-- DETAIL -->
+
+						<td>
+
+							<a th:href="@{'/orders/' + ${order.id}}" class="btn btn-primary">
+
+								詳細を見る
+
+							</a>
+
+						</td>
+
+					</tr>
+
+				</tbody>
+
+			</table>
+
+			<!-- EMPTY -->
+
+			<div th:if="${#lists.isEmpty(orderList)}" class="empty-history">
+
+				<h3>
+
+					注文履歴がありません
+
+				</h3>
+
+				<p>
+
+					まだ商品を購入していません。
+
+				</p>
+
+				<a href="/products" class="btn btn-primary">
+
+					商品を見る
+
+				</a>
+
+			</div>
+
+		</section>
+
+	</div>
+
+</body>
+
+</html>

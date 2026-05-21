@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+
+<!-- 共通CSS：ヘッダー・フッター・AIウィジェット用 -->
+	   <link rel="stylesheet" th:href="@{/css/style.css}">
+
+	   <!-- 商品一覧ページ専用CSS -->
+	   <link rel="stylesheet" th:href="@{/css/style_merged.css}">
+<title>注文詳細</title>
+</head>
+<body>
+	<div th:replace="~{fragments/_header :: header}"></div>
+	
+<h2>注文詳細</h2>
+
+<h3>注文情報</h3>
+<p>注文ID：<span th:text="${order.id}"></span></p>
+<p>注文日：<span th:text="${order.orderDate}"></span></p>
+<p>配送先：<span th:text="${order.shippingAddress}"></span></p>
+<p>使用ポイント：<span th:text="${order.usedPoint}"></span></p>
+<p>獲得ポイント：<span th:text="${order.earnedPoint}"></span></p>
+<p>合計金額：<span th:text="${order.totalAmount}"></span>円</p>
+<p>注文状態：<span th:text="${order.orderStatus}"></span></p>
+
+<h3>商品明細</h3>
+
+<table border="1">
+    <tr>
+        <th>商品名</th>
+        <th>数量</th>
+        <th>単価</th>
+        <th>小計</th>
+        <th>画像</th>
+    </tr>
+
+    <tr th:each="item : ${orderItemDetails}">
+        <td th:text="${item.productName}"></td>
+        <td th:text="${item.quantity}"></td>
+        <td th:text="${item.productPrice}"></td>
+        <td th:text="${item.itemSubtotal}"></td>
+        <td><img th:src="${item.imageUrl}" width="80" /></td>
+    </tr>
+</table>
+
+<br>
+<a href="/order/history">注文履歴へ戻る</a>
+
+</body>
+</html>

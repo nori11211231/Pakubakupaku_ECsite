@@ -3,39 +3,13 @@
 <head>
 	<meta charset="UTF-8">
 	<title>会員情報 | 北海道EC</title>
-	<link rel="stylesheet" th:href="@{/css/style.css}">
+	<link rel="stylesheet" th:href="@{/css/style_merged.css}">
 </head>
 <body>
 	<div class="container">
 		<!-- HEADER -->
-		<header>
-			<div class="brand">
-				<a th:href="@{/}"><h1>HOKKAIDO.</h1></a>
-			</div>
-			<form th:action="@{/products}" method="get" class="searchbar">
-				<input type="text" name="keyword" placeholder="北海道の商品を探す">
-				<button type="submit">検索</button>
-			</form>
-			<div class="user-area">
-				<div class="point-view">
-					<span>POINT</span>
-					<!-- 【変更】loginUserに合わせて安全に取得 -->
-					<strong th:text="${loginUser?.point} ?: 0">0</strong>
-				</div>
-				<a th:href="@{/mypage}" class="btn">マイページ</a>
-			</div>
-		</header>
+		<div th:replace="~{fragments/_header :: header}"></div>
 
-		<!-- NAV -->
-		<nav class="nav-menu">
-			<a th:href="@{/products}">商品一覧</a>
-			<a th:href="@{/regions}">地域から探す</a>
-			<a th:href="@{/points}">ポイント</a>
-			<a th:href="@{/points/history}">ポイント履歴</a>
-			<a th:href="@{/game}">ミニゲーム</a>
-			<a th:href="@{/game/history}">ゲーム履歴</a>
-			<a th:href="@{/orders}">注文履歴</a>
-		</nav>
 
 		<!-- MAIN CONTENT: 会員情報表示エリア -->
 		<section class="profile-area" style="padding: 40px 20px; background: #fff; margin-top: 20px; border-radius: 8px;">
