@@ -1,179 +1,215 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>マイページ - 北海道EC</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" th:href="@{/css/style_merged.css}">
+    
+    <!-- 共通フォント -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Noto+Serif+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
 </head>
 
-<body class="bg-gray-50 text-gray-800">
+<body>
 
-    <div th:replace="~{fragments/_header :: header}"></div>
+    <div class="container">
 
-    <main class="max-w-7xl mx-auto p-6 mt-6">
-
-        <div class="mb-8">
-            <h1 class="text-3xl font-bold text-slate-800">マイページ</h1>
-            <p class="text-gray-500 text-sm mt-1">
-                注文履歴・ポイント・AI成長・ミニゲーム履歴をまとめる
-            </p>
-        </div>
-
-        <div th:if="${user == null}" class="bg-red-50 border border-red-200 text-red-700 p-5 rounded-xl mb-8">
-            <p class="font-bold">ログイン情報が見つかりません。</p>
-            <p class="text-sm mt-1">もう一度ログインしてください。</p>
-            <a th:href="@{/login}"
-               class="inline-block mt-3 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm">
-                ログイン画面へ
-            </a>
-        </div>
-
-        <div th:if="${user != null}">
-
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10">
-
-                <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm flex flex-col justify-center min-h-[140px]">
-                    <p class="text-xs text-gray-400 font-semibold mb-1">ユーザー情報</p>
-
-                    <p class="text-lg font-bold text-gray-700"
-                       th:text="${user.name}">
-                        山田 太郎
-                    </p>
-
-                    <p class="text-sm text-gray-500"
-                       th:text="${user.email}">
-                        taro@example.com
-                    </p>
-                </div>
-
-                <div class="bg-amber-100 p-6 rounded-xl border border-amber-200 shadow-sm flex flex-col justify-center text-center min-h-[140px]">
-                    <p class="text-sm font-bold text-amber-800">保有ポイント</p>
-
-                    <p class="text-2xl font-extrabold text-amber-900 mt-1">
-                        <span th:text="${#numbers.formatInteger(user.point, 1, 'COMMA')}">1,250</span> pt
-                    </p>
-
-                    <p class="text-sm text-amber-700 mt-1">
-                        ランク：
-                        <span th:text="${point != null ? point.name : '未設定'}">ブロンズ</span>
-                    </p>
-                </div>
-
-                <div class="bg-purple-50 p-6 rounded-xl border border-purple-200 shadow-sm flex flex-col justify-center text-center min-h-[140px]">
-                    <p class="text-sm font-bold text-purple-800">育成AI</p>
-
-                    <p class="text-xl font-extrabold text-purple-900 mt-1">
-                        Lv.
-                        <span th:text="${ai != null and ai['level'] != null ? ai['level'] : 1}">1</span>
-                    </p>
-
-                    <p class="text-sm text-purple-700 mt-1">
-                        経験値
-                        <span th:text="${ai != null and ai['exp'] != null ? #numbers.formatInteger(ai['exp'], 1, 'COMMA') : 0}">0</span>
-                    </p>
-                </div>
-
-                <div class="bg-slate-50 p-6 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-center text-center min-h-[140px]">
-                    <p class="text-sm font-medium text-slate-600">次のおすすめ商品</p>
-                    <p class="text-xs text-slate-400 mt-2">
-                        商品一覧から気になる北海道商品を探してみよう
-                    </p>
-
-                    <a th:href="@{/products}"
-                       class="inline-block mt-3 bg-slate-700 hover:bg-slate-800 text-white text-sm px-4 py-2 rounded-lg transition">
-                        商品を見る
-                    </a>
-                </div>
-
+        <!-- =========================
+             HEADER (共通フォーマット)
+        ========================== -->
+        <header>
+            <div class="brand">
+                <a th:href="@{/}">
+                    <h1>HOKKAIDO.</h1>
+                </a>
             </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
+            <form th:action="@{/products}" method="get" class="searchbar">
+                <input type="text" name="keyword" placeholder="北海道の商品を探す">
+                <button type="submit">検索</button>
+            </form>
 
-                <div class="lg:col-span-2">
-                    <h2 class="text-2xl font-bold text-slate-800 mb-4">注文履歴</h2>
+            <div class="user-area">
+                <div class="point-view">
+                    <span>POINT</span>
+                    <!-- マイページで使われているuserオブジェクトからポイントを表示 -->
+                    <strong th:text="${user != null ? user.point : 0}">0</strong>
+                </div>
 
-                    <div class="space-y-3">
+                <!-- 未ログイン -->
+                <a th:if="${user == null}" th:href="@{/login}" class="btn">ログイン</a>
+                <!-- ログイン済 -->
+                <a th:if="${user != null}" th:href="@{/mypage}" class="btn">マイページ</a>
+            </div>
+        </header>
 
-                        <div th:if="${orders != null and !#lists.isEmpty(orders)}">
-                            <div th:each="order : ${orders}"
-                                 class="bg-white p-4 rounded-lg border border-gray-200 shadow-sm flex justify-between items-center mb-3">
+        <!-- =========================
+             NAV (共通フォーマット)
+        ========================== -->
+        <nav class="nav-menu">
+            <a th:href="@{/products}">商品一覧</a>
+            <a th:href="@{/regions}">地域から探す</a>
+            <a th:href="@{/points}">ポイント</a>
+            <a th:href="@{/points/history}">ポイント履歴</a>
+            <a th:href="@{/game}">ミニゲーム</a>
+            <a th:href="@{/game/history}">ゲーム履歴</a>
+            <a th:href="@{/order/history}">注文履歴</a>
+            <a th:href="@{/ai}">AIコンシェルジュ</a>
+        </nav>
 
-                                <div class="text-sm text-gray-600 font-medium">
-                                    <span>
-                                        <span th:text="${#numbers.formatInteger(order.totalAmount, 1, 'COMMA')}">3,900</span>円
+        <!-- =========================
+             MAIN CONTENT (変更なし)
+        ========================== -->
+        <main class="max-w-7xl mx-auto p-6 mt-6">
+
+            <div class="mb-8">
+                <h1 class="text-3xl font-bold text-slate-800">マイページ</h1>
+                <p class="text-gray-500 text-sm mt-1">
+                    注文履歴・ポイント・AI成長・ミニゲーム履歴をまとめる
+                </p>
+            </div>
+
+            <div th:if="${user == null}" class="bg-red-50 border border-red-200 text-red-700 p-5 rounded-xl mb-8">
+                <p class="font-bold">ログイン情報が見つかりません。</p>
+                <p class="text-sm mt-1">もう一度ログインしてください。</p>
+                <a th:href="@{/login}"
+                   class="inline-block mt-3 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm">
+                    ログイン画面へ
+                </a>
+            </div>
+
+            <div th:if="${user != null}">
+
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10">
+
+                    <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm flex flex-col justify-center min-h-[140px]">
+                        <p class="text-xs text-gray-400 font-semibold mb-1">ユーザー情報</p>
+                        <p class="text-lg font-bold text-gray-700" th:text="${user.name}">山田 太郎</p>
+                        <p class="text-sm text-gray-500" th:text="${user.email}">taro@example.com</p>
+                    </div>
+
+                    <div class="bg-amber-100 p-6 rounded-xl border border-amber-200 shadow-sm flex flex-col justify-center text-center min-h-[140px]">
+                        <p class="text-sm font-bold text-amber-800">保有ポイント</p>
+                        <p class="text-2xl font-extrabold text-amber-900 mt-1">
+                            <span th:text="${#numbers.formatInteger(user.point, 1, 'COMMA')}">1,250</span> pt
+                        </p>
+                        <p class="text-sm text-amber-700 mt-1">
+                            ランク：
+                            <span th:text="${point != null ? point.name : '未設定'}">ブロンズ</span>
+                        </p>
+                    </div>
+
+                    <div class="bg-purple-50 p-6 rounded-xl border border-purple-200 shadow-sm flex flex-col justify-center text-center min-h-[140px]">
+                        <p class="text-sm font-bold text-purple-800">育成AI</p>
+                        <p class="text-xl font-extrabold text-purple-900 mt-1">
+                            Lv.
+                            <span th:text="${ai != null and ai['level'] != null ? ai['level'] : 1}">1</span>
+                        </p>
+                        <p class="text-sm text-purple-700 mt-1">
+                            経験値
+                            <span th:text="${ai != null and ai['exp'] != null ? #numbers.formatInteger(ai['exp'], 1, 'COMMA') : 0}">0</span>
+                        </p>
+                    </div>
+
+                    <div class="bg-slate-50 p-6 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-center text-center min-h-[140px]">
+                        <p class="text-sm font-medium text-slate-600">次のおすすめ商品</p>
+                        <p class="text-xs text-slate-400 mt-2">
+                            商品一覧から気になる北海道商品を探してみよう
+                        </p>
+                        <a th:href="@{/products}"
+                           class="inline-block mt-3 bg-slate-700 hover:bg-slate-800 text-white text-sm px-4 py-2 rounded-lg transition">
+                            商品を見る
+                        </a>
+                    </div>
+
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
+
+                    <div class="lg:col-span-2">
+                        <h2 class="text-2xl font-bold text-slate-800 mb-4">注文履歴</h2>
+                        <div class="space-y-3">
+                            <div th:if="${orders != null and !#lists.isEmpty(orders)}">
+                                <div th:each="order : ${orders}"
+                                     class="bg-white p-4 rounded-lg border border-gray-200 shadow-sm flex justify-between items-center mb-3">
+                                    <div class="text-sm text-gray-600 font-medium">
+                                        <span>
+                                            <span th:text="${#numbers.formatInteger(order.totalAmount, 1, 'COMMA')}">3,900</span>円
+                                        </span>
+                                    </div>
+                                    <span class="text-sm font-medium text-gray-500" th:text="${order.orderStatus}">
+                                        注文完了
                                     </span>
                                 </div>
+                            </div>
 
-                                <span class="text-sm font-medium text-gray-500"
-                                      th:text="${order.orderStatus}">
-                                    注文完了
-                                </span>
+                            <div th:if="${orders == null or #lists.isEmpty(orders)}"
+                                 class="bg-white p-6 rounded-lg border border-gray-200 shadow-sm text-center">
+                                <p class="text-gray-600 font-medium">まだ注文履歴がありません。</p>
+                                <p class="text-sm text-gray-400 mt-1">
+                                    商品を購入すると、ここに注文履歴が表示されます。
+                                </p>
+                                <a th:href="@{/products}"
+                                   class="inline-block mt-4 bg-blue-600 hover:bg-blue-700 text-white text-sm px-5 py-2 rounded-lg transition">
+                                    商品一覧へ
+                                </a>
                             </div>
                         </div>
+                    </div>
 
-                        <div th:if="${orders == null or #lists.isEmpty(orders)}"
-                             class="bg-white p-6 rounded-lg border border-gray-200 shadow-sm text-center">
-
-                            <p class="text-gray-600 font-medium">まだ注文履歴がありません。</p>
-                            <p class="text-sm text-gray-400 mt-1">
-                                商品を購入すると、ここに注文履歴が表示されます。
-                            </p>
-
-                            <a th:href="@{/products}"
-                               class="inline-block mt-4 bg-blue-600 hover:bg-blue-700 text-white text-sm px-5 py-2 rounded-lg transition">
-                                商品一覧へ
+                    <div>
+                        <h2 class="text-2xl font-bold text-slate-800 mb-4">履歴・管理</h2>
+                        <div class="space-y-3">
+                            <a th:href="@{/order/history}"
+                               class="block w-full text-center bg-slate-50 hover:bg-slate-100 text-slate-700 font-medium py-3 px-4 rounded-lg border border-slate-200 shadow-sm transition">
+                                注文履歴一覧
                             </a>
+                            <a th:href="@{/points}"
+                               class="block w-full text-center bg-slate-50 hover:bg-slate-100 text-slate-700 font-medium py-3 px-4 rounded-lg border border-slate-200 shadow-sm transition">
+                                Point Page
+                            </a>
+                            <a th:href="@{/points/history}"
+                               class="block w-full text-center bg-slate-50 hover:bg-slate-100 text-slate-700 font-medium py-3 px-4 rounded-lg border border-slate-200 shadow-sm transition">
+                                ポイント履歴
+                            </a>
+                            <a th:href="@{/game/history}"
+                               class="block w-full text-center bg-slate-50 hover:bg-slate-100 text-slate-700 font-medium py-3 px-4 rounded-lg border border-slate-200 shadow-sm transition">
+                                ミニゲーム履歴
+                            </a>
+                            <a th:href="@{/mypage/profile}"
+                               class="block w-full text-center bg-slate-50 hover:bg-slate-100 text-slate-700 font-medium py-3 px-4 rounded-lg border border-slate-200 shadow-sm transition">
+                                登録情報確認
+                            </a>
+                            <form th:action="@{/logout}" method="post" class="block w-full">
+                                <button type="submit"
+                                        class="w-full text-center bg-slate-50 hover:bg-red-50 text-red-600 font-medium py-3 px-4 rounded-lg border border-slate-200 shadow-sm transition">
+                                    ログアウト
+                                </button>
+                            </form>
                         </div>
-
                     </div>
-                </div>
 
-                <div>
-                    <h2 class="text-2xl font-bold text-slate-800 mb-4">履歴・管理</h2>
-
-                    <div class="space-y-3">
-
-                        <a th:href="@{/order/history}"
-                           class="block w-full text-center bg-slate-50 hover:bg-slate-100 text-slate-700 font-medium py-3 px-4 rounded-lg border border-slate-200 shadow-sm transition">
-                            注文履歴一覧
-                        </a>
-
-                        <a th:href="@{/points}"
-                           class="block w-full text-center bg-slate-50 hover:bg-slate-100 text-slate-700 font-medium py-3 px-4 rounded-lg border border-slate-200 shadow-sm transition">
-                            ポイントページ
-                        </a>
-
-                        <a th:href="@{/points/history}"
-                           class="block w-full text-center bg-slate-50 hover:bg-slate-100 text-slate-700 font-medium py-3 px-4 rounded-lg border border-slate-200 shadow-sm transition">
-                            ポイント履歴
-                        </a>
-
-                        <a th:href="@{/game/history}"
-                           class="block w-full text-center bg-slate-50 hover:bg-slate-100 text-slate-700 font-medium py-3 px-4 rounded-lg border border-slate-200 shadow-sm transition">
-                            ミニゲーム履歴
-                        </a>
-
-                        <a th:href="@{/mypage/profile}"
-                           class="block w-full text-center bg-slate-50 hover:bg-slate-100 text-slate-700 font-medium py-3 px-4 rounded-lg border border-slate-200 shadow-sm transition">
-                            登録情報確認
-                        </a>
-
-                        <form th:action="@{/logout}" method="post" class="block w-full">
-                            <button type="submit"
-                                    class="w-full text-center bg-slate-50 hover:bg-red-50 text-red-600 font-medium py-3 px-4 rounded-lg border border-slate-200 shadow-sm transition">
-                                ログアウト
-                            </button>
-                        </form>
-
-                    </div>
                 </div>
 
             </div>
 
-        </div>
+        </main>
 
-    </main>
+        <!-- =========================
+             FOOTER (共通フォーマット)
+        ========================== -->
+        <footer>
+            HOKKAIDO. © 2026
+        </footer>
+
+    </div>
+
+    <!-- AIコンシェルジュウィジェット -->
+    <div th:replace="~{fragments/ai-widget :: aiWidget}"></div>
 
 </body>
 </html>
