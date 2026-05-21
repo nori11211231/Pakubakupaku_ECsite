@@ -341,8 +341,8 @@ public class OrderController {
 		// AIキャラをランクに合わせて作成・更新
 		// 1: ブロンズ = 卵
 		// 2: シルバー = 子供
-		// 3: ゴールド = 成体
-		// 4: プラチナ = 成体2
+		// 3以上: ゴールド以上 = 14振興局キャラから選択可能
+		// ゴールドに上がった瞬間は AiService 側でランダムな振興局キャラに変更される
 		aiService.getOrCreateAiGrowthByRank(loginUser.getId(), newRankId);
 
 		// ポイント履歴 使用分

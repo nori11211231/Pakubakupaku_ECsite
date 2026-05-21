@@ -20,13 +20,55 @@
             </div>
         </div>
 
-		<div class="ai-status-box">
-		    <p>レベル：<strong th:text="${aiLevel}">-</strong></p>
-		    <p>ランク：<span th:text="${aiRankName}">ゲスト</span></p>
-		    <p>性格：<span th:text="${aiGrowth.personality}">やさしい</span></p>
-		    <p>経験値：<span th:text="${aiExpText}">0</span></p>
-		    <p th:text="${nextRankMessage}">ログインすると経験値と次のランクが表示されます。</p>
-		</div>
+        <div class="ai-status-box">
+            <p>レベル：<strong th:text="${aiLevel}">-</strong></p>
+            <p>ランク：<span th:text="${aiRankName}">ゲスト</span></p>
+            <p>性格：<span th:text="${aiGrowth.personality}">やさしい</span></p>
+            <p>経験値：<span th:text="${aiExpText}">0</span></p>
+            <p th:text="${nextRankMessage}">ログインすると経験値と次のランクが表示されます。</p>
+        </div>
+
+        <section class="ai-character-change-box">
+            <h2>キャラ変更</h2>
+
+            <div th:if="${canChangeAiCharacter}">
+                <p class="ai-character-change-message">
+                    ゴールドランク以上のため、14の振興局キャラから選択できます。
+                </p>
+
+                <form th:action="@{/ai/character/change}" method="post" class="ai-character-change-form">
+                    <input type="hidden"
+                           th:if="${_csrf != null}"
+                           th:name="${_csrf.parameterName}"
+                           th:value="${_csrf.token}">
+
+                    <div class="ai-region-character-grid">
+                        <label class="ai-region-character-card"
+                               th:each="character : ${aiRegionCharacters}"
+                               th:classappend="${currentAiCharacterKey == character.key} ? ' selected' : ''">
+
+                            <input type="radio"
+                                   name="charaKey"
+                                   th:value="${character.key}"
+                                   th:checked="${currentAiCharacterKey == character.key}">
+
+                            <img th:src="${character.imageUrl}" th:alt="${character.name}">
+                            <span th:text="${character.name}">空知コンシェルジュ</span>
+                        </label>
+                    </div>
+
+                    <button type="submit" class="ai-character-change-button">
+                        このキャラに変更する
+                    </button>
+                </form>
+            </div>
+
+            <div th:unless="${canChangeAiCharacter}">
+                <p class="ai-character-locked-message">
+                    ゴールドランク以上になると、14の振興局キャラから好きなキャラを選べます。
+                </p>
+            </div>
+        </section>
 
         <form id="aiChatForm"
               class="ai-chat-form"

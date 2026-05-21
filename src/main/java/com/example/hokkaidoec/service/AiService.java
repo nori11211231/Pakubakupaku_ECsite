@@ -29,6 +29,24 @@ public class AiService {
 
 	private static final String OPENAI_RESPONSES_URL = "https://api.openai.com/v1/responses";
 
+	private static final int GOLD_RANK_ID = 3;
+
+	private static final List<AiCharacterOption> REGION_CHARACTERS = List.of(
+			new AiCharacterOption("sorachi", "空知コンシェルジュ", "/img/ai/chara_sorachi.png"),
+			new AiCharacterOption("ishikari", "石狩コンシェルジュ", "/img/ai/chara_ishikari.png"),
+			new AiCharacterOption("shiribeshi", "後志コンシェルジュ", "/img/ai/chara_shiribeshi.png"),
+			new AiCharacterOption("iburi", "胆振コンシェルジュ", "/img/ai/chara_tanshin.png"),
+			new AiCharacterOption("hidaka", "日高コンシェルジュ", "/img/ai/chara_hidaka.png"),
+			new AiCharacterOption("oshima", "渡島コンシェルジュ", "/img/ai/chara_oshima.png"),
+			new AiCharacterOption("hiyama", "檜山コンシェルジュ", "/img/ai/chara_hiyama.png"),
+			new AiCharacterOption("kamikawa", "上川コンシェルジュ", "/img/ai/chara_kawakami.png"),
+			new AiCharacterOption("rumoi", "留萌コンシェルジュ", "/img/ai/chara_rumoi.png"),
+			new AiCharacterOption("soya", "宗谷コンシェルジュ", "/img/ai/chara_soya.png"),
+			new AiCharacterOption("okhotsk", "オホーツクコンシェルジュ", "/img/ai/chara_oho-tsuku.png"),
+			new AiCharacterOption("tokachi", "十勝コンシェルジュ", "/img/ai/chara_tokachi.png"),
+			new AiCharacterOption("kushiro", "釧路コンシェルジュ", "/img/ai/chara_kushiro.png"),
+			new AiCharacterOption("nemuro", "根室コンシェルジュ", "/img/ai/chara_nemro.png"));
+
 	private final AiGrowthMapper aiGrowthMapper;
 	private final Environment environment;
 	private final ObjectMapper objectMapper;
@@ -63,11 +81,18 @@ public class AiService {
 		if (aiGrowth == null) {
 			AiGrowth newAiGrowth = new AiGrowth();
 			newAiGrowth.setUserId(userId);
-			newAiGrowth.setName(createAiNameByStage(growthStage));
 			newAiGrowth.setGrowthStage(growthStage);
 			newAiGrowth.setPersonality(getRandomPersonality());
 			newAiGrowth.setUpdatedAt(LocalDateTime.now());
-			newAiGrowth.setCharaImageUrl(createImageUrlByStage(growthStage));
+
+			if (isGoldOrHigher(growthStage)) {
+				AiCharacterOption randomCharacter = getRandomRegionCharacter();
+				newAiGrowth.setName(randomCharacter.getName());
+				newAiGrowth.setCharaImageUrl(randomCharacter.getImageUrl());
+			} else {
+				newAiGrowth.setName(createAiNameByStage(growthStage));
+				newAiGrowth.setCharaImageUrl(createImageUrlByStage(growthStage));
+			}
 
 			aiGrowthMapper.insert(newAiGrowth);
 
@@ -81,6 +106,11 @@ public class AiService {
 		}
 
 		Integer currentStage = normalizeGrowthStage(aiGrowth.getGrowthStage());
+
+		if (isGoldOrHigher(growthStage)) {
+			return syncGoldOrHigherCharacter(userId, aiGrowth, currentStage, growthStage);
+		}
+
 		String correctImageUrl = createImageUrlByStage(growthStage);
 		String correctName = createAiNameByStage(growthStage);
 
@@ -187,6 +217,65 @@ public class AiService {
 		}
 
 		return aiGrowth.getCharaImageUrl();
+	}
+
+	public List<AiCharacterOption> getRegionCharacterOptions() {
+		return REGION_CHARACTERS;
+	}
+
+	public boolean canChangeRegionCharacter(Integer rankId) {
+		if (rankId == null) {
+			return false;
+		}
+
+		return normalizeGrowthStage(rankId) >= GOLD_RANK_ID;
+	}
+
+	public AiGrowth changeRegionCharacter(Integer userId, Integer rankId, String charaKey) {
+		if (userId == null) {
+			return createDefaultAiGrowth();
+		}
+
+		Integer growthStage = normalizeGrowthStage(rankId);
+
+		if (!canChangeRegionCharacter(growthStage)) {
+			return getOrCreateAiGrowthByRank(userId, growthStage);
+		}
+
+		AiCharacterOption selectedCharacter = findRegionCharacterByKey(charaKey);
+
+		if (selectedCharacter == null) {
+			return getOrCreateAiGrowthByRank(userId, growthStage);
+		}
+
+		AiGrowth aiGrowth = getOrCreateAiGrowthByRank(userId, growthStage);
+
+		aiGrowthMapper.updateGrowthStage(
+				userId,
+				growthStage,
+				selectedCharacter.getName(),
+				selectedCharacter.getImageUrl());
+
+		aiGrowth.setGrowthStage(growthStage);
+		aiGrowth.setName(selectedCharacter.getName());
+		aiGrowth.setCharaImageUrl(selectedCharacter.getImageUrl());
+		aiGrowth.setUpdatedAt(LocalDateTime.now());
+
+		return aiGrowth;
+	}
+
+	public String getCurrentRegionCharacterKey(AiGrowth aiGrowth) {
+		if (aiGrowth == null || aiGrowth.getCharaImageUrl() == null) {
+			return "";
+		}
+
+		AiCharacterOption character = findRegionCharacterByImageUrl(aiGrowth.getCharaImageUrl());
+
+		if (character == null) {
+			return "";
+		}
+
+		return character.getKey();
 	}
 
 	public String createPageMessage(String currentPath, AiGrowth aiGrowth) {
@@ -638,6 +727,91 @@ public class AiService {
 		};
 	}
 
+	private AiGrowth syncGoldOrHigherCharacter(
+			Integer userId,
+			AiGrowth aiGrowth,
+			Integer currentStage,
+			Integer newStage) {
+
+		AiCharacterOption currentCharacter = findRegionCharacterByImageUrl(aiGrowth.getCharaImageUrl());
+
+		if (currentStage < GOLD_RANK_ID || currentCharacter == null) {
+			AiCharacterOption randomCharacter = getRandomRegionCharacter();
+
+			aiGrowthMapper.updateGrowthStage(
+					userId,
+					newStage,
+					randomCharacter.getName(),
+					randomCharacter.getImageUrl());
+
+			aiGrowth.setGrowthStage(newStage);
+			aiGrowth.setName(randomCharacter.getName());
+			aiGrowth.setCharaImageUrl(randomCharacter.getImageUrl());
+			aiGrowth.setUpdatedAt(LocalDateTime.now());
+
+			return aiGrowth;
+		}
+
+		if (!currentStage.equals(newStage)
+				|| aiGrowth.getName() == null
+				|| !aiGrowth.getName().equals(currentCharacter.getName())) {
+
+			aiGrowthMapper.updateGrowthStage(
+					userId,
+					newStage,
+					currentCharacter.getName(),
+					currentCharacter.getImageUrl());
+
+			aiGrowth.setGrowthStage(newStage);
+			aiGrowth.setName(currentCharacter.getName());
+			aiGrowth.setCharaImageUrl(currentCharacter.getImageUrl());
+			aiGrowth.setUpdatedAt(LocalDateTime.now());
+		}
+
+		return aiGrowth;
+	}
+
+	private boolean isGoldOrHigher(Integer growthStage) {
+		if (growthStage == null) {
+			return false;
+		}
+
+		return growthStage >= GOLD_RANK_ID;
+	}
+
+	private AiCharacterOption getRandomRegionCharacter() {
+		int index = ThreadLocalRandom.current().nextInt(REGION_CHARACTERS.size());
+		return REGION_CHARACTERS.get(index);
+	}
+
+	private AiCharacterOption findRegionCharacterByKey(String key) {
+		if (key == null || key.isBlank()) {
+			return null;
+		}
+
+		for (AiCharacterOption character : REGION_CHARACTERS) {
+			if (character.getKey().equals(key)) {
+				return character;
+			}
+		}
+
+		return null;
+	}
+
+	private AiCharacterOption findRegionCharacterByImageUrl(String imageUrl) {
+		if (imageUrl == null || imageUrl.isBlank()) {
+			return null;
+		}
+
+		for (AiCharacterOption character : REGION_CHARACTERS) {
+			if (character.getImageUrl().equals(imageUrl)) {
+				return character;
+			}
+		}
+
+		return null;
+	}
+
 	private String adjustByGrowthStage(String message, AiGrowth aiGrowth) {
 		if (message == null || message.isBlank()) {
 			return "";
@@ -732,5 +906,30 @@ public class AiService {
 		}
 
 		return text.substring(0, 500) + "...";
+	}
+
+	public static class AiCharacterOption {
+
+		private final String key;
+		private final String name;
+		private final String imageUrl;
+
+		public AiCharacterOption(String key, String name, String imageUrl) {
+			this.key = key;
+			this.name = name;
+			this.imageUrl = imageUrl;
+		}
+
+		public String getKey() {
+			return key;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public String getImageUrl() {
+			return imageUrl;
+		}
 	}
 }

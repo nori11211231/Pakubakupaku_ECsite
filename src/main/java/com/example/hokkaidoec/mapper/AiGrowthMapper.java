@@ -22,5 +22,10 @@ public interface AiGrowthMapper {
 			@Param("name") String name,
 			@Param("charaImageUrl") String charaImageUrl);
 
+	void updateCharacter(
+			@Param("userId") Integer userId,
+			@Param("name") String name,
+			@Param("charaImageUrl") String charaImageUrl);
+
 	Map<String, Object> findAiStatusByUserId(@Param("userId") Integer userId);
 }

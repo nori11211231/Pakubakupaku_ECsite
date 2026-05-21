@@ -40,10 +40,6 @@ public class AiController {
 		return "ai";
 	}
 
-	/**
-	 * JavaScriptがOFFのとき用。
-	 * 通常はai.htmlのfetchで /ai/chat/reply を呼ぶ。
-	 */
 	@PostMapping("/ai/chat")
 	public String chat(AiChatForm aiChatForm, Model model, HttpSession session) {
 		AiGrowth aiGrowth = getAiGrowth(session);
@@ -60,10 +56,6 @@ public class AiController {
 		return "ai";
 	}
 
-	/**
-	 * AIページの「AIの返答」だけを更新するためのAPI。
-	 * HTMLではなくJSONを返す。
-	 */
 	@PostMapping("/ai/chat/reply")
 	@ResponseBody
 	public Map<String, String> chatReply(
@@ -71,6 +63,9 @@ public class AiController {
 			HttpSession session) {
 
 		AiGrowth aiGrowth = getAiGrowth(session);
+
+		// ★ Ajaxでもセッションを最新状態にする
+		updateAiSession(session, aiGrowth);
 
 		String aiReply = aiService.createChatReply(
 				aiGrowth,
@@ -80,10 +75,6 @@ public class AiController {
 		return Map.of("reply", aiReply);
 	}
 
-	/**
-	 * 全画面共通AIウィジェット用API。
-	 * ページ遷移せず、ウィジェットの吹き出しだけLLMの返答に更新する。
-	 */
 	@PostMapping("/ai/widget/reply")
 	@ResponseBody
 	public Map<String, String> widgetReply(
@@ -92,6 +83,9 @@ public class AiController {
 			HttpSession session) {
 
 		AiGrowth aiGrowth = getAiGrowth(session);
+
+		// ★ ウィジェットでもセッションを最新状態にする
+		updateAiSession(session, aiGrowth);
 
 		String context = "全画面共通AIウィジェット。";
 
@@ -107,11 +101,65 @@ public class AiController {
 		return Map.of("reply", aiReply);
 	}
 
+	@PostMapping("/ai/character/change")
+	public String changeCharacter(
+			@RequestParam("charaKey") String charaKey,
+			HttpSession session) {
+
+		Integer userId = getLoginUserId(session);
+
+		if (userId == null) {
+			return "redirect:/login";
+		}
+
+		Integer rankId = getLoginUserRankId(userId);
+
+		if (rankId == null) {
+			rankId = 1;
+		}
+
+		aiService.changeRegionCharacter(userId, rankId, charaKey);
+
+		// ★ 変更直後にDBから取り直してセッションへ保存する
+		AiGrowth updatedAiGrowth = aiService.getOrCreateAiGrowthByRank(userId, rankId);
+		updateAiSession(session, updatedAiGrowth);
+
+		return "redirect:/ai";
+	}
+
 	private void addAiModel(Model model, HttpSession session, AiChatForm aiChatForm, AiGrowth aiGrowth) {
+		Integer userId = getLoginUserId(session);
+		Integer rankId = 1;
+
+		if (userId != null) {
+			Integer foundRankId = getLoginUserRankId(userId);
+
+			if (foundRankId != null) {
+				rankId = foundRankId;
+			}
+		}
+
+		String aiCharaImageUrl = aiService.resolveCharaImageUrl(aiGrowth);
+		boolean canChangeAiCharacter = aiService.canChangeRegionCharacter(rankId);
+		String currentAiCharacterKey = aiService.getCurrentRegionCharacterKey(aiGrowth);
+
 		model.addAttribute("aiChatForm", aiChatForm);
 		model.addAttribute("aiGrowth", aiGrowth);
 		model.addAttribute("aiName", aiGrowth.getName());
-		model.addAttribute("aiCharaImageUrl", aiService.resolveCharaImageUrl(aiGrowth));
+		model.addAttribute("aiCharaImageUrl", aiCharaImageUrl);
+
+		model.addAttribute("aiRegionCharacters", aiService.getRegionCharacterOptions());
+		model.addAttribute("canChangeAiCharacter", canChangeAiCharacter);
+		model.addAttribute("currentAiCharacterKey", currentAiCharacterKey);
+
+		// ★ AI表示情報をセッションにも入れる
+		session.setAttribute("aiGrowth", aiGrowth);
+		session.setAttribute("aiName", aiGrowth.getName());
+		session.setAttribute("aiPersonality", aiGrowth.getPersonality());
+		session.setAttribute("aiCharaImageUrl", aiCharaImageUrl);
+		session.setAttribute("aiRankId", rankId);
+		session.setAttribute("canChangeAiCharacter", canChangeAiCharacter);
+		session.setAttribute("currentAiCharacterKey", currentAiCharacterKey);
 
 		addAiStatusModel(model, session);
 	}
@@ -124,6 +172,11 @@ public class AiController {
 		model.addAttribute("aiExpText", "0");
 		model.addAttribute("nextRankMessage", "ログインすると経験値と次のランクが表示されます。");
 
+		session.setAttribute("aiLevel", "-");
+		session.setAttribute("aiRankName", "ゲスト");
+		session.setAttribute("aiExpText", "0");
+		session.setAttribute("nextRankMessage", "ログインすると経験値と次のランクが表示されます。");
+
 		if (userId == null) {
 			return;
 		}
@@ -132,6 +185,7 @@ public class AiController {
 
 		if (aiStatus == null) {
 			model.addAttribute("nextRankMessage", "ランク情報が見つかりません。");
+			session.setAttribute("nextRankMessage", "ランク情報が見つかりません。");
 			return;
 		}
 
@@ -149,12 +203,21 @@ public class AiController {
 			totalPurchaseAmount = 0;
 		}
 
-		model.addAttribute("aiLevel", rankId);
+		String aiLevel = String.valueOf(rankId);
+		String aiExpText = formatNumber(totalPurchaseAmount);
+
+		model.addAttribute("aiLevel", aiLevel);
 		model.addAttribute("aiRankName", rankName);
-		model.addAttribute("aiExpText", formatNumber(totalPurchaseAmount));
+		model.addAttribute("aiExpText", aiExpText);
+
+		session.setAttribute("aiLevel", aiLevel);
+		session.setAttribute("aiRankName", rankName);
+		session.setAttribute("aiExpText", aiExpText);
+
+		String nextRankMessage;
 
 		if (nextRankMinAmount == null) {
-			model.addAttribute("nextRankMessage", "最高ランクです！");
+			nextRankMessage = "最高ランクです！";
 		} else {
 			int remainingExp = nextRankMinAmount - totalPurchaseAmount;
 
@@ -162,38 +225,74 @@ public class AiController {
 				remainingExp = 0;
 			}
 
-			model.addAttribute(
-					"nextRankMessage",
-					"次のランク「" + nextRankName + "」まであと " + formatNumber(remainingExp) + " 経験値");
+			nextRankMessage = "次のランク「" + nextRankName + "」まであと "
+					+ formatNumber(remainingExp) + " 経験値";
 		}
+
+		model.addAttribute("nextRankMessage", nextRankMessage);
+		session.setAttribute("nextRankMessage", nextRankMessage);
+	}
+
+	private void updateAiSession(HttpSession session, AiGrowth aiGrowth) {
+		if (aiGrowth == null) {
+			return;
+		}
+
+		Integer userId = getLoginUserId(session);
+		Integer rankId = 1;
+
+		if (userId != null) {
+			Integer foundRankId = getLoginUserRankId(userId);
+
+			if (foundRankId != null) {
+				rankId = foundRankId;
+			}
+		}
+
+		String aiCharaImageUrl = aiService.resolveCharaImageUrl(aiGrowth);
+
+		session.setAttribute("aiGrowth", aiGrowth);
+		session.setAttribute("aiName", aiGrowth.getName());
+		session.setAttribute("aiPersonality", aiGrowth.getPersonality());
+		session.setAttribute("aiCharaImageUrl", aiCharaImageUrl);
+		session.setAttribute("aiRankId", rankId);
+		session.setAttribute("canChangeAiCharacter", aiService.canChangeRegionCharacter(rankId));
+		session.setAttribute("currentAiCharacterKey", aiService.getCurrentRegionCharacterKey(aiGrowth));
 	}
 
 	private AiGrowth getAiGrowth(HttpSession session) {
 		Integer userId = getLoginUserId(session);
 
 		if (userId == null) {
-			return aiService.createDefaultAiGrowth();
+			AiGrowth defaultAiGrowth = aiService.createDefaultAiGrowth();
+			updateAiSession(session, defaultAiGrowth);
+			return defaultAiGrowth;
+		}
+
+		Integer rankId = getLoginUserRankId(userId);
+
+		if (rankId == null) {
+			rankId = 1;
+		}
+
+		AiGrowth aiGrowth = aiService.getOrCreateAiGrowthByRank(userId, rankId);
+		updateAiSession(session, aiGrowth);
+
+		return aiGrowth;
+	}
+
+	private Integer getLoginUserRankId(Integer userId) {
+		if (userId == null) {
+			return null;
 		}
 
 		Map<String, Object> aiStatus = aiGrowthMapper.findAiStatusByUserId(userId);
 
-		Integer rankId = 1;
-
-		if (aiStatus != null) {
-			Object rankIdValue = getMapValue(aiStatus, "rankId");
-
-			if (rankIdValue instanceof Number) {
-				rankId = ((Number) rankIdValue).intValue();
-			} else if (rankIdValue != null) {
-				try {
-					rankId = Integer.parseInt(rankIdValue.toString());
-				} catch (NumberFormatException e) {
-					rankId = 1;
-				}
-			}
+		if (aiStatus == null) {
+			return null;
 		}
 
-		return aiService.getOrCreateAiGrowthByRank(userId, rankId);
+		return toInteger(getMapValue(aiStatus, "rankId"));
 	}
 
 	private Integer getLoginUserId(HttpSession session) {
