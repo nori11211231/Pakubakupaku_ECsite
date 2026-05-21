@@ -7,7 +7,7 @@
 </head>
 <body>
 	<div class="container">
-		<!-- HEADER (既存のヘッダーと同じ) -->
+		<!-- HEADER -->
 		<header>
 			<div class="brand">
 				<a th:href="@{/}"><h1>HOKKAIDO.</h1></a>
@@ -19,13 +19,14 @@
 			<div class="user-area">
 				<div class="point-view">
 					<span>POINT</span>
-					<strong th:text="${user.point}">0</strong>
+					<!-- 【変更】loginUserに合わせて安全に取得 -->
+					<strong th:text="${loginUser?.point} ?: 0">0</strong>
 				</div>
 				<a th:href="@{/mypage}" class="btn">マイページ</a>
 			</div>
 		</header>
 
-		<!-- NAV (既存のメニューと同じ) -->
+		<!-- NAV -->
 		<nav class="nav-menu">
 			<a th:href="@{/products}">商品一覧</a>
 			<a th:href="@{/regions}">地域から探す</a>
@@ -46,19 +47,23 @@
 			<table class="profile-table" style="width: 100%; border-collapse: collapse; font-size: 16px;">
 				<tr style="border-bottom: 1px solid #eee;">
 					<th style="text-align: left; padding: 15px; width: 200px; background: #f9f9f9; color: #555;">お名前</th>
-					<td style="padding: 15px; color: #333;" th:text="${user.name}">山田 太郎</td>
+					<!-- 【変更】loginUser.name に変更 -->
+					<td style="padding: 15px; color: #333;" th:text="${loginUser?.name}">山田 太郎</td>
 				</tr>
 				<tr style="border-bottom: 1px solid #eee;">
 					<th style="text-align: left; padding: 15px; background: #f9f9f9; color: #555;">メールアドレス</th>
-					<td style="padding: 15px; color: #333;" th:text="${user.email}">sample@example.com</td>
+					<!-- 【変更】loginUser.email に変更 -->
+					<td style="padding: 15px; color: #333;" th:text="${loginUser?.email}">sample@example.com</td>
 				</tr>
 				<tr style="border-bottom: 1px solid #eee;">
 					<th style="text-align: left; padding: 15px; background: #f9f9f9; color: #555;">ご住所</th>
-					<td style="padding: 15px; color: #333;" th:text="${user.address}">北海道札幌市...</td>
+					<!-- 【変更】loginUser.address に変更 -->
+					<td style="padding: 15px; color: #333;" th:text="${loginUser?.address}">北海道札幌市...</td>
 				</tr>
 				<tr style="border-bottom: 1px solid #eee;">
 					<th style="text-align: left; padding: 15px; background: #f9f9f9; color: #555;">電話番号</th>
-					<td style="padding: 15px; color: #333;" th:text="${user.phone}">090-1234-5678</td>
+					<!-- 【変更】loginUser.phone に変更 -->
+					<td style="padding: 15px; color: #333;" th:text="${loginUser?.phone}">090-1234-5678</td>
 				</tr>
 				<tr style="border-bottom: 1px solid #eee;">
 					<th style="text-align: left; padding: 15px; background: #f9f9f9; color: #555;">現在の会員ランク</th>
@@ -66,11 +71,13 @@
 				</tr>
 				<tr style="border-bottom: 1px solid #eee;">
 					<th style="text-align: left; padding: 15px; background: #f9f9f9; color: #555;">所持ポイント</th>
-					<td style="padding: 15px; color: #e67e22; font-weight: bold;"><span th:text="${user.point}">0</span> pt</td>
+					<!-- 【変更】loginUser.point に変更 -->
+					<td style="padding: 15px; color: #e67e22; font-weight: bold;"><span th:text="${loginUser?.point} ?: 0">0</span> pt</td>
 				</tr>
 				<tr style="border-bottom: 1px solid #eee;">
 					<th style="text-align: left; padding: 15px; background: #f9f9f9; color: #555;">総購入金額</th>
-					<td style="padding: 15px; color: #333;" th:text="${user.totalPurchaseAmount != null ? user.totalPurchaseAmount + ' 円' : '0 円'}">0 円</td>
+					<!-- 【変更】loginUser.totalPurchaseAmount に変更 -->
+					<td style="padding: 15px; color: #333;" th:text="${loginUser?.totalPurchaseAmount != null ? loginUser.totalPurchaseAmount + ' 円' : '0 円'}">0 円</td>
 				</tr>
 			</table>
 
