@@ -1,11 +1,14 @@
 package com.example.hokkaidoec.mapper;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
+import com.example.hokkaidoec.entity.Order;
 import com.example.hokkaidoec.entity.User;
 
 @Mapper
@@ -35,4 +38,8 @@ public interface UserMapper {
 			@Param("id") Integer id,
 			@Param("totalPurchaseAmount") Integer totalPurchaseAmount,
 			@Param("rankId") Integer rankId);
+
+	/** ユーザーIDに紐づく注文履歴を取得する */
+	@Select("SELECT id, total_amount, order_status, user_id, shipping_address, order_date, used_point, earned_point FROM orders WHERE user_id = #{userId} ORDER BY id DESC")
+	List<Order> findOrdersByUserId(@Param("userId") Integer userId);
 }
