@@ -566,7 +566,7 @@ public class GameController {
 					betPoint);
 
 			result.setPointChange(
-					-betPoint);
+					-betPoint * 10);
 
 			result.setVideoPath(
 					"/video/game/hazure.mp4");
