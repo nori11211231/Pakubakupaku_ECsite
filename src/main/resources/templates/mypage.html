@@ -51,33 +51,30 @@
                 <h2 class="text-2xl font-bold text-slate-800 mb-4">注文履歴</h2>
                 
                 <div class="space-y-3">
-                    <!-- 🌟 修正箇所：order.totalAmount と order.orderStatus に変更しました -->
+                    <!-- 本物の注文履歴ループ（注文IDを削除） -->
                     <div th:each="order : ${orders}" class="bg-white p-4 rounded-lg border border-gray-200 shadow-sm flex justify-between items-center">
-                        <div class="flex space-x-6 text-sm text-gray-600">
-                            <span class="font-mono font-bold" th:text="${order.id}">注文ID 001</span>
+                        <div class="text-sm text-gray-600 font-medium">
                             <span><span th:text="${#numbers.formatInteger(order.totalAmount, 1, 'COMMA')}">3,900</span>円</span>
                         </div>
                         <span class="text-sm font-medium text-gray-500" th:text="${order.orderStatus}">注文完了</span>
                     </div>
 
+                    <!-- ダミーの注文履歴（注文IDを削除） -->
                     <div th:if="${orders == null}" class="space-y-3">
                         <div class="bg-white p-4 rounded-lg border border-gray-200 shadow-sm flex justify-between items-center">
-                            <div class="flex space-x-6 text-sm text-gray-600">
-                                <span class="font-mono font-bold">注文ID 001</span>
+                            <div class="text-sm text-gray-600 font-medium">
                                 <span>3,900円</span>
                             </div>
                             <span class="text-sm font-medium text-emerald-600 font-bold">注文完了</span>
                         </div>
                         <div class="bg-white p-4 rounded-lg border border-gray-200 shadow-sm flex justify-between items-center">
-                            <div class="flex space-x-6 text-sm text-gray-600">
-                                <span class="font-mono font-bold">注文ID 002</span>
+                            <div class="text-sm text-gray-600 font-medium">
                                 <span>2,100円</span>
                             </div>
                             <span class="text-sm font-medium text-orange-500 font-bold">発送準備中</span>
                         </div>
                         <div class="bg-white p-4 rounded-lg border border-gray-200 shadow-sm flex justify-between items-center">
-                            <div class="flex space-x-6 text-sm text-gray-600">
-                                <span class="font-mono font-bold">注文ID 003</span>
+                            <div class="text-sm text-gray-600 font-medium">
                                 <span>1,500円</span>
                             </div>
                             <span class="text-sm font-medium text-gray-500">注文完了</span>
