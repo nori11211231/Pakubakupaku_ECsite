@@ -2,202 +2,318 @@
 <html lang="ja" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-
 	<meta charset="UTF-8">
-
 	<title>注文履歴 | 北海道EC</title>
-
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-
-	<link rel="stylesheet" th:href="@{/css/style.css}">
-
+	<link rel="stylesheet" th:href="@{/css/style_merged.css}">
 	<link rel="preconnect" href="https://fonts.googleapis.com">
-
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Noto+Serif+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+	<style>
+		.order-page {
+			padding-top: 42px;
+			padding-bottom: 80px;
+		}
 
-	<link
-		href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Noto+Serif+JP:wght@300;400;500;700&display=swap"
-		rel="stylesheet">
+		.order-hero {
+			text-align: center;
+			margin: 36px auto 34px;
+		}
 
+		.order-label,
+		.complete-sub,
+		.hero-label {
+			letter-spacing: .18em;
+			font-size: 13px;
+			font-weight: 700;
+			color: #9a6b2f;
+			margin-bottom: 12px;
+		}
+
+		.order-hero h1,
+		.order-hero h2 {
+			font-size: clamp(30px, 4vw, 48px);
+			margin: 0 0 12px;
+		}
+
+		.order-hero p {
+			line-height: 1.9;
+			color: #6f665c;
+			margin: 0;
+		}
+
+		.order-card,
+		.order-panel,
+		.complete-card {
+			background: rgba(255, 255, 255, .92);
+			border: 1px solid rgba(120, 92, 58, .16);
+			border-radius: 28px;
+			box-shadow: 0 18px 45px rgba(80, 60, 30, .10);
+			padding: clamp(22px, 4vw, 44px);
+		}
+
+		.order-card + .order-card,
+		.order-panel + .order-panel {
+			margin-top: 24px;
+		}
+
+		.order-section-title {
+			font-size: 22px;
+			margin: 0 0 20px;
+		}
+
+		.order-table,
+		.history-table {
+			width: 100%;
+			border-collapse: collapse;
+			overflow: hidden;
+		}
+
+		.order-table th,
+		.order-table td,
+		.history-table th,
+		.history-table td {
+			padding: 16px 14px;
+			border-bottom: 1px solid rgba(120, 92, 58, .14);
+			vertical-align: middle;
+		}
+
+		.order-table th,
+		.history-table th {
+			font-size: 13px;
+			letter-spacing: .08em;
+			color: #7b5a31;
+			background: rgba(180, 132, 58, .08);
+			white-space: nowrap;
+		}
+
+		.order-table td,
+		.history-table td {
+			color: #3d352d;
+		}
+
+		.price-cell,
+		.text-right {
+			text-align: right;
+			font-weight: 700;
+		}
+
+		.text-center {
+			text-align: center;
+		}
+
+		.order-form-inline {
+			display: inline-flex;
+			align-items: center;
+			gap: 8px;
+		}
+
+		.order-input,
+		.order-qty-input {
+			border: 1px solid rgba(120, 92, 58, .25);
+			border-radius: 999px;
+			padding: 10px 14px;
+			background: #fff;
+			font-family: inherit;
+		}
+
+		.order-qty-input {
+			width: 76px;
+			text-align: center;
+		}
+
+		.order-form-grid {
+			display: grid;
+			grid-template-columns: 1.2fr .8fr;
+			gap: 18px;
+			margin-top: 22px;
+		}
+
+		.form-field {
+			display: flex;
+			flex-direction: column;
+			gap: 8px;
+		}
+
+		.form-field label {
+			font-weight: 700;
+			color: #5e4b35;
+		}
+
+		.summary-box {
+			margin-top: 26px;
+			margin-left: auto;
+			max-width: 460px;
+			background: rgba(180, 132, 58, .07);
+			border-radius: 22px;
+			padding: 20px;
+		}
+
+		.summary-row,
+		.detail-row {
+			display: flex;
+			justify-content: space-between;
+			gap: 18px;
+			padding: 10px 0;
+			border-bottom: 1px solid rgba(120, 92, 58, .12);
+		}
+
+		.summary-row:last-child,
+		.detail-row:last-child {
+			border-bottom: 0;
+		}
+
+		.summary-row strong,
+		.detail-row strong {
+			color: #5e4b35;
+		}
+
+		.total-row {
+			font-size: 20px;
+			font-weight: 700;
+		}
+
+		.order-alert {
+			margin: 18px 0;
+			padding: 14px 18px;
+			border-radius: 16px;
+			background: rgba(190, 54, 54, .08);
+			color: #b53131;
+			font-weight: 700;
+		}
+
+		.order-actions,
+		.complete-buttons {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			gap: 14px;
+			flex-wrap: wrap;
+			margin-top: 28px;
+		}
+
+		.btn-small {
+			padding: 8px 14px;
+			font-size: 13px;
+		}
+
+		.btn-danger {
+			background: #fff;
+			color: #b53131;
+			border: 1px solid rgba(181, 49, 49, .28);
+		}
+
+		.detail-grid {
+			display: grid;
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+			gap: 12px 28px;
+		}
+
+		.order-product-img {
+			width: 86px;
+			height: 66px;
+			object-fit: cover;
+			border-radius: 14px;
+			box-shadow: 0 8px 18px rgba(80, 60, 30, .12);
+		}
+
+		.complete-wrapper {
+			max-width: 760px;
+			margin: 36px auto;
+			text-align: center;
+		}
+
+		.complete-icon {
+			width: 72px;
+			height: 72px;
+			border-radius: 50%;
+			display: grid;
+			place-items: center;
+			margin: 0 auto 20px;
+			background: rgba(154, 107, 47, .12);
+			color: #9a6b2f;
+			font-size: 34px;
+			font-weight: 700;
+		}
+
+		.complete-message {
+			line-height: 1.9;
+			color: #6f665c;
+		}
+
+		.empty-history {
+			text-align: center;
+			padding: 44px 20px;
+		}
+
+		@media (max-width: 760px) {
+			.order-form-grid,
+			.detail-grid {
+				grid-template-columns: 1fr;
+			}
+
+			.order-table,
+			.history-table {
+				display: block;
+				overflow-x: auto;
+				white-space: nowrap;
+			}
+		}
+	</style>
 </head>
 
 <body>
+	<div th:replace="~{fragments/_header :: header}"></div>
 
-	<div class="container">
-
-		<!-- =========================
-         HEADER
-    ========================== -->
-
-		<header>
-
-			<div class="brand">
-
-				<a th:href="@{/top}">
-
-					<h1>
-
-						HOKKAIDO.
-
-					</h1>
-
-				</a>
-
-			</div>
-
-			<div class="user-area">
-
-				<a href="/top" class="btn">
-
-					トップへ戻る
-
-				</a>
-
-			</div>
-
-		</header>
-
-		<!-- =========================
-         PAGE TITLE
-    ========================== -->
-
-		<section class="history-hero">
-
-			<div class="hero-label">
-
-				ORDER HISTORY
-
-			</div>
-
-			<h2>
-
-				注文履歴
-
-			</h2>
-
-			<p>
-
-				過去に注文した商品を
-				確認できます。
-
-			</p>
-
+	<main class="container order-page">
+		<section class="order-hero history-hero">
+			<div class="hero-label">ORDER HISTORY</div>
+			<h1>注文履歴</h1>
+			<p>過去に注文した商品、使用ポイント、獲得ポイントを確認できます。</p>
 		</section>
 
-		<!-- =========================
-         HISTORY TABLE
-    ========================== -->
-
-		<section class="history-wrapper">
-
-			<table class="history-table">
-
-				<thead>
-
-					<tr>
-
-						<th>
-
-							注文ID
-
-						</th>
-
-						<th>
-
-							注文日
-
-						</th>
-
-						<th>
-
-							合計金額
-
-						</th>
-
-						<th>
-
-							詳細
-
-						</th>
-
-					</tr>
-
-				</thead>
-
-				<tbody>
-
-					<tr th:each="order : ${orderList}">
-
-						<!-- ORDER ID -->
-
-						<td th:text="${order.id}">
-
-							1
-
-						</td>
-
-						<!-- DATE -->
-
-						<td th:text="${order.orderDate}">
-
-							2026-05-20
-
-						</td>
-
-						<!-- PRICE -->
-
-						<td class="price-cell" th:text="${order.totalAmount} + ' 円'">
-
-							5000円
-
-						</td>
-
-						<!-- DETAIL -->
-
-						<td>
-
-							<a th:href="@{'/orders/' + ${order.id}}" class="btn btn-primary">
-
-								詳細を見る
-
-							</a>
-
-						</td>
-
-					</tr>
-
-				</tbody>
-
-			</table>
-
-			<!-- EMPTY -->
-
+		<section class="order-card history-wrapper">
 			<div th:if="${#lists.isEmpty(orderList)}" class="empty-history">
-
-				<h3>
-
-					注文履歴がありません
-
-				</h3>
-
-				<p>
-
-					まだ商品を購入していません。
-
-				</p>
-
-				<a href="/products" class="btn btn-primary">
-
-					商品を見る
-
-				</a>
-
+				<h3>注文履歴がありません</h3>
+				<p>まだ商品を購入していません。</p>
+				<a th:href="@{/products}" class="btn btn-primary">商品を見る</a>
 			</div>
 
+			<table class="history-table" th:if="${!#lists.isEmpty(orderList)}">
+				<thead>
+					<tr>
+						<th>注文ID</th>
+						<th>注文日</th>
+						<th class="text-right">合計金額</th>
+						<th class="text-right">使用ポイント</th>
+						<th class="text-right">獲得ポイント</th>
+						<th>状態</th>
+						<th class="text-center">詳細</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="order : ${orderList}">
+						<td th:text="${order.id}">1</td>
+						<td th:text="${#temporals.format(order.orderDate, 'yyyy/MM/dd HH:mm')}">2026/05/21 12:00</td>
+						<td class="price-cell" th:text="${#numbers.formatInteger(order.totalAmount, 0, 'COMMA')} + ' 円'">0 円</td>
+						<td class="text-right" th:text="${#numbers.formatInteger(order.usedPoint, 0, 'COMMA')} + ' pt'">0 pt</td>
+						<td class="text-right" th:text="${#numbers.formatInteger(order.earnedPoint, 0, 'COMMA')} + ' pt'">0 pt</td>
+						<td th:text="${order.orderStatus}">ORDERED</td>
+						<td class="text-center">
+							<a th:href="@{'/orders/' + ${order.id}}" class="btn btn-primary btn-small">詳細を見る</a>
+						</td>
+					</tr>
+				</tbody>
+			</table>
 		</section>
 
-	</div>
+		<div class="order-actions">
+			<a th:href="@{/mypage}" class="btn">マイページへ戻る</a>
+			<a th:href="@{/top}" class="btn">トップへ戻る</a>
+		</div>
+	</main>
 
+	<div th:replace="~{fragments/ai-widget :: aiWidget}"></div>
 </body>
 
 </html>
