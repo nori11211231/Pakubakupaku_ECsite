@@ -74,6 +74,17 @@
             user_id = #{userId}
     </update>
 
+    <update id="updateCharacter">
+        UPDATE
+            ai_growth
+        SET
+            name = #{name},
+            updated_at = CURRENT_TIMESTAMP,
+            chara_image_url = #{charaImageUrl}
+        WHERE
+            user_id = #{userId}
+    </update>
+
     <select id="findAiStatusByUserId" resultType="java.util.HashMap">
         SELECT
             u.rank_id AS "rankId",
