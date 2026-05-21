@@ -37,12 +37,18 @@
         </a>
 
         <!-- ログイン状態 -->
-        <div class="header-auth">
-            <a th:if="${loginUser == null}" th:href="@{/login}">ログイン</a>
+		<div class="header-auth">
+		    <a th:if="${loginUser == null}" th:href="@{/login}">ログイン</a>
 
-            <a th:if="${loginUser != null}" th:href="@{/mypage}">マイページ</a>
-            <a th:if="${loginUser != null}" th:href="@{/logout}">ログアウト</a>
-        </div>
+		    <a th:if="${loginUser != null}" th:href="@{/mypage}">マイページ</a>
+
+		    <form th:if="${loginUser != null}"
+		          th:action="@{/logout}"
+		          method="post"
+		          class="logout-form">
+		        <button type="submit" class="logout-button">ログアウト</button>
+		    </form>
+		</div>
 
     </div>
 
