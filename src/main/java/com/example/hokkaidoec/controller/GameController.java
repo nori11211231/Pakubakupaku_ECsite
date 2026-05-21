@@ -524,7 +524,7 @@ public class GameController {
 
 		}
 		// 当たり
-		else if (roll <= 10) {
+		else if (roll <= 480) {
 
 			result.setWin(true);
 
