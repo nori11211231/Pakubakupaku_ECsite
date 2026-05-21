@@ -51,12 +51,13 @@
                 <h2 class="text-2xl font-bold text-slate-800 mb-4">注文履歴</h2>
                 
                 <div class="space-y-3">
+                    <!-- 🌟 修正箇所：order.totalAmount と order.orderStatus に変更しました -->
                     <div th:each="order : ${orders}" class="bg-white p-4 rounded-lg border border-gray-200 shadow-sm flex justify-between items-center">
                         <div class="flex space-x-6 text-sm text-gray-600">
                             <span class="font-mono font-bold" th:text="${order.id}">注文ID 001</span>
-                            <span><span th:text="${#numbers.formatInteger(order.price, 1, 'COMMA')}">3,900</span>円</span>
+                            <span><span th:text="${#numbers.formatInteger(order.totalAmount, 1, 'COMMA')}">3,900</span>円</span>
                         </div>
-                        <span class="text-sm font-medium text-gray-500" th:text="${order.status}">注文完了</span>
+                        <span class="text-sm font-medium text-gray-500" th:text="${order.orderStatus}">注文完了</span>
                     </div>
 
                     <div th:if="${orders == null}" class="space-y-3">

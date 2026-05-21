@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import com.example.hokkaidoec.entity.Order;
 import com.example.hokkaidoec.entity.Rank;
 import com.example.hokkaidoec.entity.User;
 import com.example.hokkaidoec.form.UserForm;
@@ -102,7 +103,7 @@ public class UserController {
 		}
 		aiData.put("level", level);
 
-		// 🌟【ここを修正！】ユーザーの総購入金額をAIの経験値（exp）としてセットする
+		// ユーザーの総購入金額をAIの経験値（exp）としてセットする
 		// ※ もし初期状態などでnullになる可能性がある場合は、0を代入する安全処理を入れると安心です
 		Integer exp = loginUser.getTotalPurchaseAmount();
 		if (exp == null) {
@@ -113,7 +114,11 @@ public class UserController {
 		model.addAttribute("ai", aiData);
 
 		// 4. 注文履歴のダミーデータ（必要であれば追加）
-		// 前回のList<Map>をここに置いておくと、注文履歴もエラーにならず表示されます！★★★★
+
+		List<Order> orderList = userService.getOrdersByUserId(loginUser.getId());
+
+		// HTMLの th:each="order : ${orders}" に本物のデータを渡す
+		model.addAttribute("orders", orderList);
 
 		return "mypage";
 	}

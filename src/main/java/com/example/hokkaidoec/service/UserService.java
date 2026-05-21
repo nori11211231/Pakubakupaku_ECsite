@@ -1,9 +1,12 @@
 package com.example.hokkaidoec.service;
 
+import java.util.List;
+
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.example.hokkaidoec.entity.Order;
 import com.example.hokkaidoec.entity.Rank;
 import com.example.hokkaidoec.entity.User;
 import com.example.hokkaidoec.form.UserForm;
@@ -46,6 +49,10 @@ public class UserService {
 	public Rank findRankById(Integer rankId) {
 		// RankMapperに定義されている「findById」を呼び出して、そのままコントローラーに返します
 		return rankMapper.findById(rankId);
+	}
+
+	public List<Order> getOrdersByUserId(Integer userId) {
+		return userMapper.findOrdersByUserId(userId);
 	}
 
 }
