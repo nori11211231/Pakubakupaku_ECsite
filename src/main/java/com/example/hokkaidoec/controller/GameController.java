@@ -524,7 +524,7 @@ public class GameController {
 
 		}
 		// 当たり
-		else if (roll <= 480) {
+		else if (roll <= 10) {
 
 			result.setWin(true);
 
@@ -566,7 +566,7 @@ public class GameController {
 					betPoint);
 
 			result.setPointChange(
-					-betPoint * 10);
+					-betPoint);
 
 			result.setVideoPath(
 					"/video/game/hazure.mp4");
